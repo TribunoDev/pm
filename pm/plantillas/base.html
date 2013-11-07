@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>{% block titulo %}{% endblock %}</title>
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/carousel.css">
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/estilo.css">
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/pm.css">
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/webflow.css">
+	<link rel="shortcut icon" href="{{STATIC_URL}}img/icono.png">
+	
+</head>
+<body>
+<!--Menú-->
+	<div class="navbar-wrapper">
+      <div class="container">
+        <div class="navbar navbar-inverse navbar-static-top">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle menu-item" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand">Paper and More</a>
+            </div>
+	        <nav id="menu" class="navbar-collapse collapse">
+	        	<ul class="nav navbar-nav">
+	            	<li class="active"><a href="/">Inicio</a></li>
+	            	<li><a href="/marcas/">Marcas</a></li>
+	            	<li class="dropdown">
+	            		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Productos <b class="caret"></b></a>
+	            		<ul class="dropdown-menu" id="categorias-productos"></ul>
+                	</li>
+	          	</ul>
+	          	<form id="frmBusqueda" class="navbar-form navbar-left" role="search">
+			      <div class="form-group">
+			        <input type="text" class="form-control" placeholder="Search">
+			      </div>
+			      <button type="submit" class="btn btn-default btn-sm">Submit</button>
+			    </form>
+	        </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+	{% block contenido %}
+	{% endblock %}
+	{% csrf_token %}
+	<!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div id='modal-ventana' class="modal-dialog"></div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+	<footer>
+		<div id="contenido-foot">
+			<article id="caja1-foot">
+				<div>
+					<a href="https://twitter.com/papermore" target="_blank">
+						<img src="{{STATIC_URL}}img/twitterpapermore.png" alt="twitter">
+					</a>	
+				</div>
+				<div>
+					<a href="https://www.facebook.com/paperandmore.hn" target="_blank">
+						<img src="{{STATIC_URL}}img/facebook_papermore.png" alt="facebook">
+					</a>
+				</div>
+			</article>
+			<article id="caja2-foot">
+				<p>
+					<a href="#">Promociones y Ofertas</a> |
+					<a href="#">Empleos</a> |
+					<a href="#">Recomendar a un amigo</a> |
+					<a href="#">Privacidad y Seguridad</a> |
+					<a href="#">Horarios de Servicio</a> |
+				</p>
+			</article>
+			<article id="caja3-foot">
+				<div>
+					<img src="{{STATIC_URL}}img/isv_incluido.png" alt="ISV">
+				</div>
+			</article>
+		</div>
+	</footer>
+	<script type="text/javascript" src="{{STATIC_URL}}js/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/carousel.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/holder.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/script.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/webflow.js"></script>
+</body>
+</html>

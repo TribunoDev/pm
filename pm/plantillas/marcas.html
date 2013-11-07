@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Paper & More{% endblock %}
+
+{% block contenido %}
+	<div class="w-clearfix section contenido">
+		<div class="inicio-caja1">
+			<div class="contenido-paginas">
+				
+			</div>
+			<div class="cotenido-paginas">
+				<section class="pagina-contenido-caja">
+					<article class="pagina-caja1-1">
+						<div class="cotenido-paginas"><h4 class="titulo h4">Marcas</h4></div>
+					</article>
+					<article id="todas-marcas" class="pagina-caja1-2">
+						{% for elemento in marcas %}
+							<a href="/marcas/{{elemento.id}}">
+								<div id="elemento-marca" class="elemento-producto">
+									<div class="w-container elemento-producto-imagen">
+								  		<img src="{{MEDIA_URL}}{{elemento.Logotipo}}" class="img-responsive baner-principal" alt="Responsive image">
+								</div>
+							</div>
+							</a>
+						{% endfor %}
+					</article>
+				</section>
+				<section class="pagina-contenido-caja2">
+					<div id="detalle-carrito">
+						<div class="cotenido-paginas contenido-carrito"><h4 class="titulo h4">Carrito</h4></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+{% endblock %}

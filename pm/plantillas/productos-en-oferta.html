@@ -1,0 +1,18 @@
+
+{% for elemento in datos %}
+	<div class="elemento-producto">
+		<div class="w-container elemento-producto-imagen">
+		  	<img src="{{MEDIA_URL}}{{elemento.Imagen}}" class="img-responsive" alt="Responsive image">
+		</div>
+		<div class="descrip-producto">
+		  <p>{{elemento.Descripcion|truncatewords:4}}</p>
+		</div>
+		<div>
+			{% load humanize %}
+		  	<p>L.{{elemento.Precio|intcomma}}</p>
+		</div>
+		<div class="w-clearfix elemento-opciones" id="elemento-opc">
+            <a id="detalleProducto" class="btn btn-info btn-lg btn-block btn-detalle" data="{{elemento.pk}}" href="#" data-toggle="modal" data-target="#myModal">Detalle</a>
+        </div>
+	</div>
+{% endfor %}

@@ -1,0 +1,25 @@
+<div class="modal-content">
+    <div class="modal-header modal-titulo">
+    	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 id="titulo-modal" class="modal-title" id="myModalLabel">Código de Producto: {{detalle.Codigo}}</h4>
+    </div>
+    <div id="contenido-modal" class="modal-body">
+    	<section class="w-clearfix detalle-modal" id="detalle-modal">
+		    <article class="detalle-img" id="detalle-img">
+		    	<img src="{{MEDIA_URL}}{{detalle.Imagen}}" class="img-responsive" alt="Responsive image">
+		    </article>
+		    <article class="detalle-descrip" id="detalle-descrip">
+		    	<div class="detalle-modal-etiqueta">
+		    		<div id="descripcion"><span>{{detalle.Descripcion}}</span></div>
+		    		<div id="existencia"><span>Unidades en existencia: {{detalle.Existencia}}</span></div>
+		    		{% load humanize %}
+		    		<div id="precio"><span>Precio: L.{{detalle.Precio|intcomma}}</span></div>
+		    	</div>
+		    </article>
+	    </section>
+    </div>
+    <div class="modal-footer">
+    	<a href="#" class="btn btn-success" data-dismiss="modal">Comprar</a>
+    	<a href="#" class="btn btn-default" data-dismiss="modal">Cerrar</a>
+    </div>
+</div><!-- /.modal-content -->
