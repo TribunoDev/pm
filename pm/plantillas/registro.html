@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block titulo %}Nuevo Usuario{% endblock %}
+{% block contenido %}
+	<h1>Registrar un nuevo usuario</h1>
+	<section>
+		<aticle>
+			{% if form.errors %}
+		        <p>{{ frmUser.errors }}</p>
+		    {% endif %}
+			<form id="frmUsuario" method='post' action='/registro/'>{% csrf_token %}
+				<table>
+					<tr>
+						<td>{{frmUser.username.label_tag}}</td>
+						<td>{{frmUser.username}}</td>
+					</tr>
+					<tr>
+						<td>{{frmUser.password.label_tag}}</td>
+						<td>{{frmUser.password}}</td>
+					</tr>
+					<tr>
+						<td>
+							<label for="">Repetir Contraseña</label>
+						</td>
+						<td><input type="password" name="repetir_password" id="repetir_password"></td>
+					</tr>
+					<tr>
+						<td>{{frmUser.email.label_tag}}</td>
+						<td>{{frmUser.email}}</td>
+					</tr>
+					<tr>
+						<td>{{frmUser.first_name.label_tag}}</td>
+						<td>{{frmUser.first_name}}</td>
+					</tr>
+					<tr>
+						<td>{{frmUser.last_name.label_tag}}</td>
+						<td>{{frmUser.last_name}}</td>
+					</tr>
+				</table>
+				<p><input type="submit" value="registrar" id="btnRegistrar"></p>
+			</form>
+		</aticle>
+	</section>
+{% endblock %}

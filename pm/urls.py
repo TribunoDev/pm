@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, include, url
+from django.contrib.auth.views import login
 from django.contrib import admin
 from django.conf import settings
 admin.autodiscover()
@@ -6,6 +7,10 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'web.views.inicio', name='inicio'),
+    url(r'^ingresar/$', 'web.views.ingresar', name='ingresar'),
+
+    url(r'^ingresar/$', 'web.views.ingresar', name='ingresar'),
+    url(r'^registro/$', 'web.views.registrar', name='registrar'),
     url(r'^marcas/$', 'web.views.marcas', name='marcas'),
     url(r'^marcas/(?P<id_marca>\d+)/$', 'web.views.marca_producto', name='marca_producto'),
     url(r'^productos/categoria/subcategoria/(?P<id_subcat>\d+)$', 'web.views.ver_subcategoria', name='ver_subcategoria'),

@@ -2,9 +2,11 @@
 	<li class="dropdown-submenu"><a href="#">{{categoria.Descripcion}}</a>
 		<ul class="dropdown-menu" id="categorias-productos">
 			{% for dato in subcategorias %}
-				{% if dato.Categoria == categoria %}
-					<li "dropdown-submenu"><a href="/productos/categoria/subcategoria/{{dato.id}}" tabindex="-1">{{dato.Subcategoria}}</a></li>
-        		{% endif %}
+					{% if dato.Categoria == categoria %}
+						<li "dropdown-submenu" id="subcat-item">
+						<a href="/productos/categoria/subcategoria/{{dato.id}}" tabindex="-1">{{dato.Subcategoria}}</a>
+						</li>
+	        		{% endif %}
 			{% endfor %}
 		</ul>
 	</li>

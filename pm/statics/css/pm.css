@@ -340,10 +340,6 @@ p {
   }
 }
 @media (max-width: 767px) {
-  #frmBusqueda{
-    margin-left:0;
-  }
-
   .button {
     margin-top: 4px;
     margin-bottom: 23px;
@@ -411,6 +407,7 @@ p {
   }
 }
 @media (max-width: 479px) {
+
   #frmBusqueda{
     margin-left:0;
   }

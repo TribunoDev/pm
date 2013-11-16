@@ -74,9 +74,33 @@ $(document).on("ready", function(){
 		});
 	});
 
+	//Script para mostrar form de inicio de sesión en ventana modal
+	$('#iniciar-sesion').on('click', function(e){
+		e.preventDefault();
+		$.ajax({
+			type: 'POST',
+			url: '/ingresar/',
+			data: {'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()},
+			success: function(data){
+				$('#modal-ventana').html(data);
+			},
+			dataType: 'html',
+		});
+	});
 
+	//Script para evaluar si las contraseñas coinsiden
+	$('#btnRegistrar').on('click', function(e){
+		password1 = $('#id_password').val();
+		password2 = $('#repetir_password').val();
 
+		if (password1 != password2) {
+			e.preventDefault();
+			$('#repetir_password').addClass('alert-danger');
+		};
+	});
 
+	$('#repetir_password').on('focus', function(){
+		$('#repetir_password').removeClass('alert-danger');
+	});
 
-	
 });

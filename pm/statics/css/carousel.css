@@ -27,7 +27,7 @@ body {
   margin-bottom: 60px;
 
   /* Negative margin to pull up carousel. 90px is roughly margins and height of navbar. */
-  margin-top: -90px;
+  margin-top: -144px;
 }
 /* Since positioning the image, we need to help out the caption */
 .carousel-caption {
@@ -101,7 +101,7 @@ body {
 
   /* Navbar positioning foo */
   .navbar-wrapper {
-    margin-top: 20px;
+    margin-top: 0;
   }
   /* The navbar becomes detached from the top, so we round the corners */
   .navbar-wrapper .navbar {
