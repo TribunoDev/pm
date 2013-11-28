@@ -7,10 +7,10 @@
 	<title>{% block titulo %}{% endblock %}</title>
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/carousel.css">
-	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/estilo.css">
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/normalize.css">
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/pm.css">
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/webflow.css">
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/estilo.css">
 	<link rel="shortcut icon" href="{{STATIC_URL}}img/icono.png">
 	
 </head>
@@ -27,11 +27,11 @@
 			</article>
 			<article id="buscar">
 				<label>Llámenos 12345678</label>
-				<form class="form-inline" role="form">
+				<form class="form-inline" role="form" method="post" action="/buscar/">{% csrf_token %}
 				  <div class="form-group">
-				    <input type="text" class="form-control" id="txtBuscar" placeholder="Buscar...">
+				    <input type="text" class="form-control" id="txtBuscar" name="txtBuscar" placeholder="Buscar...">
 				  </div>
-				  <button type="submit" class="btn btn-primary">Buscar</button>
+				  <button type="submit" id="btnBuscar" class="btn btn-primary">Buscar</button>
 				</form>
 			</article>
 		</section>
@@ -49,7 +49,7 @@
 			                	<span class="icon-bar"></span>
 			                	<span class="icon-bar"></span>
 			              	</button>
-			              	<a class="navbar-brand">Paper and More</a>
+			              	<a class="navbar-brand">P&M</a>
 			            </div>
 			        	<nav id="menu" class="navbar-collapse collapse">
 			        		<ul class="nav navbar-nav">
@@ -60,11 +60,23 @@
 			            			<ul class="dropdown-menu" id="categorias-productos"></ul>
 		                		</li>
 			          		</ul>
-			          		<ul id="btn-Carrito" class="nav navbar-nav">
-				            	<li><a id="iniciar-sesion" href="#" data-toggle="modal" data-target="#myModal">Iniciar Sesión</a></li>
-				            	<li><a href="/registro/">Registrarse</a></li>
-				            	<li><a href="/marcas/">Carrito</a></li>
-			          		</ul>
+			          		<ul class="nav navbar-nav navbar-right">
+			          			{% if centinela == True %}
+			          				<li><a href="/carrito/">Carrito [<span id="total-item"></span>]</a></li>
+							      	<li class="dropdown">
+							        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{usuario.username|capfirst}} <b class="caret"></b></a>
+								        <ul class="dropdown-menu">
+								          <li><a href="#">Mi Perfil</a></li>
+								          <li><a href="/salir/">Cerrar Sesión</a></li>
+								        </ul>
+							      	</li> 
+							      	<input type="hidden" name="usuario" value="{{usuario.username}}">
+							    {% else %}
+							   		<li><a id="iniciar-sesion" href="/ingresar/">Ingresar</a></li>
+				            		<li><a href="/registro/">Registrarse</a></li>
+				            		<li><a href="/carrito/">Carrito</a></li>
+							    {% endif %}
+						    </ul>
 			        	</nav>
 		          	</div>
 		        </div>

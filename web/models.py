@@ -29,6 +29,24 @@ class Producto(models.Model):
 	def __unicode__(self):
 		return self.Descripcion
 
+class Estado(models.Model):
+	Estado = models.CharField(max_length=45, help_text='Describe el estado de la orden', verbose_name=u'Estado de Orden')
+	def __unicode__(self):
+		return self.Estado
+
+class Carrito(models.Model):
+	Usuario = models.ForeignKey(User, help_text='Seleccionar el usuario', verbose_name=u'Usuario')
+	Estado = models.ForeignKey(Estado, help_text='Estado de la orden de productos')
+	def __unicode__(self):
+		return self.Usuario.username
+
+class Detalle_Carrito(models.Model):
+	Producto = models.ForeignKey(Producto, help_text='Código del producto seleccionado', verbose_name=u'Código de Producto')
+	Cantidad = models.IntegerField(help_text='Cantidad de producto', verbose_name=u'Cantidad')
+	Carrito = models.ForeignKey(Carrito, help_text='Carrito al que se va asignar', verbose_name=u'Carrito', null=True, blank=True)
+	def __unicode__(self):
+		return self.Producto.Descripcion+" "+str(self.Cantidad)
+
 class Pais(models.Model):
 	Pais = models.CharField(max_length=45, help_text='Ingrese el nombre del país', verbose_name=u'País')
 	def __unicode__(self):
@@ -46,27 +64,14 @@ class Direccion_Orden(models.Model):
 	def __unicode__(self):
 		return self.Direccion +' '+ self.Ciudad +', '+ self.Region +', '+ self.Pais.Pais
 
-class Estado_Orden(models.Model):
-	Estado = models.CharField(max_length=45, help_text='Describe el estado de la orden', verbose_name=u'Estado de Orden')
-	def __unicode__(self):
-		return self.Estado
-
 class Orden(models.Model):
-	Fecha = models.DateField(help_text='Ingresar Fecha de la orden', verbose_name=u'Fecha')
-	Usuario = models.ForeignKey(User, help_text='Seleccionar el usuario', verbose_name=u'Usuario')
-	Estado = models.ForeignKey(Estado_Orden, help_text='Estado de la orden de productos', )
-	Direccion = models.ForeignKey(Direccion_Orden, help_text='Ingresar la dirección para el envío del producto', verbose_name=u'Dirección')
+	Fecha = models.DateField(help_text='Ingresar Fecha de la orden', verbose_name=u'Fecha', null=True, blank=True)
+	Carrito = models.ForeignKey(Carrito, help_text='Ingrese el carrito que va a comprar', verbose_name=u'Carrito')
+	Estado = models.ForeignKey(Estado, help_text='Estado de la orden de productos', null=True, blank=True)
+	Direccion = models.ForeignKey(Direccion_Orden, help_text='Ingresar la dirección para el envío del producto', verbose_name=u'Dirección', null=True, blank=True)
 
 	def __unicode__(self):
 		return str(self.pk)
-
-class Detalle_Orden(models.Model):
-	Orden = models.ForeignKey(Orden, help_text='Número de orden para compra en linea')
-	Producto = models.ForeignKey(Producto, help_text='Código del producto seleccionado', verbose_name=u'Código de Producto')
-	Cantidad = models.IntegerField(help_text='Cantidad de producto', verbose_name=u'Cantidad')
-
-	def __unicode__(self):
-		return self.Cantidad +' '+ self.Producto
 
 class Marca(models.Model):
 	Marca = models.CharField(max_length=50, help_text='Nombre de la marca', verbose_name=u'Marca')

@@ -8,6 +8,11 @@ body{
 	font-size: 16px;
 }
 
+figure{
+	margin: 0;
+	padding: 0;
+}
+
 footer{
 	background: #2980b9;
 	color: white;
@@ -16,7 +21,7 @@ footer{
 	margin-top: -5px;
 	padding: 1%;
 	position: relative;
-	width: 100%
+	width: 100%;
 }
 
 header{
@@ -27,7 +32,8 @@ header{
 	z-index: 15;
 }
 
-header section{
+html, body{
+	height: 100%;
 }
 
 #caja1-foot{
@@ -107,9 +113,6 @@ header section{
 	
 }
 
-#btn-Carrito{
-	float: right;
-}
 
 #box-busqueda{
 	background: none;
@@ -213,18 +216,6 @@ header section{
 	margin-bottom: 5px;
 }
 
-#datos-carrito{
-	border: 1px solid #bdc3c7;
-	border-radius: 3px;
-	font-size: 14px;
-	padding: 3% 3%;
-}
-
-#detalle-modal{
-	margin: 0 auto;
-	width: 100%;
-}
-
 #detalle-inicio-sesion form{
 	margin: 5px auto;
 }
@@ -266,6 +257,14 @@ header section{
 	text-align: center;
 }
 
+#frmOrden div{
+	padding: 0;
+	width: 100%;
+}
+
+#frmOrden div input{
+	width: 50%;
+}
 
 #contenido-producto{
 	height: 200px;
@@ -279,6 +278,52 @@ header section{
 #contenedor-menu{
 	background-color: #bdc3c7;
 	border-right-bottom-radius: 0;
+}
+
+#caja-btn{
+
+	float: left;
+	margin-right: 2em;
+	margin-top: 1em;
+}
+
+#caja-detalle{
+	float: left;
+	margin-top: 5px;
+	border: 1px solid #bdc3c7;
+	border-radius: 3px;
+	padding: 1em;
+	margin-bottom: 20px;
+	width: 100%;
+}
+
+#caja-detalle figure{
+	border: 1px solid #bdc3c7;
+	display: inline-block;
+	float: left;
+	margin-right: 5px;
+	padding: 0.2em;
+	position: relative;
+	width: 45%;
+}
+
+#caja-detalle img{
+	float: left;
+	position: relative;
+	width: 100%;
+}
+
+#detalle-descripcion{
+	border-top: 1px solid #bdc3c7;
+	display: inline-block;
+	float: left;
+	padding: 0.4em;
+	width: 54%;
+}
+
+#formulario{
+	margin-top: 10px;
+	padding: 1em 30%;
 }
 
 #login{
@@ -303,6 +348,13 @@ header section{
 	position: relative;
 	vertical-align: bottom;
 	width: 45%;
+}
+
+#mensaje-carrito{
+	margin: 0;
+	margin-top: 5px;
+	padding-top: 8px;
+	padding-bottom: 8px;
 }
 
 #menu{
@@ -415,6 +467,14 @@ header section{
 .contenido-carrito{
 	text-align: center;
 }
+
+.datos-carrito{
+	border: 1px solid #bdc3c7;
+	border-radius: 3px;
+	font-size: 14px;
+	padding: 3% 3%;
+}
+
 .descrip-producto{
 	height: 70px;
 	font-family: Arial, sans-serif;
@@ -483,6 +543,16 @@ header section{
   float: right;
 }
 
+.detalle-footer{
+	border-bottom: 1px solid #bdc3c7;
+	float: left;
+	display: block;
+	margin-top: 5px;
+	padding: 3px 2px;
+	padding-bottom: 5px;
+	position: relative;
+}
+
 .dropdown-submenu{
 	position:relative;
 }
@@ -526,9 +596,17 @@ header section{
 	-moz-border-radius:6px 0 6px 6px;
 	border-radius:6px 0 6px 6px;*/
 }
+.detalle-footer{
+	position: relative;
+	width: 100%;
+}
+
+.detalle-footer div{
+	display: inline-block;
+	position: relative;
+}
 
 .elemento-producto-imagen img{
-	height: 150px;
 	width: 100%;
 }
 
@@ -537,10 +615,104 @@ header section{
 	color: white;
 }
 
+.inicio-caja1, .contenido{
+	
+}
+
+.item-carrito{
+	border: 1px solid #bdc3c7;
+	border-radius: 3px;
+	display: block;
+	float: left;
+	margin-bottom: 4px;
+	padding: 5px 0.5em;
+	position: relative;
+	width: 100%;
+}
+
+.item-carrito figure{
+	border: 1px solid #bdc3c7;
+	display: inline-block;
+	float: left;
+	height: auto;
+	padding: 0.3em;
+	width: 112px;
+}
+
+.item-carrito label{
+	font-size: 13px;
+}
+
+.item-carrito .item-descripcion{
+	display: inline-block;
+	float: left;
+	padding: 0.3em;
+	position: relative;
+	width: 50%;
+}
+
+.item-carrito .item-precio-cantidad{
+	display: inline-block;
+	float: left;
+	padding: 0.3em;
+	position: relative;
+	width: 30%;
+}
+
+.item-carrito .item-precio-cantidad div{
+	display: inline-block;
+	float: left;
+	position: relative;
+}
+
+.item-carrito .item-precio-cantidad .item-cantidad{
+	text-align: center;
+	width: 40%;
+}
+
+.item-carrito .item-precio-cantidad .item-cantidad a{
+	font-size: 12px;
+	font-weight: bolder;
+	padding: 3px 3px;
+}
+
+.item-cantidad .btn{
+	font-size: 10px;
+	font-weight: bolder;
+	padding: 0.2em;
+}
+
+.item-carrito .item-precio-cantidad .item-cantidad div{
+	float: left;
+	position: relative;
+	width: 100%;
+}
+
+.item-carrito .item-precio-cantidad .item-cantidad p{
+	text-align: center;
+}
+
+.item-carrito .item-precio-cantidad .item-precio{
+	text-align: center;
+	width: 60%;
+}
+
+.item-precio p{
+	text-align: center;
+}
+
+.item-eliminar{
+	font-size: 13px;
+	margin-top: 8px;
+}
+
+.items-carrito{
+	margin-top: 5px;
+}
+
 .modal-titulo{
 
 }
-
 
 .muestra-producto{
 	position: relative;
@@ -566,6 +738,19 @@ header section{
 	position: relative;
 }
 
+.social{
+	display: inline-block;
+	float: left;
+	padding: 4px 0px;
+	vertical-align: middle;
+}
+
+.social div{
+	display: inline-block;
+	float: left;
+	vertical-align: middle;
+}
+
 .titulo{
 	background: #3498db;
 	border-radius: 3px;
@@ -575,11 +760,8 @@ header section{
 
 @media (max-width: 959px){
 	
-
-
 	#btn-Carrito {
-		float: left;
-		width: 100%;
+		float: right;
 	}
 
 	#buscar{
@@ -597,6 +779,18 @@ header section{
 		width: 50%;
 	}
 
+	#caja-btn{
+		float: left;
+	}
+
+	#caja-detalle figure{
+		width: 100%;
+	}
+
+	#detalle-descripcion{
+		border: none;
+	}
+
 	#logo{
 		width: 59%;
 	}
@@ -606,10 +800,6 @@ header section{
 @media (max-width: 767px){
 	#btn-Carrito {
 		float: left;
-	}
-
-	#muestra-producto{
-		width: 45%;
 	}
 
 	#contenido{
@@ -625,9 +815,33 @@ header section{
 	#contenido aside{
 		width: 100%;
 	}
+
+	#menu{
+		font-size: 14px;
+	}
+
+	#muestra-producto{
+		width: 45%;
+	}
+
+	#section-carrito{
+		display: none;
+	}
+
+	.detalle-footer{
+		width: 100%;
+	}
+
+	#cuerpo-detalle{
+		width: 100%;
+	}
 }
 
 @media (max-width: 479px){
+	
+	html, body{
+		height: auto;
+	}
 
 	header section{
 		position: relative;
@@ -635,6 +849,10 @@ header section{
 
 	#btn-Carrito {
 		float: left;
+	}
+
+	#caja-detalle figure{
+		width: 100%;
 	}
 	#logo{
 		display: block;
@@ -663,7 +881,33 @@ header section{
 	.carousel{
 		margin-top: -188px;
 	}
+
+	.detalle-footer div a{
+		position: relative;
+		vertical-align: middle;
+	}
 	.inicio-caja1-columna1{
 		padding: 0;
 	}
+
+	#cuerpo-detalle{
+		width: 100%;
+	}
+
+	.social{
+		display: block;
+		text-align: left;
+		position: relative;
+		width: 40%;
+	}
+
+	.social div{
+		display: block;
+		float: left;
+		position: relative;
+	
+	}
+
+	
+
 }

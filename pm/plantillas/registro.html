@@ -1,43 +1,58 @@
 {% extends 'base.html' %}
 {% block titulo %}Nuevo Usuario{% endblock %}
 {% block contenido %}
-	<h1>Registrar un nuevo usuario</h1>
-	<section>
-		<aticle>
-			{% if form.errors %}
-		        <p>{{ frmUser.errors }}</p>
-		    {% endif %}
-			<form id="frmUsuario" method='post' action='/registro/'>{% csrf_token %}
-				<table>
-					<tr>
-						<td>{{frmUser.username.label_tag}}</td>
-						<td>{{frmUser.username}}</td>
-					</tr>
-					<tr>
-						<td>{{frmUser.password.label_tag}}</td>
-						<td>{{frmUser.password}}</td>
-					</tr>
-					<tr>
-						<td>
-							<label for="">Repetir Contraseña</label>
-						</td>
-						<td><input type="password" name="repetir_password" id="repetir_password"></td>
-					</tr>
-					<tr>
-						<td>{{frmUser.email.label_tag}}</td>
-						<td>{{frmUser.email}}</td>
-					</tr>
-					<tr>
-						<td>{{frmUser.first_name.label_tag}}</td>
-						<td>{{frmUser.first_name}}</td>
-					</tr>
-					<tr>
-						<td>{{frmUser.last_name.label_tag}}</td>
-						<td>{{frmUser.last_name}}</td>
-					</tr>
-				</table>
-				<p><input type="submit" value="registrar" id="btnRegistrar"></p>
-			</form>
-		</aticle>
-	</section>
+<div class="w-clearfix section contenido">
+		<div class="inicio-caja1">
+			<div class="contenido-paginas">
+				
+			</div>
+			<div class="cotenido-paginas">
+				<section id="cuerpo-detalle" class="pagina-contenido-caja">
+					<article class="pagina-caja1-1">
+						<div class="cotenido-paginas"><h3 class="titulo h4">Registrar un nuevo usuario</h3></div>
+					</article>
+					<article id="formulario" class="pagina-caja1-2">
+						<form role="form" id="frmRegUsuario" name="frmRegUsuario" method="post" action="/registro/">{% csrf_token %}
+						  <div class="form-group">
+						    <label for="txtNombre">Nombre</label>
+						    <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Ingrese su nombre">
+						  </div>
+						  <div class="form-group">
+						    <label for="txtApellido">Apellidos</label>
+						    <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Ingrese sus apellidos">
+						  </div>
+						  <div class="form-group">
+						    <label for="txtUsuario">Usuario</label>
+						    <input type="text" class="form-control" id="username" name="username" placeholder="Nombre de usuario">
+						  </div>
+						  <div class="form-group">
+						    <label for="txtCorreo">Correo</label>
+						    <input type="email" class="form-control" id="email" name="email" placeholder="micorreo@ejemplo.com">
+						  </div>
+						  <div class="form-group">
+						    <label for="txtPassword">Contraseña</label>
+						    <input type="password" class="form-control" id="password" name="password" placeholder="Ingrese una contraseña">
+						  </div>
+						  <div class="form-group">
+						    <label for="txtPassword2">Repetir Contraseña</label>
+						    <input type="password" class="form-control" id="txtPassword2" name="txtPassword2" placeholder="Repita la contraseña">
+						  </div>
+						  <button type="submit" class="btn btn-default">Submit</button>
+						</form>
+					</article>
+				</section>
+				<section id="section-carrito" class="pagina-contenido-caja2">
+					<div id="detalle-carrito">
+						<div class="cotenido-paginas contenido-carrito">
+							<h4 class="titulo h4">Carrito</h4>
+						</div>
+						<div id="datos-carrito">
+							<p>Producto: 1</p>
+							<p>Cantidad: 5</p>
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
 {% endblock %}

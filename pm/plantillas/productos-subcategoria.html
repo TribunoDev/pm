@@ -27,7 +27,7 @@
 								  	<p>L.{{elemento.Precio|intcomma}}</p>
 								</div>
 								<div class="w-clearfix elemento-opciones" id="elemento-opc">
-						            <a id="detalleProducto" class="btn btn-info btn-lg btn-block btn-detalle" data="{{elemento.pk}}" href="#" data-toggle="modal" data-target="#myModal">Detalle</a>
+						            <a id="detalleProducto" class="btn btn-info btn-lg btn-block btn-detalle" href="/detalle-producto/{{elemento.pk}}">Detalle</a>
 						        </div>
 							</div>
 						{% endfor %}

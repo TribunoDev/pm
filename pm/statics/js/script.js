@@ -75,18 +75,18 @@ $(document).on("ready", function(){
 	});
 
 	//Script para mostrar form de inicio de sesión en ventana modal
-	$('#iniciar-sesion').on('click', function(e){
-		e.preventDefault();
-		$.ajax({
-			type: 'POST',
-			url: '/ingresar/',
-			data: {'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()},
-			success: function(data){
-				$('#modal-ventana').html(data);
-			},
-			dataType: 'html',
-		});
-	});
+	// $('#iniciar-sesion').on('click', function(e){
+	// 	e.preventDefault();
+	// 	$.ajax({
+	// 		type: 'POST',
+	// 		url: '/ingresar/',
+	// 		data: {'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()},
+	// 		success: function(data){
+	// 			$('#modal-ventana').html(data);
+	// 		},
+	// 		dataType: 'html',
+	// 	});
+	// });
 
 	//Script para evaluar si las contraseñas coinsiden
 	$('#btnRegistrar').on('click', function(e){
@@ -102,5 +102,109 @@ $(document).on("ready", function(){
 	$('#repetir_password').on('focus', function(){
 		$('#repetir_password').removeClass('alert-danger');
 	});
+	
+	//Script para los datos del carrito
+	function datos_carrito () {
+		$.ajax({
+			type: 	'GET',
+			url: 	'/datos-carrito/',
+			data: 	{},
+			success: function(data){
+				$('.total-item-carrito').html(data);
+			},
+			dataType: 	'html'
+		});
+	};
+
+	datos_carrito();
+
+	//Script que retorna los item del carrito a la pestaña del menu
+	function item_carrito () {
+		$.ajax({
+			type: 	'GET',
+			url: 	'/item-carrito/',
+			data: 	{},
+			success: function(data){
+				$('.nav #total-item').html(data.cantidad);
+			},
+			dataType: 'JsON'
+		});
+	};
+
+	item_carrito();
+
+	//Script para agregar datos de un nuevo carrito
+	$('#frmOrden').submit(function(e){
+		e.preventDefault();
+		$.ajax({
+			type: 	'POST',
+			url: 	'/agregar-carrito/',
+			data: 	{ 
+				'Cantidad': $('input[name=Cantidad]').val(),
+				'Producto': $('input[name=Producto').val(),
+				'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+			},
+			success: function(data){
+				$('#mensaje').fadeIn("slow", function(){});
+				$('.mensaje').html(data);
+				datos_carrito();
+				item_carrito();
+			},
+			dataType: 'html'
+		});
+	});
+
+	//Script para el boton de editar item
+	$('.item-cantidad').on('click', '.btnItem-Editar', function(e){
+		var idDetalle = $(this).attr('data-id');
+		var frmCantidad = $(this).closest('.item-cantidad').attr('data-id');
+		e.preventDefault();
+		$.ajax({
+			type: 	'POST',
+			url: 	'/form-editar-cantidad/',
+			data: 	{
+				'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
+				'idDetalle':idDetalle
+			},
+			success: function(data){
+				$('div[data-id='+ frmCantidad + '] div').html(data);
+			},
+			dataType: 'html'
+		});
+
+	});
+
+	//Script para actualizar la cantidad de cada producto
+	$('.item-cantidad').on('click', '.btnActualizar', function(e){
+		e.preventDefault();
+		var form = $(this).closest('form').attr('id');
+		var frmCantidad = $(this).closest('.item-cantidad').attr('data-id');
+
+		$.ajax({
+			type: 	'POST',
+			url: 	'/actualizar-cantidad/',
+			data: 	{
+				'Cantidad': $('form[id=' + form + '] input[name=Cantidad]').val(),
+				'Producto': $('form[id=' + form + '] input[name=Producto]').val(),
+				'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
+			},
+			success: function(data){
+				$('div[data-id='+ frmCantidad + '] div').html(data);
+				datos_carrito();
+				item_carrito();
+			},
+			dataType: 'html'
+
+		});
+	});
+
+	//Script para el boton de eliminar item
+	$('.btnItem-Eliminar').on('click', function(e){
+		e.preventDefault();
+
+	});
+
+	//Script para editar cantidad de productos
+
 
 });

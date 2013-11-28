@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User 
-from django.forms import ModelForm 
+from django.forms import ModelForm
+from web.models import *
 
 class SignUpForm(ModelForm):
 	class Meta:
@@ -9,3 +10,8 @@ class SignUpForm(ModelForm):
 		widgets = {
 		'password': forms.PasswordInput(),
 		}
+
+class Detalle_CarritoForm(ModelForm):
+    class Meta:
+        model = Detalle_Carrito
+        fields = ['Producto', 'Cantidad']

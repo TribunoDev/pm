@@ -1,20 +1,17 @@
 {% extends 'base.html' %}
-
-{% block titulo %}Paper & More{% endblock %}
-
+{% block titulo %}Resultados de la busqueda{% endblock %}
 {% block contenido %}
 	<div class="w-clearfix section contenido">
 		<div class="inicio-caja1">
 			<div class="contenido-paginas">
-				
 			</div>
 			<div class="cotenido-paginas">
 				<section class="pagina-contenido-caja">
 					<article class="pagina-caja1-1">
-						<div class="cotenido-paginas"><h4 class="titulo h4">{{marca.Marca}}</h4></div>
+						<div class="cotenido-paginas"><h4 class="titulo h4">Resultados de busqueda con "{{dato}}"</h4></div>
 					</article>
 					<article id="todas-marcas" class="pagina-caja1-2">
-						{% for elemento in productos %}
+						{% for elemento in resultado %}
 							<div id="productos-subcategoria" class="elemento-producto">
 								<div class="w-container elemento-producto-imagen">
 								  	<img src="{{MEDIA_URL}}{{elemento.Imagen}}" class="img-responsive" alt="Responsive image">
@@ -27,7 +24,7 @@
 								  	<p>L.{{elemento.Precio|intcomma}}</p>
 								</div>
 								<div class="w-clearfix elemento-opciones" id="elemento-opc">
-						            <a id="detalleProducto" class="btn btn-info btn-lg btn-block btn-detalle" href="/detalle-producto/{{elemento.pk}}">Detalle</a>
+						            <a id="detalleProducto" class="btn btn-info btn-lg btn-block btn-detalle" data="{{elemento.pk}}" href="#" data-toggle="modal" data-target="#myModal">Detalle</a>
 						        </div>
 							</div>
 						{% endfor %}
@@ -35,7 +32,14 @@
 				</section>
 				<section class="pagina-contenido-caja2">
 					<div id="detalle-carrito">
-						<div class="cotenido-paginas contenido-carrito"><h4 class="titulo h4">Carrito</h4></div>
+						<div class="cotenido-paginas contenido-carrito">
+							<h4 class="titulo h4">Carrito</h4>
+						</div>
+						<div id="datos-carrito">
+							<p>Producto: 1</p>
+							<p>Cantidad: 5</p>
+
+						</div>
 					</div>
 				</section>
 			</div>

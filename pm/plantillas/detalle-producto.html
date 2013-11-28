@@ -1,25 +1,54 @@
-<div class="modal-content">
-    <div class="modal-header modal-titulo">
-    	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 id="titulo-modal" class="modal-title" id="myModalLabel">Código de Producto: {{detalle.Codigo}}</h4>
+{% extends 'base.html' %}
+{% block titulo %}Detalle de Producto{% endblock %}
+{% block contenido %}
+<div class="w-clearfix section contenido">
+        <div class="inicio-caja1">
+            <div class="cotenido-paginas">
+                <section id="cuerpo-detalle" class="pagina-contenido-caja">
+                    <article class="pagina-caja1-1">
+                        <div class="cotenido-paginas"><h4 class="titulo h4">Detalles del producto</h4></div>
+                    </article>
+                    <article class="mensaje"></article>
+                    <article id="caja-detalle" class="pagina-caja1-2">
+                        <figure class="img-responsive" alt="Responsive image">
+                            <img src="{{MEDIA_URL}}{{detalle.Imagen}}" alt="Imagen del producto">
+                        </figure>
+                        <div id="detalle-descripcion">
+                            <p>Descripción:&nbsp;{{detalle.Descripcion}}</p>&nbsp;
+                            <p>Precio: L.{{detalle.Precio}}</p>&nbsp;
+                            <p>En exitencia: {{detalle.Existencia}} unidades</p>&nbsp;
+                            <form role="form" id="frmOrden" name="frmOrden" method="post" action="/agregar-carrito/">{% csrf_token %}
+                              <div class="form-group col-sm-6">
+                                <input class="form-control" type="number" id="txtCantidad" name="Cantidad" placeholder="Cantidad" min="1" value="1">
+                              </div>
+                              <input type="submit" id="btnComprar" class="btn btn-success" value="Agregar a Carrito" />
+                              <input type="hidden" id="hddProducto" name="Producto" value="{{ detalle.Codigo }}" />
+                            </form>
+                        </div>
+                        <div class="detalle-footer">
+                            <div class="social">
+                                <div>
+                                    <iframe src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;width=20&amp;layout=button_count&amp;action=like&amp;show_faces=true&amp;share=false&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:125px; height:21px;" allowTransparency="true"></iframe>
+                                </div>
+                                <div id="twitter">
+                                    <a href="https://twitter.com/share" class="twitter-share-button" data-lang="es">Twittear</a>
+                                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+                                    </script>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </article>
+                </section>
+                <section id="section-carrito" class="pagina-contenido-caja2">
+                    <div id="detalle-carrito">
+                        <div class="cotenido-paginas contenido-carrito">
+                            <h4 class="titulo h4">Carrito</h4>
+                        </div>
+                        <article class="total-item-carrito"></article>
+                    </div>
+                </section>
+            </div>
+        </div>
     </div>
-    <div id="contenido-modal" class="modal-body">
-    	<section class="w-clearfix detalle-modal" id="detalle-modal">
-		    <article class="detalle-img" id="detalle-img">
-		    	<img src="{{MEDIA_URL}}{{detalle.Imagen}}" class="img-responsive" alt="Responsive image">
-		    </article>
-		    <article class="detalle-descrip" id="detalle-descrip">
-		    	<div class="detalle-modal-etiqueta">
-		    		<div id="descripcion"><span>{{detalle.Descripcion}}</span></div>
-		    		<div id="existencia"><span>Unidades en existencia: {{detalle.Existencia}}</span></div>
-		    		{% load humanize %}
-		    		<div id="precio"><span>Precio: L.{{detalle.Precio|intcomma}}</span></div>
-		    	</div>
-		    </article>
-	    </section>
-    </div>
-    <div class="modal-footer">
-    	<a href="#" class="btn btn-success" data-dismiss="modal">Comprar</a>
-    	<a href="#" class="btn btn-default" data-dismiss="modal">Cerrar</a>
-    </div>
-</div><!-- /.modal-content -->
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block titulo %}Datos del carrito{%  endblock %}
+{% block contenido %}
+	<div class="w-clearfix section contenido">
+		<div class="inicio-caja1">
+			<div class="contenido-paginas">
+				
+			</div>
+			<div class="cotenido-paginas">
+				<section class="pagina-contenido-caja">
+					<article class="pagina-caja1-1">
+						<div class="cotenido-paginas"><h4 class="titulo h4">Carrito de Compras</h4></div>
+					</article>
+					<article class="items-carrito">
+						{% for item in detalle %}
+							<div  class="item-carrito">
+								<figure>
+									<img src="{{MEDIA_URL}}{{item.Producto.Imagen}}" alt="Imagen de Producto">
+								</figure>
+								<div class="item-descripcion">
+									<p>{{item.Producto.Descripcion}}</p>
+									<div class="item-eliminar">
+										<a class="btnItem-Eliminar" href="#" data-id="{{item.id}}">Eliminar</a>
+									</div>
+								</div>
+								<div class="item-precio-cantidad">
+									<div class="item-precio">
+										<label>Precio</label>
+										<p>{{item.Producto.Precio}}</p>
+									</div>
+									<div class="item-cantidad" data-id="form_{{item.id}}">
+										<label>Cantidad</label>
+										<div>
+											<p>{{item.Cantidad}}</p>
+											<a href="#" class="btnItem-Editar" data-id="{{item.id}}">Editar</a>
+										</div>
+									</div>
+								</div>
+                    		</div>
+                       	{% endfor %}
+					</article>  
+				</section>
+				<section id="section-carrito" class="pagina-contenido-caja2">
+                    <div id="detalle-carrito">
+                        <div class="cotenido-paginas contenido-carrito">
+                            <h4 class="titulo h4">Carrito</h4>
+                        </div>
+                        <article class="total-item-carrito"></article>
+                    </div>
+                </section>
+			</div>
+		</div>
+	</div>
+{% endblock %}
