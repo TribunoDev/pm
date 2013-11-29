@@ -74,20 +74,6 @@ $(document).on("ready", function(){
 		});
 	});
 
-	//Script para mostrar form de inicio de sesión en ventana modal
-	// $('#iniciar-sesion').on('click', function(e){
-	// 	e.preventDefault();
-	// 	$.ajax({
-	// 		type: 'POST',
-	// 		url: '/ingresar/',
-	// 		data: {'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()},
-	// 		success: function(data){
-	// 			$('#modal-ventana').html(data);
-	// 		},
-	// 		dataType: 'html',
-	// 	});
-	// });
-
 	//Script para evaluar si las contraseñas coinsiden
 	$('#btnRegistrar').on('click', function(e){
 		password1 = $('#id_password').val();
@@ -145,7 +131,7 @@ $(document).on("ready", function(){
 				'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
 			},
 			success: function(data){
-				$('#mensaje').fadeIn("slow", function(){});
+				$('#mensaje-carrito').slideDown("slow");
 				$('.mensaje').html(data);
 				datos_carrito();
 				item_carrito();
@@ -175,7 +161,7 @@ $(document).on("ready", function(){
 	});
 
 	//Script para actualizar la cantidad de cada producto
-	$('.item-cantidad').on('click', '.btnActualizar', function(e){
+	$('.item-cantidad').on('click', '.btnItem-Actualizar', function(e){
 		e.preventDefault();
 		var form = $(this).closest('form').attr('id');
 		var frmCantidad = $(this).closest('.item-cantidad').attr('data-id');
@@ -199,12 +185,41 @@ $(document).on("ready", function(){
 	});
 
 	//Script para el boton de eliminar item
-	$('.btnItem-Eliminar').on('click', function(e){
+	$('.item-carrito').on('click', '.btnItem-Eliminar', function(e){
 		e.preventDefault();
+		var idDetalle = $(this).attr('data-id');
+		$(this).closest('.item-carrito').slideUp('slow');
+
+		$.ajax({
+			type: 	'POST',
+			url: 	'/eliminar-item/',
+			data: 	{
+				'idDetalle':idDetalle, 
+				'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
+			},
+			success: function(data){
+				datos_carrito();
+				item_carrito();
+			},
+			dataType: 'json'
+		});
 
 	});
 
-	//Script para editar cantidad de productos
+	//Script para evaluar si el valor del input es cero
+	$('.item-carrito').on('keyup', 'input[name=Cantidad]', function(){
+		input_val = $(this).val();
+		form = $(this).closest('form').attr('id');
 
+		if (input_val == 0) {
+			$('.item-carrito form[id=' + form + '] a').text('Eliminar');
+			$('.item-carrito form[id=' + form + '] a').removeClass('btnItem-Actualizar');
+			$('.item-carrito form[id=' + form + '] a').addClass('btnItem-Eliminar');
+		} else{
+			$('.item-carrito form[id=' + form + '] a').text('Actualizar');
+			$('.item-carrito form[id=' + form + '] a').addClass('btnItem-Actualizar');
+			$('.item-carrito form[id=' + form + '] a').removeClass('btnItem-Eliminar');
+		};
+	});
 
 });

@@ -28,6 +28,10 @@ urlpatterns = patterns('',
     url(r'^registro/$', 'web.views.registrar', name='registrar'),
     url(r'^registrado/$', 'web.views.registrado', name='registrado'),
 
+    #URL'S AJAX---
+    url(r'^eliminar-item/$', 'web.views.eliminar_item_detalle', name='eliminar_item_detalle'),
+    #---URL'S AJAX
+
     # url(r'^pm/', include('pm.foo.urls')),
     
     #App de pedidos -->

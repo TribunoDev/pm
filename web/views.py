@@ -171,8 +171,8 @@ def agregar_carrito(request):
 
 				if Detalle_Carrito.objects.filter(Producto=codProd, Carrito=carrito).count() == 1:
 					detalle = Detalle_Carrito.objects.get(Producto = codProd, Carrito=carrito)
-					cantidad = detalle.Cantidad + int(cantidad)
-					detalle.Cantidad = cantidad
+					cantidadTotal = detalle.Cantidad + int(cantidad)
+					detalle.Cantidad = cantidadTotal
 					detalle.save()
 				else:
 					detalleCar = Detalle_Carrito(
@@ -181,7 +181,7 @@ def agregar_carrito(request):
 						Carrito = carrito
 						)
 					detalleCar.save()		
-	return render_to_response('mensaje-carrito.html', context_instance=RequestContext(request))
+	return render_to_response('mensaje-carrito.html', {'cantidad':cantidad}, context_instance=RequestContext(request))
 
 #Vista que retorna el total en el carrito
 def datos_carrito(request):
@@ -245,3 +245,10 @@ def actualizar_cantidad(request):
 			detalle.save()
 
 	return render_to_response('item-cantidad.html',{'item':detalle}, context_instance=RequestContext(request))
+
+def eliminar_item_detalle(request):
+	if request.is_ajax():
+		if request.method == 'POST':
+			idDetalle = request.POST['idDetalle']
+			detalle = Detalle_Carrito.objects.filter(id=idDetalle).delete()
+	return HttpResponse(simplejson.dumps({'dato':detalle}), mimetype='application/json')
