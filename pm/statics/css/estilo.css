@@ -297,16 +297,6 @@ html, body{
 	width: 100%;
 }
 
-#caja-detalle figure{
-	border: 1px solid #bdc3c7;
-	display: inline-block;
-	float: left;
-	margin-right: 5px;
-	padding: 0.2em;
-	position: relative;
-	width: 45%;
-}
-
 #caja-detalle img{
 	float: left;
 	position: relative;
@@ -619,6 +609,17 @@ html, body{
 	
 }
 
+.info-usuario ul{
+
+}
+
+.info-usuario .panel{
+	border-top: none;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	padding: 2em 2em;
+}
+
 .item-carrito{
 	border: 1px solid #bdc3c7;
 	border-radius: 3px;
@@ -850,10 +851,7 @@ html, body{
 	#btn-Carrito {
 		float: left;
 	}
-
-	#caja-detalle figure{
-		width: 100%;
-	}
+	
 	#logo{
 		display: block;
 		margin-bottom: 4px;

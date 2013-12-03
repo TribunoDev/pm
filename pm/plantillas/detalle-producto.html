@@ -10,9 +10,26 @@
                     </article>
                     <article class="mensaje"></article>
                     <article id="caja-detalle" class="pagina-caja1-2">
-                        <figure class="img-responsive" alt="Responsive image">
-                            <img src="{{MEDIA_URL}}{{detalle.Imagen}}" alt="Imagen del producto">
-                        </figure>
+                        <article class="slide_image">
+                            <figure id="no-template-pager" class="cycle-pager external">
+                                <!-- using thumbnail image files would be even better! -->
+                                <img src="http://jquery.malsup.com/cycle2/images/p1.jpg" width="20" height="20">
+                                <img src="http://jquery.malsup.com/cycle2/images/p2.jpg" width="20" height="20"> 
+                                <img src="http://jquery.malsup.com/cycle2/images/p3.jpg" width="20" height="20"> 
+                                <img src="http://jquery.malsup.com/cycle2/images/p4.jpg" width="20" height="20">
+                            </figure>
+                            <figure class="cycle-slideshow"
+                                data-cycle-fx=scrollHorz
+                                data-cycle-timeout=3000
+                                data-cycle-pager="#no-template-pager"
+                                data-cycle-pager-template=""
+                            >
+                                <img src="http://jquery.malsup.com/cycle2/images/p1.jpg">
+                                <img src="http://jquery.malsup.com/cycle2/images/p2.jpg">
+                                <img src="http://jquery.malsup.com/cycle2/images/p3.jpg">
+                                <img src="http://jquery.malsup.com/cycle2/images/p4.jpg">
+                            </figure>
+                        </article>
                         <div id="detalle-descripcion">
                             <p>Descripción:&nbsp;{{detalle.Descripcion}}</p>&nbsp;
                             <p>Precio: L.{{detalle.Precio}}</p>&nbsp;

@@ -222,4 +222,15 @@ $(document).on("ready", function(){
 		};
 	});
 
+	//Script para obtener la informacion del usuario 
+	$.ajax({
+		type: 	'GET',
+		url: 	'/obtener-info-usuario/',
+		data: 	{},
+		success: function(data){
+			$('.info-usuario .panel').html(data);
+		},
+		dataType: 'html'
+	});
+
 });

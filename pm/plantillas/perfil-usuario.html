@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Paper & More - Perfil de Usuario{% endblock %}
+
+{% block contenido %}
+	<div class="w-clearfix section contenido">
+		<div class="inicio-caja1">
+			<div class="contenido-paginas">
+				
+			</div>
+			<div class="cotenido-paginas">
+				<section class="pagina-contenido-caja">
+					<article class="pagina-caja1-1">
+						<div class="cotenido-paginas"><h4 class="titulo h4">Mi Cuenta</h4></div>
+					</article>
+					<article class="mensaje"></article>
+					<article class="items-carrito">
+							<div  class="item-carrito info-usuario">
+								<ul id="myTab" class="nav nav-tabs nav-justified">
+								  <li class="active"><a href="#">General</a></li>
+								  <li><a href="#">Creditos</a></li>
+								</ul>
+								<div class="panel panel-default">
+								</div>
+                    		</div>
+					</article>  
+				</section>
+				<section id="section-carrito" class="pagina-contenido-caja2">
+                    <div id="detalle-carrito">
+                        <div class="cotenido-paginas contenido-carrito">
+                            <h4 class="titulo h4">Carrito</h4>
+                        </div>
+                        <article class="total-item-carrito"></article>
+                    </div>
+                </section>
+			</div>
+		</div>
+	</div>
+{% endblock %}

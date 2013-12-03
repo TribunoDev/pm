@@ -211,7 +211,7 @@ def item_carrito(request):
 		detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
 		for item in detalle:
 			cantidad += item.Cantidad		
-	return HttpResponse(simplejson.dumps({'cantidad':cantidad}), mimetype='application/json')
+	return HttpResponse(simplejson.dumps({'cantidad':cantidad}), content_type='application/json')
 
 @login_required(login_url='/ingresar/')
 def carrito(request):
@@ -251,4 +251,22 @@ def eliminar_item_detalle(request):
 		if request.method == 'POST':
 			idDetalle = request.POST['idDetalle']
 			detalle = Detalle_Carrito.objects.filter(id=idDetalle).delete()
-	return HttpResponse(simplejson.dumps({'dato':detalle}), mimetype='application/json')
+	return HttpResponse(simplejson.dumps({'dato':detalle}), content_type='application/json')
+
+@login_required(login_url='/ingresar/')
+def perfil_usuario(request):
+	if not request.user.is_anonymous():
+		usuario = request.user
+		centinela = True
+	else:
+		centinela = False
+
+	return render_to_response('perfil-usuario.html',{'usuario':usuario,'centinela':centinela}, context_instance=RequestContext(request))
+
+def info_usuario(request):
+	if not request.user.is_anonymous():
+		usuario = request.user
+
+	usuario = User.objects.get(id=usuario.id)
+
+	return render_to_response('info-usuario.html',{'usuario':usuario}, context_instance=RequestContext(request))
