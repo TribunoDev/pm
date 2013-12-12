@@ -1,18 +1,19 @@
 # -*- coding:utf-8 -*-
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from web.models import *
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
-from django.utils import simplejson
+import json
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login
-from web.forms import SignUpForm, Detalle_CarritoForm
+from web.forms import *
 from datetime import date
 
+centinela = False
 #Vista que retorna la pagina de inicio
 def inicio(request):
 	if not request.user.is_anonymous():
@@ -44,7 +45,7 @@ def ingresar(request):
 		frmSesion = AuthenticationForm()
 	return render_to_response('inicio-sesion.html', context_instance=RequestContext(request))
 
-@login_required()
+@login_required(login_url='/ingresar/')
 def home(request):
 	usuario = request.user
 	return render_to_response('index.html',{'usuario':usuario, 'centinela':True}, context_instance=RequestContext(request))
@@ -52,6 +53,8 @@ def home(request):
 #Vista que retorna la pagina de registro de usuario
 def registrar(request):
 	if request.method=='POST':
+		telefono = request.POST['Telefono']
+		direccion = request.POST['Direccion']
 		frmUser = SignUpForm(request.POST)
 		if frmUser.is_valid():
 			#Procesar los datos con form.cleaned_data
@@ -69,7 +72,25 @@ def registrar(request):
 			#Guardar el nuevo usuario
 			user.save()
 
-			return HttpResponseRedirect(reverse('registrado'))
+			#Guardar la direccion del nuevo usuario
+			usuario = User.objects.get(username=usuario)
+			detalle_perfil = Detalle_Perfil(
+				Telefono = telefono,
+				Direccion = direccion,
+				Usuario = usuario
+				)
+			detalle_perfil.save()
+
+			#Crear un carrito por default para el usuario
+			c = Carrito(
+				Usuario = usuario,
+				Estado = Estado.objects.get(id=1)
+				)
+			c.save()
+
+			acceso = authenticate(username=usuario, password=contrasena)
+			login(request, acceso)
+			return HttpResponseRedirect('/home')
 	else:
 		frmUser = SignUpForm()
 
@@ -111,8 +132,9 @@ def ofertas(request):
 def catalogo_productos(request):
 	categorias = Categoria.objects.all()
 	subcategorias = SubCategoria.objects.all()
-	total_sub = SubCategoria.objects.count()
-	return render_to_response('categorias-productos.html', {'categorias':categorias, 'subcategorias':subcategorias}, context_instance=RequestContext(request))
+	producto = Producto.objects.all()
+	total = SubCategoria.objects.annotate(existencia=Sum('producto__Existencia'))
+	return render_to_response('categorias-productos.html', {'categorias':categorias, 'subcategorias':subcategorias, 'total':total}, context_instance=RequestContext(request))
 
 #Vista que retorna los productos filtrando por subcategorias
 def ver_subcategoria(request, id_subcat):
@@ -126,8 +148,9 @@ def ver_subcategoria(request, id_subcat):
 #Vista que retorna el detalle de cada producto
 def detalle_producto(request, id_producto):
 	detalle = get_object_or_404(Producto, pk=id_producto)
+	detalle_img = Detalle_Imagen.objects.filter(Producto = detalle)
 	if not request.user.is_anonymous():
-		return render_to_response('detalle-producto.html', {'detalle':detalle, 'usuario': request.user, 'centinela':True}, context_instance=RequestContext(request))
+		return render_to_response('detalle-producto.html', {'detalle':detalle, 'detalle_img':detalle_img, 'usuario': request.user, 'centinela':True}, context_instance=RequestContext(request))
 	else:
 		return render_to_response('detalle-producto.html', {'detalle':detalle}, context_instance=RequestContext(request))
 
@@ -187,42 +210,46 @@ def agregar_carrito(request):
 def datos_carrito(request):
 	cantidad = 0
 	precio = 0
+	estado = 0
+	carrito = 0
+	usuario = 0
 	if not request.user.is_anonymous():
 		usuario = request.user
 
 	if request.is_ajax():
-		estado = Estado.objects.get(id=1)
-		carrito = Carrito.objects.get(Usuario=usuario, Estado=estado)
-		detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
-		for item in detalle:
-			cantidad += item.Cantidad
-			precio += item.Producto.Precio * item.Cantidad
+		#if Carrito.objects.filter(Usuario=usuario, Estado=estado).count() != 0:
+			estado = Estado.objects.get(id=1)
+			carrito = Carrito.objects.get(Usuario=usuario, Estado=estado)
+			detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
+			for item in detalle:
+				cantidad += item.Cantidad
+				precio += item.Producto.Precio * item.Cantidad
 
-		return render_to_response('datos-carrito.html', {'cantidad': cantidad, 'subtotal':precio}, context_instance=RequestContext(request))
+	return render_to_response('datos-carrito.html', {'cantidad': cantidad, 'subtotal':precio}, context_instance=RequestContext(request))
 
+#Vista que retorna la cantidad de productos y mostrarlo en la pestaña "Carrito" del menu
 def item_carrito(request):
 	cantidad = 0
+	estado = 0
 	if not request.user.is_anonymous():
 		usuario = request.user
-
-	if request.is_ajax():
+	
+	#if Carrito.objects.filter(Usuario=usuario, Estado=estado).count() != 0:
 		estado = Estado.objects.get(id=1)
 		carrito = Carrito.objects.get(Usuario=usuario, Estado=estado)
 		detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
 		for item in detalle:
 			cantidad += item.Cantidad		
-	return HttpResponse(simplejson.dumps({'cantidad':cantidad}), content_type='application/json')
+	return HttpResponse(json.dumps({'cantidad':cantidad}), content_type='application/json')
 
+#Vista que retorna a la pagina de "Carrito"
 @login_required(login_url='/ingresar/')
 def carrito(request):
 	if not request.user.is_anonymous():
 		usuario = request.user
+	return render_to_response('carrito.html',{'usuario':usuario, 'centinela':True }, context_instance=RequestContext(request))
 
-	carrito = Carrito.objects.get(Usuario=usuario, Estado=1)
-	detalle = Detalle_Carrito.objects.filter(Carrito=carrito)
-
-	return render_to_response('carrito.html',{'usuario':usuario, 'centinela':True, 'detalle':detalle}, context_instance=RequestContext(request))
-
+#Vista que retorna formulario para editar cantidad de cada producto en carrito
 def form_editar_cantidad(request):
 	if request.is_ajax():
 		if request.method == 'POST':
@@ -230,6 +257,7 @@ def form_editar_cantidad(request):
 			detalle = Detalle_Carrito.objects.get(id=idDetalle)
 	return render_to_response('form-editar-cantidad.html', {'detalle':detalle}, context_instance=RequestContext(request))
 
+#Vista que actualiza la cantidad de productos en cada item del carrito
 def actualizar_cantidad(request):
 	if not request.user.is_anonymous():
 		usuario = request.user
@@ -246,13 +274,15 @@ def actualizar_cantidad(request):
 
 	return render_to_response('item-cantidad.html',{'item':detalle}, context_instance=RequestContext(request))
 
+#Vista que elimina un item del carrito
 def eliminar_item_detalle(request):
 	if request.is_ajax():
 		if request.method == 'POST':
 			idDetalle = request.POST['idDetalle']
 			detalle = Detalle_Carrito.objects.filter(id=idDetalle).delete()
-	return HttpResponse(simplejson.dumps({'dato':detalle}), content_type='application/json')
+	return HttpResponse(json.dumps({'dato':detalle}), content_type='application/json')
 
+#Vista que retorna a la pagina del perfil de usuario
 @login_required(login_url='/ingresar/')
 def perfil_usuario(request):
 	if not request.user.is_anonymous():
@@ -263,10 +293,28 @@ def perfil_usuario(request):
 
 	return render_to_response('perfil-usuario.html',{'usuario':usuario,'centinela':centinela}, context_instance=RequestContext(request))
 
+#Vista que devuelve informacion sobre el usuario
 def info_usuario(request):
+	usuario = False
+	perfil = False
 	if not request.user.is_anonymous():
 		usuario = request.user
+		usuario = User.objects.get(id=usuario.id)
+		perfil = Detalle_Perfil.objects.get(Usuario=usuario)
+	return render_to_response('info-usuario.html',{'usuario':usuario, 'perfil':perfil}, context_instance=RequestContext(request))
 
-	usuario = User.objects.get(id=usuario.id)
+def items_en_carrito(request):
+	carrito = 0
+	if not request.user.is_anonymous():
+		usuario = request.user
+		carrito = Carrito.objects.get(Usuario=usuario, Estado=1)
+	if Detalle_Carrito.objects.filter(Carrito=carrito).count() != 0:
+		detalle = Detalle_Carrito.objects.filter(Carrito=carrito)
+		return render_to_response('items-en-carrito.html',{'detalle':detalle}, context_instance=RequestContext(request))
+	else:
+		return render_to_response('no-hay-items-carrito.html', context_instance=RequestContext(request))
 
-	return render_to_response('info-usuario.html',{'usuario':usuario}, context_instance=RequestContext(request))
+#Vista que devuelve a la pagina ofertas
+def productos_ofertas(request):
+	ofertas = Producto.objects.filter(Oferta__exact=True)
+	return render_to_response('ofertas.html', {'datos':ofertas}, context_instance=RequestContext(request))

@@ -120,7 +120,11 @@ $(document).on("ready", function(){
 	item_carrito();
 
 	//Script para agregar datos de un nuevo carrito
-	$('#frmOrden').submit(function(e){
+	// $('#btnComprar').on('click', function(){
+	// 	$('.mensaje').slideDown("slow").delay(4000).slideUp("slow");
+	// });
+
+	$('#btnComprar').on('click', function(e){
 		e.preventDefault();
 		$.ajax({
 			type: 	'POST',
@@ -131,17 +135,18 @@ $(document).on("ready", function(){
 				'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
 			},
 			success: function(data){
-				$('#mensaje-carrito').slideDown("slow");
-				$('.mensaje').html(data);
+				$('#myModal').html(data);
 				datos_carrito();
 				item_carrito();
+
 			},
 			dataType: 'html'
 		});
+
 	});
 
 	//Script para el boton de editar item
-	$('.item-cantidad').on('click', '.btnItem-Editar', function(e){
+	$('.items-carrito').on('click', '.btnItem-Editar', function(e){
 		var idDetalle = $(this).attr('data-id');
 		var frmCantidad = $(this).closest('.item-cantidad').attr('data-id');
 		e.preventDefault();
@@ -160,8 +165,19 @@ $(document).on("ready", function(){
 
 	});
 
+	//Script para obtener datos de un carrito
+	$.ajax({
+		type: 	'GET',
+		url: 	'/obtener-datos-carrito/',
+		data: 	{},
+		success: function(data){
+			$('.items-en-carrito').html(data);
+		},
+		dataType: 'html'
+	});
+
 	//Script para actualizar la cantidad de cada producto
-	$('.item-cantidad').on('click', '.btnItem-Actualizar', function(e){
+	$('.items-carrito').on('click', '.btnItem-Actualizar', function(e){
 		e.preventDefault();
 		var form = $(this).closest('form').attr('id');
 		var frmCantidad = $(this).closest('.item-cantidad').attr('data-id');
@@ -185,7 +201,7 @@ $(document).on("ready", function(){
 	});
 
 	//Script para el boton de eliminar item
-	$('.item-carrito').on('click', '.btnItem-Eliminar', function(e){
+	$('.items-carrito').on('click', '.btnItem-Eliminar', function(e){
 		e.preventDefault();
 		var idDetalle = $(this).attr('data-id');
 		$(this).closest('.item-carrito').slideUp('slow');
@@ -207,7 +223,7 @@ $(document).on("ready", function(){
 	});
 
 	//Script para evaluar si el valor del input es cero
-	$('.item-carrito').on('keyup', 'input[name=Cantidad]', function(){
+	$('.items-carrito').on('keyup', 'input[name=Cantidad]', function(){
 		input_val = $(this).val();
 		form = $(this).closest('form').attr('id');
 
@@ -222,7 +238,7 @@ $(document).on("ready", function(){
 		};
 	});
 
-	//Script para obtener la informacion del usuario 
+	//Script para obtener la informacion del usuario
 	$.ajax({
 		type: 	'GET',
 		url: 	'/obtener-info-usuario/',
@@ -231,6 +247,17 @@ $(document).on("ready", function(){
 			$('.info-usuario .panel').html(data);
 		},
 		dataType: 'html'
+	});
+
+	//Script para agregar elementos css a controles de inicio de sesión
+	$('#frmRegUsuario label').addClass('col-sm-5 control-label');
+	$('#id_username').addClass('form-control input-lg');
+	$('#id_password').addClass('form-control input-lg');
+
+	//Active para imagenes miniatura en detalle
+	$('#no-template-pager img').on('click', function(){
+		$('#no-template-pager img').removeClass('active_img');
+		$(this).addClass('active_img');
 	});
 
 });

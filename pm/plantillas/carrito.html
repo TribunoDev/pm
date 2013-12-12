@@ -12,34 +12,7 @@
 						<div class="cotenido-paginas"><h4 class="titulo h4">Carrito de Compras</h4></div>
 					</article>
 					<article class="mensaje"></article>
-					<article class="items-carrito">
-						{% for item in detalle %}
-							<div  class="item-carrito">
-								<figure>
-									<img src="{{MEDIA_URL}}{{item.Producto.Imagen}}" alt="Imagen de Producto">
-								</figure>
-								<div class="item-descripcion">
-									<p>{{item.Producto.Descripcion}}</p>
-									<div class="item-eliminar">
-										<a class="btnItem-Eliminar" href="#" data-id="{{item.id}}">Eliminar</a>
-									</div>
-								</div>
-								<div class="item-precio-cantidad">
-									<div class="item-precio">
-										<label>Precio</label>
-										<p>{{item.Producto.Precio}}</p>
-									</div>
-									<div class="item-cantidad" data-id="form_{{item.id}}">
-										<label>Cantidad</label>
-										<div>
-											<p>{{item.Cantidad}}</p>
-											<a href="#" class="btnItem-Editar" data-id="{{item.id}}">Editar</a>
-										</div>
-									</div>
-								</div>
-                    		</div>
-                       	{% endfor %}
-					</article>  
+					<article class="items-carrito items-en-carrito"></article>  
 				</section>
 				<section id="section-carrito" class="pagina-contenido-caja2">
                     <div id="detalle-carrito">

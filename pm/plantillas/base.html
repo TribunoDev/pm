@@ -12,6 +12,7 @@
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/webflow.css">
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/estilo.css">
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/slider_image.css">
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/carrito.css"
 	<link rel="shortcut icon" href="{{STATIC_URL}}img/icono.png">
 	
 </head>
@@ -50,14 +51,14 @@
 			                	<span class="icon-bar"></span>
 			                	<span class="icon-bar"></span>
 			              	</button>
-			              	<a class="navbar-brand">P&M</a>
+			              	<a id="btnPM" class="navbar-brand">P&M</a>
 			            </div>
 			        	<nav id="menu" class="navbar-collapse collapse">
 			        		<ul class="nav navbar-nav">
 			            		<li class="active"><a href="/">Inicio</a></li>
 			            		<li><a href="/marcas/">Marcas</a></li>
 			            		<li class="dropdown">
-			            			<a href="#" class="dropdown-toggle" data-toggle="dropdown">Productos <b class="caret"></b></a>
+			            			<a id="btnProductos" href="#" class="dropdown-toggle" data-toggle="dropdown">Productos <b class="caret"></b></a>
 			            			<ul class="dropdown-menu" id="categorias-productos"></ul>
 		                		</li>
 			          		</ul>
@@ -107,7 +108,7 @@
 			</article>
 			<article id="caja2-foot">
 				<p>
-					<a href="#">Promociones y Ofertas</a> |
+					<a href="/ofertas/">Promociones y Ofertas</a> |
 					<a href="#">Empleos</a> |
 					<a href="#">Recomendar a un amigo</a> |
 					<a href="#">Privacidad y Seguridad</a> |
@@ -126,7 +127,8 @@
 	<script type="text/javascript" src="{{STATIC_URL}}js/jquery.cycle2.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/holder.js"></script>
-	<script type="text/javascript" src="{{STATIC_URL}}js/script.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/webflow.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/jquery.cookie.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/script.js"></script>
 </body>
 </html>

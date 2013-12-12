@@ -171,7 +171,6 @@ p {
   width: 90%;
   height: 100%;
   float: right;
-  border: 1px solid #080606;
 }
 .contenido-productos {
   position: relative;
@@ -255,12 +254,12 @@ p {
   border: 1px solid rgba(0, 0, 0, 0);
 }
 .elemento-producto {
-  border: 1px solid #bdc3c7;
+  border: 1px solid #bbd8db;
   border-radius: 5px;
   position: relative;
   display: inline-block;
   overflow: visible;
-  width: 30%;
+  width: 31.3%;
   margin-right: 1%;
   margin-bottom: 5px;
   margin-left: 1%;

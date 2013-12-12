@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block titulo %}Ofertas{% endblock %}
+{% block contenido %}
+	<section class="contenedor container">
+		<div class="row">
+			<article id="caja-contenido" class="col-xs-12 col-sm-8 col-md-9">
+				<div class="row">
+					<h2 class="titulo">Productos en Ofertas</h2>
+				</div>
+				<div  class="row">
+					<article class="cuerpo-contenido">
+						{% for elemento in datos %}
+						<div class="elemento-producto">
+							<figure class="elemento-producto-imagen">
+								
+							</figure>
+							<p class="descrip-producto"></p>
+							<p class="precio-producto"></p>
+							<div class="elemento-opciones">
+								<a id="detalleProducto" class="btn btn-info btn-lg btn-block btn-detalle" href="/detalle-producto/{{elemento.pk}}">Detalle</a>
+							</div>
+						</div>
+						{% endfor %}
+					</article>
+				</div>
+			</article>
+			<article>
+				
+			</article>
+		</div>
+	</section>
+{% endblock %}

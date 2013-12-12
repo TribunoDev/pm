@@ -2,6 +2,14 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class Detalle_Perfil(models.Model):
+	Direccion = models.CharField(max_length=250, help_text='Direccion residencial del usuario', verbose_name=u'Direccion', null=True, blank=True)
+	Telefono = models.IntegerField(null=True, blank=True, help_text='Teléfono del usuario', verbose_name=u'Telefono')
+	Usuario = models.ForeignKey(User, unique=True, help_text='Usuario al que pertenece la dirección', verbose_name=u'Usuario')
+
+	def __unicode__(self):
+		return self.Usuario.username
+
 class Categoria(models.Model):
 	Categoria = models.CharField(max_length=50, unique=True, help_text='Nombre de la categoría', verbose_name=u'Categoría')
 	Descripcion = models.TextField(help_text='Descripción de la categoría', verbose_name=u'Descripción')
@@ -28,6 +36,12 @@ class Producto(models.Model):
 	
 	def __unicode__(self):
 		return self.Descripcion
+
+class Detalle_Imagen(models.Model):
+	Imagen = models.ImageField(upload_to='img_detalle',verbose_name=u'Imágen')
+	Producto = models.ForeignKey(Producto, help_text='Producto asociado a la imagen', verbose_name=u'Producto')
+	def __unicode__(self):
+		return self.Producto.Descripcion +' - '+ str(self.Imagen)
 
 class Estado(models.Model):
 	Estado = models.CharField(max_length=45, help_text='Describe el estado de la orden', verbose_name=u'Estado de Orden')

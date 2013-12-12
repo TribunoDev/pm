@@ -8,28 +8,32 @@
             <div class="cotenido-paginas">
                 <section id="cuerpo-detalle" class="pagina-contenido-caja">
                     <article class="pagina-caja1-1">
-                        <div class="cotenido-paginas"><h3 class="titulo h4">Iniciar Sesión</h3></div>
+                        <div class="cotenido-paginas"><h2 class="titulo">Iniciar Sesión</h2></div>
                     </article>
                     <article id="formulario" class="pagina-caja1-2">
-                        <form role="form" id="frmRegUsuario" name="frmRegUsuario" method="post" action="{%  url 'django.contrib.auth.views.login' %}">{% csrf_token %}
-                          <div class="form-group">
-                            {{ form.username.label_tag }}
-                            {{ form.username }}
-                            <!--label for="txtUsuario">Usuario</label>
-                            <input type="text" class="form-control" id="username" name="username" placeholder="Nombre de usuario"-->
-                          </div>
-                          <div class="form-group">
-                            {{ form.password.label_tag }}
-                            {{ form.password }}
-                            <!--label for="txtPassword">Contraseña</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Ingrese una contraseña"-->
-                          </div>
-                          <input type="submit" class="btn btn-default" value="Ingresar" />
-                          <input type="hidden" name="next" value="{{ next }}" />
+                        <form role="form" class="form-horizontal" id="frmRegUsuario" name="frmRegUsuario" method="post" action="{%  url 'django.contrib.auth.views.login' %}">{% csrf_token %}
+                            <div class="form-group">
+                                <h3>{{ form.username.label_tag }}</h3>
+                                <div class="col-sm-6">
+                                    {{ form.username }}  
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <h3>{{ form.password.label_tag }}</h3>
+                                <div class="col-sm-6">
+                                    {{ form.password }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-5 col-sm-5">
+                                    <input type="submit" class="btn btn-default" value="Ingresar" />
+                                    <input type="hidden" name="next" value="{{ next }}" />
+                                </div>
+                            </div>
                         </form>
                     </article>
                 </section>
-                <section id="section-carrito" class="pagina-contenido-caja2">
+                <!--section id="section-carrito" class="pagina-contenido-caja2">
                     <div id="detalle-carrito">
                         <div class="cotenido-paginas contenido-carrito">
                             <h4 class="titulo h4">Carrito</h4>
@@ -39,7 +43,7 @@
                             <p>Cantidad: 5</p>
                         </div>
                     </div>
-                </section>
+                </section-->
             </div>
         </div>
     </div>

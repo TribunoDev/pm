@@ -6,28 +6,32 @@
             <div class="cotenido-paginas">
                 <section id="cuerpo-detalle" class="pagina-contenido-caja">
                     <article class="pagina-caja1-1">
-                        <div class="cotenido-paginas"><h4 class="titulo h4">Detalles del producto</h4></div>
+                        <div class="cotenido-paginas"><h2 class="titulo">Detalles del producto</h2></div>
                     </article>
-                    <article class="mensaje"></article>
+                    <article class="mensaje">
+                        <div id="mensaje-carrito" class="alert alert-success alert-dismissable">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            Se agregaron {{cantidad}} productos al carrito... <a href="#" class="alert-link">Verifique su carrito</a>
+                        </div>
+                    </article>
                     <article id="caja-detalle" class="pagina-caja1-2">
                         <article class="slide_image">
-                            <figure id="no-template-pager" class="cycle-pager external">
-                                <!-- using thumbnail image files would be even better! -->
-                                <img src="http://jquery.malsup.com/cycle2/images/p1.jpg" width="20" height="20">
-                                <img src="http://jquery.malsup.com/cycle2/images/p2.jpg" width="20" height="20"> 
-                                <img src="http://jquery.malsup.com/cycle2/images/p3.jpg" width="20" height="20"> 
-                                <img src="http://jquery.malsup.com/cycle2/images/p4.jpg" width="20" height="20">
-                            </figure>
                             <figure class="cycle-slideshow"
                                 data-cycle-fx=scrollHorz
-                                data-cycle-timeout=3000
+                                data-cycle-timeout=0
                                 data-cycle-pager="#no-template-pager"
                                 data-cycle-pager-template=""
                             >
-                                <img src="http://jquery.malsup.com/cycle2/images/p1.jpg">
-                                <img src="http://jquery.malsup.com/cycle2/images/p2.jpg">
-                                <img src="http://jquery.malsup.com/cycle2/images/p3.jpg">
-                                <img src="http://jquery.malsup.com/cycle2/images/p4.jpg">
+                                <img src="{{MEDIA_URL}}{{detalle.Imagen}}" >
+                                {% for imagen in detalle_img %}
+                                    <img src="{{MEDIA_URL}}{{imagen.Imagen}}">
+                                {% endfor %}
+                            </figure>
+                            <figure id="no-template-pager" class="cycle-pager external">
+                                <img src="{{MEDIA_URL}}{{detalle.Imagen}}" width="20" height="20" class="active_img">
+                                {% for imagen in detalle_img %}
+                                    <img src="{{MEDIA_URL}}{{imagen.Imagen}}" width="20" height="20">
+                                {% endfor %}
                             </figure>
                         </article>
                         <div id="detalle-descripcion">
@@ -38,8 +42,11 @@
                               <div class="form-group col-sm-6">
                                 <input class="form-control" type="number" id="txtCantidad" name="Cantidad" placeholder="Cantidad" min="1" value="1">
                               </div>
-                              <input type="submit" id="btnComprar" class="btn btn-success" value="Agregar a Carrito" />
-                              <input type="hidden" id="hddProducto" name="Producto" value="{{ detalle.Codigo }}" />
+                              <div id="caja-btnComprar" class="form-group">
+                                <button id="btnComprar" class="btn btn-success" type="submit"><span class='icon-carrito icon-carritocart' data-toggle="modal" data-target="#myModal"></span></button>
+                                <!--input type="submit" id="btnComprar" class="btn btn-success" value="" /-->
+                                <input type="hidden" id="hddProducto" name="Producto" value="{{ detalle.Codigo }}" /> 
+                              </div>
                             </form>
                         </div>
                         <div class="detalle-footer">

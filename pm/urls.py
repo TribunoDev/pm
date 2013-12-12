@@ -18,9 +18,9 @@ urlpatterns = patterns('',
     url(r'^detalle-producto/(?P<id_producto>\d+)/$', 'web.views.detalle_producto', name='detalle_producto'),
     url(r'^home/$', 'web.views.home', name='home'),
     url(r'^ingresar/$', login, {'template_name': 'inicio-sesion.html',}, name='login'),
-    url(r'^item-carrito/$', 'web.views.item_carrito', name='item_carrito'),
     url(r'^marcas/$', 'web.views.marcas', name='marcas'),
     url(r'^marcas/(?P<id_marca>\d+)/$', 'web.views.marca_producto', name='marca_producto'),
+    url(r'^ofertas/$', 'web.views.productos_ofertas', name='productos_ofertas'),
     url(r'^perfil-usuario/$', 'web.views.perfil_usuario', name='perfil_usuario'),
     url(r'^productos-en-oferta/$', 'web.views.ofertas', name='ofertas'),
     url(r'^productos-destacados/$', 'web.views.destacados', name='destacados'),
@@ -31,8 +31,10 @@ urlpatterns = patterns('',
 
     #URL'S AJAX---
     url(r'^eliminar-item/$', 'web.views.eliminar_item_detalle', name='eliminar_item_detalle'),
+    url(r'^item-carrito/$', 'web.views.item_carrito', name='item_carrito'),
+    url(r'^obtener-datos-carrito/$', 'web.views.items_en_carrito', name='items_en_carrito'),
     url(r'^obtener-info-usuario/$', 'web.views.info_usuario', name='info_usuario'),
-    
+
     #---URL'S AJAX
 
     # url(r'^pm/', include('pm.foo.urls')),

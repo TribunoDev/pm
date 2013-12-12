@@ -2,7 +2,6 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
-from django.utils import simplejson
 from pedidos.models import Pedido
 from datetime import datetime
 from django.core import serializers

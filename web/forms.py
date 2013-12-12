@@ -15,3 +15,8 @@ class Detalle_CarritoForm(ModelForm):
     class Meta:
         model = Detalle_Carrito
         fields = ['Producto', 'Cantidad']
+
+class Detalle_PerfilForm(ModelForm):
+    class Meta:
+        model = Detalle_Perfil
+    
