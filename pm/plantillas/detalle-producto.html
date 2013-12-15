@@ -22,10 +22,13 @@
                                 data-cycle-pager="#no-template-pager"
                                 data-cycle-pager-template=""
                             >
+                            
                                 <img src="{{MEDIA_URL}}{{detalle.Imagen}}" >
+                           
                                 {% for imagen in detalle_img %}
                                     <img src="{{MEDIA_URL}}{{imagen.Imagen}}">
                                 {% endfor %}
+                            
                             </figure>
                             <figure id="no-template-pager" class="cycle-pager external">
                                 <img src="{{MEDIA_URL}}{{detalle.Imagen}}" width="20" height="20" class="active_img">
@@ -39,9 +42,11 @@
                             <p>Precio: L.{{detalle.Precio}}</p>&nbsp;
                             <p>En exitencia: {{detalle.Existencia}} unidades</p>&nbsp;
                             <form role="form" id="frmOrden" name="frmOrden" method="post" action="/agregar-carrito/">{% csrf_token %}
-                              <div class="form-group col-sm-6">
-                                <input class="form-control" type="number" id="txtCantidad" name="Cantidad" placeholder="Cantidad" min="1" value="1">
-                              </div>
+                            <div>                                
+                                <div class="form-group col-sm-1">
+                                    <input class="form-control " type="number" id="txtCantidad" name="Cantidad" placeholder="Cantidad" min="1" value="1">
+                                </div>
+                            </div>
                               <div id="caja-btnComprar" class="form-group">
                                 <button id="btnComprar" class="btn btn-success" type="submit"><span class='icon-carrito icon-carritocart' data-toggle="modal" data-target="#myModal"></span></button>
                                 <!--input type="submit" id="btnComprar" class="btn btn-success" value="" /-->

@@ -316,5 +316,12 @@ def items_en_carrito(request):
 
 #Vista que devuelve a la pagina ofertas
 def productos_ofertas(request):
+	centinela = False
+	usuario = ""
+	if not request.user.is_anonymous():
+		usuario = request.user
+		centinela = True
 	ofertas = Producto.objects.filter(Oferta__exact=True)
-	return render_to_response('ofertas.html', {'datos':ofertas}, context_instance=RequestContext(request))
+	destacados = Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	detalle_img = Detalle_Imagen.objects.all()
+	return render_to_response('ofertas.html', {'datos':ofertas, 'centinela': centinela, 'usuario':usuario, 'destacados':destacados, 'detalle_img':detalle_img}, context_instance=RequestContext(request))

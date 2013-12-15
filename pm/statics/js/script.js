@@ -260,4 +260,8 @@ $(document).on("ready", function(){
 		$(this).addClass('active_img');
 	});
 
+	$('#s2').cycle({
+		fx: 'scrollDown'
+	});
+
 });
