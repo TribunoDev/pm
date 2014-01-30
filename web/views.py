@@ -12,15 +12,21 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login
 from web.forms import *
 from datetime import date
+from django.core.mail import EmailMessage
+import suds
+from suds.client import Client
+from datetime import datetime, timedelta, date
 
 centinela = False
+
 #Vista que retorna la pagina de inicio
 def inicio(request):
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
 	if not request.user.is_anonymous():
-		usuario = request.user
-		return render_to_response('index.html',{'usuario':usuario, 'centinela':True}, context_instance=RequestContext(request))
-	else:
-		return render_to_response('index.html', context_instance=RequestContext(request))
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+	return render_to_response('index.html',diccionario, context_instance=RequestContext(request))
 
 #Vista que retorna la ventana de inicio de sesion
 def ingresar(request):
@@ -47,14 +53,18 @@ def ingresar(request):
 
 @login_required(login_url='/ingresar/')
 def home(request):
-	usuario = request.user
-	return render_to_response('index.html',{'usuario':usuario, 'centinela':True}, context_instance=RequestContext(request))
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['usuario']=request.user
+	diccionario['centinela']=True
+	return render_to_response('index.html',diccionario, context_instance=RequestContext(request))
 
 #Vista que retorna la pagina de registro de usuario
 def registrar(request):
 	if request.method=='POST':
 		telefono = request.POST['Telefono']
 		direccion = request.POST['Direccion']
+		rnp=request.POST['RNP']
 		frmUser = SignUpForm(request.POST)
 		if frmUser.is_valid():
 			#Procesar los datos con form.cleaned_data
@@ -75,6 +85,7 @@ def registrar(request):
 			#Guardar la direccion del nuevo usuario
 			usuario = User.objects.get(username=usuario)
 			detalle_perfil = Detalle_Perfil(
+				RNP=rnp,
 				Telefono = telefono,
 				Direccion = direccion,
 				Usuario = usuario
@@ -101,131 +112,186 @@ def registrado(request):
 
 #Vista que devuelve las marcas de los productos
 def marcas(request):
-	marca = Marca.objects.all()
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	if not request.user.is_anonymous():
-		usuario = request.user
-		return render_to_response('marcas.html',{'marcas': marca, 'usuario':usuario, 'centinela':True}, context_instance=RequestContext(request))
-	else:
-		return render_to_response('marcas.html', {'marcas': marca}, context_instance=RequestContext(request))
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+		
+	return render_to_response('marcas.html', diccionario, context_instance=RequestContext(request))
 
 #Vista que retorna los productos por cada marca
 def marca_producto(request, id_marca):
-	marca = get_object_or_404(Marca, pk=id_marca)
-	productos = Producto.objects.filter(Descripcion__icontains=marca)
-	if request.user.is_authenticated():
-		usuario = request.user
-		return render_to_response('productos-marcas.html', {'marca':marca,'productos':productos,'usuario':usuario, 'centinela':True}, context_instance=RequestContext(request))
-	else:
-		return render_to_response('productos-marcas.html', {'marca':marca, 'productos':productos}, context_instance=RequestContext(request))
+	diccionario={}
+	marca=get_object_or_404(Marca, pk=id_marca)
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['productos']=Producto.objects.filter(Descripcion__icontains=marca)
+	diccionario['marca']=marca
+	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+	return render_to_response('productos-marcas.html', diccionario, context_instance=RequestContext(request))
 
 #Vista para devolver los productos con categoria "Novedades"
 def destacados(request):
-	destacados = Producto.objects.filter(Destacado__exact=True)
+	destacados = Producto.objects.filter(Destacado__exact=True)[:12]
 	return render_to_response('contenido-productos.html', {'datos': destacados}, context_instance= RequestContext(request))
 
 #Vista que devuelve los productos que estan en la categoria de Ofertas
 def ofertas(request):
-	ofertas = Producto.objects.filter(Oferta__exact=True)
+	ofertas = Producto.objects.filter(Oferta__exact=True)[:12]
 	return render_to_response('contenido-productos.html', {'datos':ofertas}, context_instance=RequestContext(request))
+
+def novedades(request):
+	mes=datetime.now().month
+	novedades = Producto.objects.filter(Fecha__month=mes)[:12]
+	return render_to_response('contenido-productos.html', {'datos':novedades}, context_instance=RequestContext(request))
+
 
 #Vista que genera los item de la pestaña productos en el menu principal
 def catalogo_productos(request):
-	categorias = Categoria.objects.all()
-	subcategorias = SubCategoria.objects.all()
+	diccionario={}
+	diccionario['categorias']=Categoria.objects.all()
+	diccionario['subcategorias']=SubCategoria.objects.all()
 	producto = Producto.objects.all()
-	total = SubCategoria.objects.annotate(existencia=Sum('producto__Existencia'))
-	return render_to_response('categorias-productos.html', {'categorias':categorias, 'subcategorias':subcategorias, 'total':total}, context_instance=RequestContext(request))
+	diccionario['total']=SubCategoria.objects.annotate(existencia=Sum('producto__Existencia'))
+	return render_to_response('categorias-productos.html', diccionario, context_instance=RequestContext(request))
 
 #Vista que retorna los productos filtrando por subcategorias
 def ver_subcategoria(request, id_subcat):
+	diccionario={}
 	subcat = get_object_or_404(SubCategoria, pk=id_subcat)
-	productos = Producto.objects.filter(Subcategoria=subcat)
+	diccionario['datos']=subcat
+	diccionario['productos']=Producto.objects.filter(Subcategoria=subcat)
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	if not request.user.is_anonymous():
-		return render_to_response('productos-subcategoria.html', {'datos':subcat ,'productos': productos, 'usuario': request.user, 'centinela': True}, context_instance=RequestContext(request))
-	else:
-		return render_to_response('productos-subcategoria.html', {'datos':subcat ,'productos': productos}, context_instance=RequestContext(request))
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+	return render_to_response('productos-subcategoria.html', diccionario, context_instance=RequestContext(request))
 
 #Vista que retorna el detalle de cada producto
 def detalle_producto(request, id_producto):
+	diccionario={}
 	detalle = get_object_or_404(Producto, pk=id_producto)
-	detalle_img = Detalle_Imagen.objects.filter(Producto = detalle)
+	diccionario['detalle_img'] = Detalle_Imagen.objects.filter(Producto = detalle)
+	diccionario['detalle']=detalle
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	diccionario['formulario']=ContactoForm()
 	if not request.user.is_anonymous():
-		return render_to_response('detalle-producto.html', {'detalle':detalle, 'detalle_img':detalle_img, 'usuario': request.user, 'centinela':True}, context_instance=RequestContext(request))
-	else:
-		return render_to_response('detalle-producto.html', {'detalle':detalle}, context_instance=RequestContext(request))
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+	return render_to_response('detalle-producto.html', diccionario, context_instance=RequestContext(request))
 
 #Vista que devuelve los resultados de una busqueda
 def buscar(request):
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	if request.method=='POST':
 		buscar = request.POST["txtBuscar"]
-		resultado = Producto.objects.filter(Descripcion__icontains=buscar)
+		diccionario['resultado']=Producto.objects.filter(Descripcion__icontains=buscar)
+		diccionario['dato']=buscar
 	if not request.user.is_anonymous():
-		return render_to_response('resultado-busqueda.html',{'resultado':resultado,'dato': buscar, 'usuario':request.user,'centinela':True}, context_instance=RequestContext(request))
-	else:
-		return render_to_response('resultado-busqueda.html',{'resultado':resultado,'dato': buscar}, context_instance=RequestContext(request))
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+	return render_to_response('resultado-busqueda.html',diccionario, context_instance=RequestContext(request))
 
 #Vista para generar una orden de compra
-@login_required(login_url='/ingresar/')
 def agregar_carrito(request):
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	if request.user.is_anonymous():
+	 	return HttpResponseRedirect('/ingresar/')
 	#Variables 
+	cantidad = 0
+	codProd = 0
 	usuario = request.user
 	idEstado = Estado.objects.get(id=1)
-	if request.is_ajax():
-		if request.method == 'POST':
-			formulario = Detalle_CarritoForm(request.POST)
-			if formulario.is_valid:
-				qset = (
-					Q(Usuario=usuario)&
-					Q(Estado=1)
+	if request.method == 'POST':
+		formulario = Detalle_CarritoForm(request.POST)
+		if formulario.is_valid:
+			qset = (
+				Q(Usuario=usuario)&
+				Q(Estado=1)
+				)
+			cantCar = Carrito.objects.filter(qset).count()
+			if cantCar == 0:
+				carrito = Carrito(
+					Usuario = usuario,
+					Estado = idEstado
 					)
-				cantCar = Carrito.objects.filter(qset).count()
-				if cantCar == 0:
-					carrito = Carrito(
-						Usuario = usuario,
-						Estado = idEstado
-						)
-					carrito.save()
-			
-				codProd = request.POST['Producto']
-				cantidad = request.POST['Cantidad']
+				carrito.save()
+		
+			codProd = request.POST['Producto']
+			cantidad = request.POST['Cantidad']
 
-				carrito = Carrito.objects.get(Estado=1, Usuario=usuario)
-				producto = Producto.objects.get(Codigo=codProd)
+			carrito = Carrito.objects.get(Estado=1, Usuario=usuario)
+			producto = Producto.objects.get(Codigo=codProd)
 
-				if Detalle_Carrito.objects.filter(Producto=codProd, Carrito=carrito).count() == 1:
-					detalle = Detalle_Carrito.objects.get(Producto = codProd, Carrito=carrito)
-					cantidadTotal = detalle.Cantidad + int(cantidad)
-					detalle.Cantidad = cantidadTotal
-					detalle.save()
-				else:
-					detalleCar = Detalle_Carrito(
-						Producto = producto,
-						Cantidad = int(cantidad),
-						Carrito = carrito
-						)
-					detalleCar.save()		
-	return render_to_response('mensaje-carrito.html', {'cantidad':cantidad}, context_instance=RequestContext(request))
+			if Detalle_Carrito.objects.filter(Producto=codProd, Carrito=carrito).count() == 1:
+				detalle = Detalle_Carrito.objects.get(Producto = codProd, Carrito=carrito)
+				cantidadTotal = detalle.Cantidad + int(cantidad)
+				detalle.Cantidad = cantidadTotal
+				detalle.save()
+			else:
+				detalleCar = Detalle_Carrito(
+					Producto = producto,
+					Cantidad = int(cantidad),
+					Carrito = carrito
+					)
+				detalleCar.save()
+		diccionario['cantidad']=cantidad
+		diccionario['usuario']=usuario
+		diccionario['centinela']=True
+		diccionario['marcas']=Marca.objects.all()
+		diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+		diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+		diccionario['detalle_img']= Detalle_Imagen.objects.all()
+
+	return HttpResponseRedirect('/carrito/')
 
 #Vista que retorna el total en el carrito
 def datos_carrito(request):
+	diccionario={}
 	cantidad = 0
 	precio = 0
 	estado = 0
 	carrito = 0
 	usuario = 0
-	if not request.user.is_anonymous():
-		usuario = request.user
-
+	
 	if request.is_ajax():
 		#if Carrito.objects.filter(Usuario=usuario, Estado=estado).count() != 0:
 			estado = Estado.objects.get(id=1)
-			carrito = Carrito.objects.get(Usuario=usuario, Estado=estado)
-			detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
-			for item in detalle:
-				cantidad += item.Cantidad
-				precio += item.Producto.Precio * item.Cantidad
+			if not request.user.is_anonymous():
+				usuario = request.user
+				carrito = Carrito.objects.get(Usuario=usuario, Estado=estado)
+				detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
+				for item in detalle:
+					cantidad += item.Cantidad
+					precio += item.Producto.Precio * item.Cantidad
+	diccionario['cantidad']=cantidad
+	diccionario['subtotal']=precio
+	diccionario['carrito']=carrito
 
-	return render_to_response('datos-carrito.html', {'cantidad': cantidad, 'subtotal':precio}, context_instance=RequestContext(request))
+	return render_to_response('datos-carrito.html',diccionario, context_instance=RequestContext(request))
 
 #Vista que retorna la cantidad de productos y mostrarlo en la pestaña "Carrito" del menu
 def item_carrito(request):
@@ -245,9 +311,15 @@ def item_carrito(request):
 #Vista que retorna a la pagina de "Carrito"
 @login_required(login_url='/ingresar/')
 def carrito(request):
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	if not request.user.is_anonymous():
-		usuario = request.user
-	return render_to_response('carrito.html',{'usuario':usuario, 'centinela':True }, context_instance=RequestContext(request))
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+	return render_to_response('carrito.html',diccionario, context_instance=RequestContext(request))
 
 #Vista que retorna formulario para editar cantidad de cada producto en carrito
 def form_editar_cantidad(request):
@@ -271,7 +343,6 @@ def actualizar_cantidad(request):
 			detalle = Detalle_Carrito.objects.get(Producto=producto, Carrito=carrito)
 			detalle.Cantidad = cantidad
 			detalle.save()
-
 	return render_to_response('item-cantidad.html',{'item':detalle}, context_instance=RequestContext(request))
 
 #Vista que elimina un item del carrito
@@ -285,13 +356,18 @@ def eliminar_item_detalle(request):
 #Vista que retorna a la pagina del perfil de usuario
 @login_required(login_url='/ingresar/')
 def perfil_usuario(request):
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
 	if not request.user.is_anonymous():
-		usuario = request.user
-		centinela = True
-	else:
-		centinela = False
-
-	return render_to_response('perfil-usuario.html',{'usuario':usuario,'centinela':centinela}, context_instance=RequestContext(request))
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+		diccionario['uPerfil']=User.objects.get(id=request.user.id)
+		diccionario['dPerfil']=Detalle_Perfil.objects.get(Usuario=request.user)
+		diccionario['marcas']=Marca.objects.all()
+		diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+		diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+		diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	return render_to_response('perfil-usuario.html',diccionario, context_instance=RequestContext(request))
 
 #Vista que devuelve informacion sobre el usuario
 def info_usuario(request):
@@ -303,16 +379,19 @@ def info_usuario(request):
 		perfil = Detalle_Perfil.objects.get(Usuario=usuario)
 	return render_to_response('info-usuario.html',{'usuario':usuario, 'perfil':perfil}, context_instance=RequestContext(request))
 
+#Vista que retorna en ajax los datos de los productos que ya estan en el carrito 
 def items_en_carrito(request):
+	diccionario={}
 	carrito = 0
 	if not request.user.is_anonymous():
 		usuario = request.user
 		carrito = Carrito.objects.get(Usuario=usuario, Estado=1)
 	if Detalle_Carrito.objects.filter(Carrito=carrito).count() != 0:
-		detalle = Detalle_Carrito.objects.filter(Carrito=carrito)
-		return render_to_response('items-en-carrito.html',{'detalle':detalle}, context_instance=RequestContext(request))
+		diccionario['detalle']=Detalle_Carrito.objects.filter(Carrito=carrito)
+		template = 'items-en-carrito.html'
 	else:
-		return render_to_response('no-hay-items-carrito.html', context_instance=RequestContext(request))
+		template = 'no-hay-items-carrito.html'
+	return render_to_response(template,diccionario, context_instance=RequestContext(request))
 
 #Vista que devuelve a la pagina ofertas
 def productos_ofertas(request):
@@ -325,3 +404,454 @@ def productos_ofertas(request):
 	destacados = Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
 	detalle_img = Detalle_Imagen.objects.all()
 	return render_to_response('ofertas.html', {'datos':ofertas, 'centinela': centinela, 'usuario':usuario, 'destacados':destacados, 'detalle_img':detalle_img}, context_instance=RequestContext(request))
+
+#Vista que retorna los datos del servicio de flete
+def servicio_flete(request):
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+	diccionario['lugar']=Servicio_Flete.objects.all()
+	return render_to_response('servicio-flete.html', diccionario, context_instance=RequestContext(request))
+
+def enviar_email(request):
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+	if request.method=='POST':
+		formulario=ContactoForm(request.POST)
+		if formulario.is_valid():
+			titulo = 'Mensaje desde la pagina web de Paper & More'
+			amigo=formulario.cleaned_data['amigo']
+			contenido=formulario.cleaned_data['mensaje'] + "\n"
+			contenido += 'Comunicarse a: ' + formulario.cleaned_data['correo']
+			correo=EmailMessage(titulo, contenido, to=[amigo])
+			correo.send()
+		else:
+			formulario = ContactoForm()
+	return render_to_response('email-enviado.html',diccionario, context_instance=RequestContext(request))
+
+def envio_datos_pago(request):
+	if not request.user.is_anonymous():
+		if request.method=='POST':
+			carrito = Carrito.objects.get(Usuario=request.user, Estado=Estado.objects.get(pk=1))
+			detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
+			precio=0
+			for item in detalle:
+				precio += item.Producto.Precio * item.Cantidad
+			Tot=precio
+
+			if Tot >= 15000:
+				return HttpResponseRedirect('/enviar-direccion/')
+			if Tot<15000:
+				return HttpResponseRedirect('/enviar-pago-carrito/')
+
+def envio_direccion(request):
+	estado=Estado.objects.get(pk=1)
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+		diccionario['frmDireccion']=Direccion_OrdenForm()
+		diccionario['direccion']=Direccion_Orden.objects.filter(Usuario=request.user)
+		diccionario['carrito']=Carrito.objects.get(Usuario=request.user, Estado=estado)
+		return render_to_response('enviar-direccion-orden.html', diccionario, context_instance=RequestContext(request))
+	else:
+		HttpResponseRedirect('/ingresar/')
+		
+
+def envio_pago(request):
+	cantidad=0
+	precio=0
+	diccionario={}
+	diccionario['frmDireccion']=Direccion_OrdenForm()
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+		estado = Estado.objects.get(id=1)
+		carrito = Carrito.objects.get(Usuario=request.user, Estado=estado)
+		detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
+		for item in detalle:
+			cantidad += item.Cantidad
+			precio += item.Producto.Precio * item.Cantidad
+		diccionario['cantidad']=cantidad
+		diccionario['subtotal']=precio
+		diccionario['carrito']=carrito
+
+		anos=[]
+		anoActual = date.today()
+		anoMax = anoActual + timedelta(7300)
+		while anoActual <= anoMax:
+			anos.append(anoActual)
+			anoActual += timedelta(365)
+
+		diccionario['anos']=anos
+
+	if request.method == 'POST':
+		idDir=request.POST['idDireccion']
+		diccionario['direccion']=Direccion_Orden.objects.get(Usuario=request.user, pk=idDir)
+		dire=Direccion_Orden.objects.get(pk=idDir)
+		diccionario['total']=precio+dire.Region.Precio
+		diccionario['region']=dire
+				
+	return render_to_response('enviar-pago.html', diccionario, context_instance=RequestContext(request))
+
+def envio_pago_directo(request):
+	cantidad=0
+	precio=0
+	diccionario={}
+	diccionario['usuario']=request.user
+	diccionario['centinela']=True
+	carrito=Carrito.objects.get(Usuario=request.user, Estado=Estado.objects.get(pk=1))
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
+	anos=[]
+	anoActual = date.today()
+	anoMax = anoActual + timedelta(7300)
+	while anoActual <= anoMax:
+		anos.append(anoActual)
+		anoActual += timedelta(365)
+
+	diccionario['anos']=anos
+	for item in detalle:
+		cantidad += item.Cantidad
+		precio += item.Producto.Precio * item.Cantidad
+	diccionario['cantidad']=cantidad
+	diccionario['subtotal']=precio
+	diccionario['carrito']=carrito
+	return render_to_response('enviar-pago2.html', diccionario, context_instance=RequestContext(request))
+
+
+
+def procesar_pago(request):
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	if not request.user.is_anonymous():
+		usuario = request.user
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+	else:
+		HttpResponseRedirect('/ingresar/')
+	precio=0
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+
+	if request.method=='POST':
+		nT=request.POST['codTar']
+		mT=request.POST['meses']
+		aT=request.POST['anos']
+		cvv=request.POST['CVV']
+		fT=aT+mT
+		tPago=request.POST['tipoPago']
+		idDir=request.POST['idDireccion']
+		carrito = Carrito.objects.get(Usuario=request.user, Estado=Estado.objects.get(pk=1))
+		detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
+		for item in detalle:
+			precio += item.Producto.Precio * item.Cantidad
+		
+		if len(idDir) > 0:
+			dire=Direccion_Orden.objects.get(pk=idDir)
+			Tot=precio+dire.Region.Precio
+		else:
+			Tot=precio
+
+		url='https://dpp.credomatic.com:50581/WebServices/CSP/Authorizer2/Authorize.asmx?WSDL'
+		cli = Client(url)
+
+		aut = cli.factory.create('clsAuthenticationHeader')
+		aut.UserName='hn_wusr_dev'
+		aut.Password='WsrHn_2013'
+
+		pet = cli.factory.create('clsWSRequestData')
+		pet.transactionType = 'SALE'
+		pet.terminalId = 'PRUPAM01'
+		pet.entryMode = 'M'
+		pet.accountNumber = nT
+		pet.expirationDate = fT
+		pet.totalAmount = Tot
+
+		diccionario['carrito']=carrito
+		#diccionario['cDir']=cDir
+
+		try:
+			template=0
+			res = cli.service.executeTransaction(aut, pet)
+			res.responseCode='05'
+			if res.responseCode=='05':
+				car=Carrito.objects.get(Usuario=usuario, Estado=Estado.objects.get(pk=1))
+				car.Estado=Estado.objects.get(pk=2)
+				car.save()
+				genOrd=Orden(
+						Fecha=date.today(),
+						Carrito=car,
+						Estado=Orden_Estado.objects.get(pk=1),
+					)
+				genOrd.save()
+				if len(idDir) > 0:
+					genOrd=Orden.objects.get(Carrito=car)
+					genOrd.Direccion=Direccion_Orden.objects.get(pk=idDir)
+					genOrd.save()
+
+				datosTrasn=DatosTransaccion(
+						Orden=Orden.objects.get(Carrito=car),
+						NumeroTransaccion=res.transactionId,
+						NumeroReferencia=res.referenceNumber,
+						NumeroAutorizacion=res.authorizationNumber,
+					)
+				datosTrasn.save()
+
+
+				diccionario['resp']=res
+				template='transaccion-exitosa.html'
+				#template='transaccion-denegada.html'
+				o = Orden.objects.get(Carrito=car)
+				d=Detalle_Carrito.objects.filter(Carrito=car)
+				titulo = 'Orden de Compra desde la tienda online.'
+				desde='no_reply@pm.hn'
+				amigo='mjbc007@gmail.com'
+				html='<h2>Detalle de Orden</h2>'
+				html='<p>Numero de Orden: '+ str(o.id) +'</p>'
+				html='<p>Nombre del Cliente: '+ str(o.Carrito.Usuario.username) +'</p>'
+				html+='<table>'
+				html+='<thead>'
+				html+='<tr>'
+				html+='<th>Codigo del Producto</th>'
+				html+='<th>Descripcion</th>'
+				html+='<th>Cantidad</th>'
+				html+='<th>Precio</th>'
+				html+='</tr>'
+				html+='</thead>'
+				html+='<tbody>'
+				for item in d:
+					html+='<tr>'
+					html+='<td>'+ str(item.Producto.Codigo) +'</td>'
+					html+='<td>'+ str(item.Producto.Descripcion) +'</td>'
+					html+='<td>'+ str(item.Cantidad) +'</td>'
+					html+='<td>'+ str(item.Producto.Precio) +'</td>'
+					html+='</tr>'
+				html+='</tbody>'
+				html+='</table>'
+
+				msg=EmailMessage(titulo,html, desde, [amigo])
+				msg.content_subtype='html'
+				msg.send()
+
+			if res.responseCode=='00':
+				template='transaccion-denegada.html'
+			if res.responseCode=='NA':
+				template='sin-sistema.html'
+				diccionario['resp']=res
+		except suds.WebFault, e:
+			diccionario['error']=e
+			
+	return render_to_response(template, diccionario, context_instance=RequestContext(request))
+
+def guardar_direccion(request):
+	cantidad=0
+	precio=0
+	diccionario={}
+	anos=[]
+	anoActual = date.today()
+	anoMax = anoActual + timedelta(7300)
+	while anoActual <= anoMax:
+		anos.append(anoActual)
+		anoActual += timedelta(365)
+	diccionario['anos']=anos
+	if request.method == 'POST':
+		frmDir = Direccion_OrdenForm(request.POST)
+		if frmDir.is_valid():
+			contacto = frmDir.cleaned_data['Nombre']
+			ciudad = frmDir.cleaned_data['Ciudad']
+			idRegion = request.POST['Region']
+			#region = Region.objects.get(id=idRegion)
+			pais = frmDir.cleaned_data['Pais']
+			direccion = frmDir.cleaned_data['Direccion']
+			telefono = frmDir.cleaned_data['Telefono']
+			Dir = Direccion_Orden(
+					Nombre=contacto,
+					Direccion=direccion,
+					Ciudad=ciudad,
+					Region=Region.objects.get(pk=idRegion),
+					Pais=pais,
+					Telefono=telefono,
+					Usuario=request.user
+				)
+			Dir.save()
+			diccionario['direccion']=Direccion_Orden.objects.get(Nombre=contacto, Direccion=direccion, Ciudad=ciudad, Region=idRegion, Pais=pais, Telefono=telefono, Usuario=request.user)
+			diccionario['usuario']=request.user
+			diccionario['centinela']=True
+			carrito=Carrito.objects.get(Usuario=request.user, Estado=Estado.objects.get(pk=1))
+			diccionario['marcas']=Marca.objects.all()
+			diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+			diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+			diccionario['detalle_img']= Detalle_Imagen.objects.all()
+			detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
+			region=Region.objects.get(pk=idRegion)
+			for item in detalle:
+				cantidad += item.Cantidad
+				precio += item.Producto.Precio * item.Cantidad
+			diccionario['cantidad']=cantidad
+			diccionario['subtotal']=precio
+			diccionario['total']=precio+region.Precio
+			diccionario['carrito']=carrito
+			diccionario['region']=region
+			
+			return render_to_response('enviar-pago.html', diccionario, context_instance=RequestContext(request))
+			#return HttpResponse(json.dumps({'texto':texto}), content_type='application/json')
+		else:
+			return render_to_response('enviar-pago.html', diccionario, context_instance=RequestContext(request))
+
+def editar_perfil(request):
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+		diccionario['uPerfil']=User.objects.get(id=request.user.id)
+		diccionario['dPerfil']=Detalle_Perfil.objects.get(Usuario=request.user)
+		diccionario['marcas']=Marca.objects.all()
+		diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+		diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+		diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	return render_to_response('editar-perfil.html', diccionario, context_instance=RequestContext(request))
+
+def actualizar_perfil(request):
+	if not request.user.is_anonymous():
+		if request.method=='POST':
+			nombre=request.POST['Nombre']
+			apellido=request.POST['Apellido']
+			email=request.POST['Correo']
+			usuario=request.POST['Usuario']
+			telefono=request.POST['Telefono']
+			direccion=request.POST['Direccion']
+
+			u=User.objects.get(pk=request.user.id)
+			d=Detalle_Perfil.objects.get(Usuario=request.user)
+
+			u.first_name=nombre
+			u.last_name=apellido
+			u.email=email
+			u.username=usuario
+			d.Telefono=telefono
+			d.Direccion=direccion
+			u.save()
+			d.save()
+
+		return HttpResponseRedirect('/perfil-usuario/')
+	else:
+		return HttpResponseRedirect('/ingresar/')
+
+def editar_contrasena(request):
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+		diccionario['marcas']=Marca.objects.all()
+		diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+		diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+		diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	return render_to_response('editar-contrasena.html', diccionario, context_instance=RequestContext(request))
+
+def actualizar_contrasena(request):
+	error=0
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	if not request.user.is_anonymous():
+		usuario=User.objects.get(pk=request.user.id)
+		if request.method=='POST':
+			cNueva=request.POST['cNueva']
+			usuario.set_password(cNueva)
+			usuario.save()
+			return HttpResponseRedirect('/perfil-usuario/')
+	else:
+		return HttpResponseRedirect('/ingresar/')
+
+def historial_compra(request):
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+		diccionario['compras']=Orden.objects.all()
+	return render_to_response('historial-compra.html',diccionario, context_instance=RequestContext(request))
+	
+def detalle_compra(request, id_orden):
+	precio=0
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+	orden = get_object_or_404(Orden, pk=id_orden)
+	diccionario['orden']=orden
+	detalle=Detalle_Carrito.objects.filter(Carrito=orden.Carrito)
+	for item in detalle:
+		precio += item.Producto.Precio * item.Cantidad
+	Tot=precio
+	diccionario['detalle']=detalle
+	diccionario['Tot']=Tot
+	return render_to_response('detalle-compra.html', diccionario, context_instance=RequestContext(request))
+
+def historial_credito(request):
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+		diccionario['creditos']=Credito.objects.all().order_by('Fecha')
+	return render_to_response('historial-credito.html', diccionario, context_instance=RequestContext(request))
+
+def detalle_credito(request, id_credito):
+	precio=0
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+	credito = get_object_or_404(Credito, pk=id_credito)
+	diccionario['pagos']=Pagos.objects.filter(Credito=credito)
+	diccionario['credito']=credito
+	return render_to_response('detalle-credito.html', diccionario, context_instance=RequestContext(request))

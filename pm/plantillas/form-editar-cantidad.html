@@ -1,4 +1,4 @@
-<form action="/actualizar-cantidad/" role="form" id="frmCant_{{detalle.id}}">
+<form action="/actualizar-cantidad/" role="form" id="frmCant_{{detalle.id}}" class="frmCant">
 	<input type="text"class="form-control" name="Cantidad" value="{{detalle.Cantidad}}" min="1">
 	<input type="hidden" name="Producto" value="{{detalle.Producto.pk}}">
 	<a href="#" class="btnItem-Actualizar" data-id="{{detalle.id}}">Actualizar</a>

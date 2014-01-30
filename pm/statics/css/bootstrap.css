@@ -690,7 +690,7 @@ blockquote:after {
 
 address {
   display: block;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   font-style: normal;
   line-height: 1.428571429;
 }
@@ -4955,7 +4955,7 @@ a.list-group-item.active > .badge,
   display: block;
   height: auto;
   max-width: 100%;
-  padding: 4px;
+  padding: 14px;
   line-height: 1.428571429;
   background-color: #ffffff;
   border: 1px solid #dddddd;
@@ -4987,7 +4987,7 @@ a.thumbnail:focus {
 
 .alert {
   padding: 15px;
-  margin-bottom: 20px;
+  /*margin-bottom: 20px;*/
   border: 1px solid transparent;
   border-radius: 4px;
 }

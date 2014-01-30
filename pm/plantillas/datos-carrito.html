@@ -1,4 +1,27 @@
 <div class="datos-carrito">
-	<p>Productos: {{cantidad}}</p>
-	<p>Sub-total: {{subtotal}}</p>
+	<div class="col-sm-offset-4 col-sm-12">
+		<h3>Detalle de Factura</h3>
+	</div>
+	<div class="espacio"></div>
+	<ul class="nav nav-pills nav-stacked">
+	  <li>
+	      <span class="badge pull-right">{{cantidad}}</span>
+	     <label>Cantidad de Productos:</label>
+	  </li>
+	  <li><span class="badge pull-right">L. {{subtotal}}</span><label>Sub-total:</label></li>
+	</ul>
 </div>
+<form action="/enviar-datos-pago/" method="post" class="col col-sm-12">{% csrf_token %}
+	<!--div class="row">
+		<div class="col col-sm-offset-6 col-sm-4">
+	      <div class="checkbox">
+	        <label>
+	          <input type="checkbox"> Servicio de envío -
+	        </label>
+	        <a href="#">(Ver precios)</a>
+	      </div>
+	    </div>
+	</div-->
+	<input id="btnPagar" type="submit" class="btn btn-success" value="Realizar Pago">
+	<input type="hidden" name="txtCarrito" value="{{carrito.pk}}">
+</form>

@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% block titulo %}Direccion del Pedido{% endblock %}
+{% block contenido %}
+	<div class="row">
+		<article id="caja-contenido" class="col-xs-12 col-sm-8 col-md-9">
+			<div class="contenido-titulo row">
+				<h2 class="titulo">Dirección del Pedido</h2>
+			</div>
+			<div  class="row">
+				<article class="cuerpo-contenido row">
+					<article class="producto-elemento row">
+						<form id="frmDireccion" action="/guardar-direccion/" method="post" class="form-horizontal" role="form">{% csrf_token %}
+							<div id="panel-direccion" class="panel panel-default">
+								<div class="panel-heading">Registra la dirección de envío</div>
+							  	<div class="panel-body">
+									<div class="form-group row">
+									    <div class="col-sm-7">
+									    	<label class=" control-label">Nombre del contacto</label>
+									      	{{frmDireccion.Nombre}}
+									    </div>
+									</div>
+									<div class="form-group row">
+									    <div class="col-sm-4">
+									    	<label class="control-label">Ciudad:</label>
+									      {{frmDireccion.Ciudad}}
+									    </div>
+									    <div class="col-sm-4">
+									    	<label class="control-label">Región:</label>
+									      {{frmDireccion.Region}}
+									    </div>
+									    <div class="col-sm-4">
+									    	<label class="control-label">País:</label>
+									     	{{frmDireccion.Pais}}
+									    </div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Dirección:</label>
+									    <div class="col-sm-9">
+									      {{frmDireccion.Direccion}}
+									    </div>
+									</div>
+									<div class="form-group row">
+									    <div class="col-sm-4">
+									    	<label class="control-label">Teléfono:</label>
+									      	{{frmDireccion.Telefono}}
+									    </div>
+									</div>
+							 	</div>
+							 	<div class="panel-body">
+								<div class="col-sm-offset-10">
+									<button id="btnGuardarDireccion" type="submit" class="btn btn-success">Procesar Pago</button>
+								</div>
+							</div>
+							</div>
+						</form>
+					</article>
+					<article class="producto-elemento row">
+						<div id="panel-direccion" class="panel panel-default">
+							<div class="panel-heading">Selecciona la dirección </div>
+							<div id="panelDireccion" class="panel-body">
+							<div class="row ">
+									{% for itemDireccion in direccion %}
+									<form id="itemDireccion" action="/enviar-pago/" method="post" class="col-sm-6">{%  csrf_token %}
+										<input type="hidden" name="idDireccion" value="{{itemDireccion.pk}}">
+											<address>
+												<strong>{{itemDireccion.Nombre}}</strong><br>
+												{{itemDireccion.Direccion}}<br>
+												{{itemDireccion.Ciudad}}, {{itemDireccion.Region}}<br>
+												{{itemDireccion.Pais}} ({{itemDireccion.Postal}})<br>
+												<abbr title="Phone">Tel:</abbr> {{itemDireccion.Telefono}}
+											</address>
+											<p>
+											  <button type="submit" class="btn btn-primary btn-xs">Seleccionar</button>
+											</p>
+									</form>
+									{% endfor %}
+							</div>
+							</div>
+						</div>
+					</article>
+				</article>
+			</div>
+		</article>
+		<article id="contenido-lateral" class="hidden-xs col-sm-4 col-md-3 contenido-lateral" >
+			<div class="row">
+				<div class="row">
+					<h2 class="titulo">Ofertas</h2>
+				</div>
+				<div  class="cuerpo-contenido row">
+					{% for item in ofertas %}
+					<article class="producto-elemento row">
+						<div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
+						<div class="row">
+							<figure id="s2" class="s2 demo">
+								<img src="{{MEDIA_URL}}{{item.Imagen}}">
+								{% for img in detalle_img %}
+									{% if img.Producto == item %}
+										<img src="{{MEDIA_URL}}{{img.Imagen}}">
+									{% endif %}
+								{% endfor %}
+							</figure>
+							<div class="contenido-lateral-precio">
+								<div class="row">
+									{% load humanize %}
+									<h3 ><span class="label label-danger">L.{{item.Precio|intcomma}}</span></h3>
+								</div>
+								<div class="row producto-caja-btn">
+                                    <form method="post" action="/agregar-carrito/">{% csrf_token %}
+                                        <input type="hidden" value="{{item.pk}}" name="Producto">
+                                        <input type="hidden" value="1" name="Cantidad">
+                                        <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.pk}}" class="btn btn-default" role="button">Ver</a></p>
+                                    </form>
+                                </div>
+							</div>
+						</div>
+						<div class="row"><p>{{item.Descripcion|truncatewords:4}}</p></div>
+					</article>
+					{% endfor %}
+				</div>
+			</div>
+			<div class="row espacio"></div>
+			<div class="row">
+				<div class="row">
+					<h2 class="titulo">Destacados</h2>
+				</div>
+				<div  class="cuerpo-contenido row">
+					{% for item in destacados %}
+					<article class="producto-elemento row">
+						<div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
+						<div class="row">
+							<figure id="s2" class="s2 demo">
+								<img src="{{MEDIA_URL}}{{item.Imagen}}">
+								{% for img in detalle_img %}
+									{% if img.Producto == item %}
+										<img src="{{MEDIA_URL}}{{img.Imagen}}">
+									{% endif %}
+								{% endfor %}
+							</figure>
+							<div class="contenido-lateral-precio">
+								<div class="row">
+									{% load humanize %}
+									<h3 ><span class="label label-success">L.{{item.Precio|intcomma}}</span></h3>
+								</div>
+								<div class="row producto-caja-btn">
+                                    <form method="post" action="/agregar-carrito/">{% csrf_token %}
+                                        <input type="hidden" value="{{item.pk}}" name="Producto">
+                                        <input type="hidden" value="1" name="Cantidad">
+                                        <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.pk}}" class="btn btn-default" role="button">Ver</a></p>
+                                    </form>
+                                </div>
+							</div>
+						</div>
+						<div class="row"><p>{{item.Descripcion|truncatewords:4}}</p></div>
+					</article>
+					{% endfor %}
+				</div>
+			</div>
+		</article>
+	</div>
+{% endblock %}

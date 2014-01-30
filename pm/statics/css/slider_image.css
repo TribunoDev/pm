@@ -1,5 +1,4 @@
 #no-template-pager{
-	border-top: 1px solid #bdc3c7;
 	display: inline-block;
 	float: left;
 	padding: 4px 0;
@@ -11,10 +10,11 @@
 	display: block;
 	float: left;
 	height: auto;
-	margin: 2px 0;
+	margin: 6px 0;
 	padding: 0 0.5em;
 	position: relative;
-	width: 15%;
+	/*idth: 15%;*/
+	width: 45px;
 }
 
 .active_img{

@@ -1,28 +1,77 @@
+<div class="row titulo-items hidden-xs">
+	<div class="col col-sm-8"><label>Producto</label></div>
+	<div class="col col-sm-4">
+		<div class="row titulo-precio-cantidad">
+			<div class="col col-sm-6"><label>Precio</label></div>
+			<div class="col col-sm-6"><label>Cantidad</label></div>
+		</div>
+	</div>
+</div>
 {% for item in detalle %}
 	<div  class="item-carrito">
-		<figure>
-			<img src="{{MEDIA_URL}}{{item.Producto.Imagen}}" alt="Imagen de Producto">
-		</figure>
-		<div class="item-descripcion">
-			<p>{{item.Producto.Descripcion}}</p>
-			<div class="item-eliminar">
-				<a class="btnItem-Eliminar" href="#" data-id="{{item.id}}">Eliminar</a>
+		<div class="col col-sm-8">
+			<figure class="col col-xs-3 col-sm-3">
+				<img src="{{MEDIA_URL}}{{item.Producto.Imagen}}" alt="Imagen de Producto">
+			</figure>
+			<div class="item-descripcion col col-xs-9 col-sm-9">
+				<h3>{{item.Producto.Descripcion}}</h3>
+				<div class="item-eliminar">
+					<a class="btnItem-Eliminar" href="#" data-id="{{item.id}}">Eliminar</a>
+				</div>
 			</div>
 		</div>
-		<div class="item-precio-cantidad">
-			<div class="item-precio">
-				<label>Precio</label>
-				<p>{{item.Producto.Precio}}</p>
+		<div class="col col-xs-12 col-sm-4">
+			<div class="row titulo-precio-cantidad visible-xs">
+				<div class="col col-xs-5">
+					<label>Precio</label>
+				</div>
+				<div class="col col-xs-5">
+					<label>Cantidad</label>
+				</div>
 			</div>
-			<div class="item-cantidad" data-id="form_{{item.id}}">
-				<label>Cantidad</label>
-				<div>
-					<p>{{item.Cantidad}}</p>
-					<a href="#" class="btnItem-Editar" data-id="{{item.id}}">Editar</a>
+			<div class="row item-precio-cantidad">
+				<div class="col item-precio col-xs-6 col-sm-6">
+					<p>L.{{item.Producto.Precio}}</p>
+				</div>
+				<div class="col item-cantidad col-xs-6 col-sm-6" data-id="form_{{item.id}}">
+					<div>
+						<p>{{item.Cantidad}}</p>
+						<a href="#" class="btnItem-Editar" data-id="{{item.id}}">Editar</a>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	<!--div id="item-carrito"  class="item-carrito visible-xs">
+		<div class="col col-xs-12">
+			<div class="row">
+				<figure class="col col-xs-4">
+					<img src="{{MEDIA_URL}}{{item.Producto.Imagen}}" alt="Imagen de Producto">
+				</figure>
+				<div class="item-descripcion col col-xs-8">
+					<div class="row">
+						<div class="col col-xs-6">
+							<label>Pecio</label>
+						</div>
+						<div class="col col-xs-6">
+							<label>Cantidad</label>
+						</div>
+					</div>
+					<div class="row item-precio-cantidad">
+						<div class="col col-xs-6">
+							<p>{{item.Producto.Precio}}</p>
+						</div>
+						<div class="col col-xs-6 item-cantidad" data-id="form_{{item.id}}">
+							<div>
+								<p>{{item.Cantidad}}</p>
+								<a href="#" class="btnItem-Editar" data-id="{{item.id}}">Editar</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div-->
 {% empty %}
 	<h2>Hola Mundo</h2>
 {% endfor %}

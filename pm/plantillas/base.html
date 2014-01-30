@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	{% block metadata %}{% endblock %}
 	<title>{% block titulo %}{% endblock %}</title>
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/carousel.css">
@@ -12,9 +13,13 @@
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/webflow.css">
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/estilo.css">
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/slider_image.css">
-	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/carrito.css"
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/carrito.css">
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/pm_estilo.css">
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/tabs.css">
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/carouFredSel.css">
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/estilo_imprimir.css" media="print">
 	<link rel="shortcut icon" href="{{STATIC_URL}}img/icono.png">
-	
+		
 </head>
 <body>
 	<header>
@@ -27,7 +32,7 @@
 					<img src="{{STATIC_URL}}img/logo-megastore.jpg" alt="Paper & More">
 				</figure>
 			</article>
-			<article id="buscar">
+			<article id="buscar" class="no-print">
 				<label>Llámenos 12345678</label>
 				<form class="form-inline" role="form" method="post" action="/buscar/">{% csrf_token %}
 				  <div class="form-group">
@@ -68,8 +73,10 @@
 							      	<li class="dropdown">
 							        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{usuario.username|capfirst}} <b class="caret"></b></a>
 								        <ul class="dropdown-menu">
-								          <li><a href="/perfil-usuario/">Mi Perfil</a></li>
-								          <li><a href="/salir/">Cerrar Sesión</a></li>
+								         	<li><a href="/perfil-usuario/">Mi Perfil</a></li>
+								          	<li><a href="/historial-de-compra/">Historial de Compra</a></li>
+								           	<li><a href="/historial-de-credito/">Historial de Crédito</a></li>
+								          	<li><a href="/salir/">Cerrar Sesión</a></li>
 								        </ul>
 							      	</li> 
 							      	<input type="hidden" name="usuario" value="{{usuario.username}}">
@@ -85,13 +92,103 @@
 	      	</div>
 	    </div>
     </div>
-	{% block contenido %}
-	{% endblock %}
+   
+    	<!-- Carousel
+    ================================================== -->
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+      <!-- Indicators -->
+    	<ol class="carousel-indicators">
+    		<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+			<li data-target="#myCarousel" data-slide-to="1"></li>
+        	<li data-target="#myCarousel" data-slide-to="2"></li>
+      	</ol>
+    	<div class="carousel-inner">
+        	<div class="item active">
+          		<img id="baner1" src="{{STATIC_URL}}img/baner1.jpg"  alt="First slide">
+              <img id="baner_movil1" src="{{STATIC_URL}}img/baner_movil1.jpg">
+      			<div class="container">
+        			<div class="carousel-caption">
+          				<h1>Paper and More</h1>
+          				<p></p>
+        			</div>
+      			</div>
+        	</div>
+        	<div class="item">
+          		<img id="baner2" src="{{STATIC_URL}}img/baner2.jpg" alt="Second slide">
+          		<div class="container">
+            		<div class="carousel-caption">
+              			<h1>Paper and More | MegaStore</h1>
+              			<p></p>
+            		</div>
+          		</div>
+        	</div>
+        	<div class="item">
+          		<img id="baner2" src="{{STATIC_URL}}img/baner3.jpg" alt="Third slide">
+          		<div class="container">
+            		<div class="carousel-caption">
+              			<h1>Paper and More Soporte Ténico</h1>
+              			<p></p>
+            		</div>
+          		</div>
+        	</div>
+      	</div>
+      	<a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+    	<a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+    </div><!-- /.carousel -->
+
+    <!--CONTENIDO -->
+    <section class="contenedor container">
+    {% block contenido %}{% endblock %}
+    <div id="list_carousel" class="row">
+		<article class="list_carousel row">
+			<div class="row">
+				<div class="hidden-xs col-sm-1">
+					<a id="prev2" class="prev" href="#"><span class="icon icon-flechitaizquierda"></span></a>
+				</div>
+				<div class="col-sm-11">
+					<ul id="carouMarcas">
+						{% for marca in marcas %}
+						<li>
+							<a href="/marcas/{{marca.id}}"><img src="{{MEDIA_URL}}{{marca.Logotipo}}" class="img-thumbnail"></a>
+						</li>
+						{% endfor %}
+					</ul>	
+				</div>
+				<div class="hidden-xs col-sm-1">
+					<a id="next2" class="next" href="#"><span class="icon icon-flechitaderecha"></span></a>
+				</div>
+			</div>
+		</article>
+    </div>
+    <div class="modal fade" id="myModalHorarioServicio">
+	  	<div class="modal-dialog">
+	    	<div class="modal-content">
+	      		<div class="modal-header">
+	        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	        		<h4 class="modal-title">Horarios de Servicio</h4>
+	      		</div>
+	      		<div class="modal-body">
+	      			<figure>
+	      				<img src="{{STATIC_URL}}/img/reloj2.png" class="img-responsive">
+	      			</figure>
+	      			<div class="horarios">
+	      				<table class="table">
+	      					<tbody>
+	      						<tr><td>Lunes-Viernes</td><td>8:00 a.m. - 6:00 p.m.</td></tr>
+	      						<tr><td>Sábados</td><td>8:00 a.m. - 5:00 p.m.</td></tr>
+	      					</tbody>
+	      				</table>
+	      			</div>
+	      		</div>
+	      		<div class="modal-footer">
+	        		<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+	      		</div>
+	   		</div><!-- /.modal-content -->
+	  	</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
+    </section>
 	{% csrf_token %}
-	<!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div id='modal-ventana' class="modal-dialog"></div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
 	<footer>
 		<div id="contenido-foot">
 			<article id="caja1-foot">
@@ -109,10 +206,11 @@
 			<article id="caja2-foot">
 				<p>
 					<a href="/ofertas/">Promociones y Ofertas</a> |
+					<a href="/marcas/">Marcas</a> |
 					<a href="#">Empleos</a> |
 					<a href="#">Recomendar a un amigo</a> |
 					<a href="#">Privacidad y Seguridad</a> |
-					<a href="#">Horarios de Servicio</a> |
+					<a href="#" data-toggle="modal" data-target="#myModalHorarioServicio">Horarios de Servicio</a> |
 				</p>
 			</article>
 			<article id="caja3-foot">
@@ -123,13 +221,31 @@
 		</div>
 	</footer>
 	<script type="text/javascript" src="{{STATIC_URL}}js/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/jquery.PrintArea.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/carousel.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/jquery.cycle2.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/holder.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/webflow.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/jquery.cookie.js"></script>
-	<script type="text/javascript" src="{{STATIC_URL}}js/script.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/jquery.cycle.all.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/tabs.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/jquery.carouFredSel.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/jquery.mousewheel.min.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/jquery.touchSwipe.min.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/script.js"></script>
+	<script type="text/javascript">
+	function imprSelec(muestra)
+	{var ficha=document.getElementById(muestra);var ventimp=window.open(' ','popimpr');ventimp.document.write(ficha.innerHTML);ventimp.document.close();ventimp.print();ventimp.close();}
+	</script>
+	<div id="fb-root"></div>
+	<!--script>(function(d, s, id) {
+	  var js, fjs = d.getElementsByTagName(s)[0];
+	  if (d.getElementById(id)) return;
+	  js = d.createElement(s); js.id = id;
+	  js.src = "//connect.facebook.net/es_LA/all.js#xfbml=1&appId=1375158249407034";
+	  fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+	</script-->
 </body>
 </html>

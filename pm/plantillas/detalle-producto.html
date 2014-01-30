@@ -1,83 +1,199 @@
 {% extends 'base.html' %}
 {% block titulo %}Detalle de Producto{% endblock %}
+{% block metadata %}
+    <meta property="og:image" content="http://miweb.com/images/im1.jpg" />
+    <meta property="og:url" content="http://127.0.0.1:8000/detalle-producto/{{detalle.pk}}" />
+    <meta property="og:url" content="http://127.0.0.1:8000/{{MEDIA_URL}}{{detalle.Imagen}}" />
+{% endblock %}
 {% block contenido %}
-<div class="w-clearfix section contenido">
-        <div class="inicio-caja1">
-            <div class="cotenido-paginas">
-                <section id="cuerpo-detalle" class="pagina-contenido-caja">
-                    <article class="pagina-caja1-1">
-                        <div class="cotenido-paginas"><h2 class="titulo">Detalles del producto</h2></div>
-                    </article>
-                    <article class="mensaje">
-                        <div id="mensaje-carrito" class="alert alert-success alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            Se agregaron {{cantidad}} productos al carrito... <a href="#" class="alert-link">Verifique su carrito</a>
-                        </div>
-                    </article>
-                    <article id="caja-detalle" class="pagina-caja1-2">
-                        <article class="slide_image">
-                            <figure class="cycle-slideshow"
-                                data-cycle-fx=scrollHorz
-                                data-cycle-timeout=0
-                                data-cycle-pager="#no-template-pager"
-                                data-cycle-pager-template=""
-                            >
-                            
-                                <img src="{{MEDIA_URL}}{{detalle.Imagen}}" >
-                           
-                                {% for imagen in detalle_img %}
-                                    <img src="{{MEDIA_URL}}{{imagen.Imagen}}">
-                                {% endfor %}
-                            
-                            </figure>
-                            <figure id="no-template-pager" class="cycle-pager external">
-                                <img src="{{MEDIA_URL}}{{detalle.Imagen}}" width="20" height="20" class="active_img">
-                                {% for imagen in detalle_img %}
-                                    <img src="{{MEDIA_URL}}{{imagen.Imagen}}" width="20" height="20">
-                                {% endfor %}
-                            </figure>
-                        </article>
-                        <div id="detalle-descripcion">
-                            <p>Descripción:&nbsp;{{detalle.Descripcion}}</p>&nbsp;
-                            <p>Precio: L.{{detalle.Precio}}</p>&nbsp;
-                            <p>En exitencia: {{detalle.Existencia}} unidades</p>&nbsp;
-                            <form role="form" id="frmOrden" name="frmOrden" method="post" action="/agregar-carrito/">{% csrf_token %}
-                            <div>                                
-                                <div class="form-group col-sm-1">
-                                    <input class="form-control " type="number" id="txtCantidad" name="Cantidad" placeholder="Cantidad" min="1" value="1">
-                                </div>
-                            </div>
-                              <div id="caja-btnComprar" class="form-group">
-                                <button id="btnComprar" class="btn btn-success" type="submit"><span class='icon-carrito icon-carritocart' data-toggle="modal" data-target="#myModal"></span></button>
-                                <!--input type="submit" id="btnComprar" class="btn btn-success" value="" /-->
-                                <input type="hidden" id="hddProducto" name="Producto" value="{{ detalle.Codigo }}" /> 
-                              </div>
-                            </form>
-                        </div>
-                        <div class="detalle-footer">
-                            <div class="social">
-                                <div>
-                                    <iframe src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;width=20&amp;layout=button_count&amp;action=like&amp;show_faces=true&amp;share=false&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:125px; height:21px;" allowTransparency="true"></iframe>
-                                </div>
-                                <div id="twitter">
-                                    <a href="https://twitter.com/share" class="twitter-share-button" data-lang="es">Twittear</a>
-                                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
-                                    </script>
-                                </div>
-                            </div>
-                            
-                        </div>
-                    </article>
-                </section>
-                <section id="section-carrito" class="pagina-contenido-caja2">
-                    <div id="detalle-carrito">
-                        <div class="cotenido-paginas contenido-carrito">
-                            <h4 class="titulo h4">Carrito</h4>
-                        </div>
-                        <article class="total-item-carrito"></article>
-                    </div>
-                </section>
+    <div class="row">
+        <article id="caja-contenido" class="col-xs-12 col-sm-8 col-md-9">
+            <div class="contenido-titulo row">
+                <h2 class="titulo">Detalle del Producto</h2>
             </div>
-        </div>
+            <div class="row">
+                <div class="col col-sm-12 col-md-12">
+                     <div id="muestra">
+                    <article id="producto-detalle" class="cuerpo-contenido row">
+                            <div id="print-imagen-producto">
+                            <div class="col-sm-5">
+                                <figure class="cycle-slideshow img-thumbnail" data-cycle-fx=scrollHorz data-cycle-timeout=0 data-cycle-pager="#no-template-pager" data-cycle-pager-template="">
+                                    <img src="{{MEDIA_URL}}{{detalle.Imagen}}" />
+                                    {% for imagen in detalle_img %}
+                                        <img src="{{MEDIA_URL}}{{imagen.Imagen}}" />
+                                    {% endfor %}
+                                </figure>
+                                <figure id="no-template-pager" class="cycle-pager external no-print">
+                                    <img src="{{MEDIA_URL}}{{detalle.Imagen}}" width="30" height="auto" class="active_img">
+                                    {% for imagen in detalle_img %}
+                                    <img src="{{MEDIA_URL}}{{imagen.Imagen}}" width="20" height="auto">
+                                    {% endfor %}
+                                </figure>
+                                <div class="row no-print">
+                                    <div class="fb-share-button" data-href="http://developers.facebook.com/docs/plugins/" data-type="button"></div>
+                                    <a href="https://twitter.com/share" class="twitter-share-button" data-url="www.pm.hn" data-text="Visita nuestro sitio y conoce de nuestros precios" data-via="papermore" data-lang="es" data-count="none">Twittear</a>
+                                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+                                    <!-- Button trigger modal -->
+                                    <button class="btn btn-primary btn-default" data-toggle="modal" data-target="#myModal"><span class="icon-mail icon-mail3"></span></button>
+                                    <button id="printer" class="btn btn-primary btn-default"><span class="icon-printer icon-printer"></span></button>
+                                    <a href="javascript:window.print()"> Imprimir</a>
+                                </div>
+                            </div>
+                            </div><!--Fin #print-imagen-producto -->
+                            <div id="producto-detalle-descripcion" class="col col-xs-12 col-sm-7">
+                                <div class="detalle-nombre row">
+                                    <h3>{{detalle.Descripcion}}</h3>
+                                </div>
+                                <form method="post" action="/agregar-carrito/" class="detalle-cantidad row no-print">{% csrf_token %}
+                                    <div class="col col-xs-3">
+                                        <input type="hidden" value="{{detalle.pk}}" name="Producto">
+                                        <input type="number" class="form-control input" name="Cantidad" min="1" value="1">
+                                    </div>
+                                    <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></span></button>
+                            
+                                </form>
+                                <div class="detalle-codigo row">
+                                    <p>Código del producto: <strong>{{detalle.pk}}</strong></p>
+                                </div>
+                                <div class="row detalle-precio">
+                                {% load humanize %}<p>Precio: L. {{detalle.Precio|intcomma}}</p>
+                                </div>
+                                <div class="row detalle-existencia">
+                                    <p>En exitencia: {{detalle.Existencia}} unidades</p>
+                                </div>
+                            </div>
+                       
+                    </article>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Enviar e-mail</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formulario" method="post" action="/enviar-email/">{% csrf_token %}
+                            {{formulario.as_p}}
+                            <p><input type="submit" value="Confirmar"></p>
+                        </form>
+                    </div>
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+        </article>
+        <article id="contenido-lateral" class="hidden-xs col-sm-4 col-md-3 contenido-lateral" >
+            <div class="row">
+                <div class="row">
+                    <h2 class="titulo">Destacados</h2>
+                </div>
+                <div  class="cuerpo-contenido row">
+                    {% for item in destacados %}
+                    <article class="producto-elemento row">
+                        <div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
+                        <div class="row">
+                            <figure id="s2" class="s2 demo">
+                                <img src="{{MEDIA_URL}}{{item.Imagen}}" >
+                                {% for img in detalle_img %}
+                                    {% if img.Producto == item %}
+                                        <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+                                    {% endif %}
+                                {% endfor %}
+                            </figure>
+                            <div class="contenido-lateral-precio">
+                                <div class="row">
+                                    {% load humanize %}
+                                    <h3 ><span class="label label-success">L.{{item.Precio|intcomma}}</span></h3>
+                                </div>
+                                <div class="row producto-caja-btn">
+                                    <form method="post" action="/agregar-carrito/">{% csrf_token %}
+                                        <input type="hidden" value="{{item.pk}}" name="Producto">
+                                        <input type="hidden" value="1" name="Cantidad">
+                                        <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.pk}}" class="btn btn-default" role="button">Ver</a></p>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row"><p>{{item.Descripcion|truncatewords:4}}</p></div>
+                    </article>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="row producto-filtro-lateral">
+                <div class="row">
+                    <h2 class="titulo">Ofertas</h2>
+                </div>
+                <div  class="cuerpo-contenido row">
+                    {% for item in ofertas %}
+                    <article class="producto-elemento row">
+                        <div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
+                        <div class="row">
+                            <figure id="s2" class="s2 demo">
+                                <img src="{{MEDIA_URL}}{{item.Imagen}}">
+                                {% for img in detalle_img %}
+                                    {% if img.Producto == item %}
+                                        <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+                                    {% endif %}
+                                {% endfor %}
+                            </figure>
+                            <div class="contenido-lateral-precio ">
+                                <div class="row">
+                                    {% load humanize %}
+                                    <h3 ><span class="label label-danger">L.{{item.Precio|intcomma}}</span></h3>
+                                </div>
+                                <div class="row producto-caja-btn">
+                                    <form method="post" action="/agregar-carrito/">{% csrf_token %}
+                                        <input type="hidden" value="{{item.pk}}" name="Producto">
+                                        <input type="hidden" value="1" name="Cantidad">
+                                        <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.pk}}" class="btn btn-default" role="button">Ver</a></p>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row"><p>{{item.Descripcion|truncatewords:4}}</p></div>
+                    </article>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="row producto-filtro-lateral">
+                <div class="row">
+                    <h2 class="titulo">Novedades</h2>
+                </div>
+                <div  class="cuerpo-contenido row">
+                    {% for item in novedades %}
+                    <article class="producto-elemento row">
+                        <div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
+                        <div class="row">
+                            <figure id="s2" class="s2 demo">
+                                <img src="{{MEDIA_URL}}{{item.Imagen}}">
+                                {% for img in detalle_img %}
+                                    {% if img.Producto == item %}
+                                        <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+                                    {% endif %}
+                                {% endfor %}
+                            </figure>
+                            <div class="contenido-lateral-precio ">
+                                <div class="row">
+                                    {% load humanize %}
+                                    <h3 ><span class="label label-success">L.{{item.Precio|intcomma}}</span></h3>
+                                </div>
+                                <div class="row producto-caja-btn">
+                                    <form method="post" action="/agregar-carrito/">{% csrf_token %}
+                                        <input type="hidden" value="{{item.pk}}" name="Producto">
+                                        <input type="hidden" value="1" name="Cantidad">
+                                        <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.pk}}" class="btn btn-default" role="button">Ver</a></p>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row"><p>{{item.Descripcion|truncatewords:4}}</p></div>
+                    </article>
+                    {% endfor %}
+                </div>
+            </div>
+        </article>
     </div>
 {% endblock %}

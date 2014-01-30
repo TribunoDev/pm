@@ -38,6 +38,10 @@ $(document).on("ready", function(){
 		Ofertas();
 	});
 
+	$("#novedades").on("click", function(){
+		Novedades();
+	});
+
 	function Destacados(){
 		$.get("/productos-destacados/", function(data){
 			$("#resultado-productos").html(data);
@@ -47,6 +51,12 @@ $(document).on("ready", function(){
 
 	function Ofertas(){
 		$.get("/productos-en-oferta/", function(data){
+			$("#resultado-productos").html(data);
+		}, "html")
+	};
+
+	function Novedades(){
+		$.get("/productos-en-novedades/", function(data){
 			$("#resultado-productos").html(data);
 		}, "html")
 	};
@@ -119,32 +129,6 @@ $(document).on("ready", function(){
 
 	item_carrito();
 
-	//Script para agregar datos de un nuevo carrito
-	// $('#btnComprar').on('click', function(){
-	// 	$('.mensaje').slideDown("slow").delay(4000).slideUp("slow");
-	// });
-
-	$('#btnComprar').on('click', function(e){
-		e.preventDefault();
-		$.ajax({
-			type: 	'POST',
-			url: 	'/agregar-carrito/',
-			data: 	{ 
-				'Cantidad': $('input[name=Cantidad]').val(),
-				'Producto': $('input[name=Producto').val(),
-				'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
-			},
-			success: function(data){
-				$('#myModal').html(data);
-				datos_carrito();
-				item_carrito();
-
-			},
-			dataType: 'html'
-		});
-
-	});
-
 	//Script para el boton de editar item
 	$('.items-carrito').on('click', '.btnItem-Editar', function(e){
 		var idDetalle = $(this).attr('data-id');
@@ -177,7 +161,7 @@ $(document).on("ready", function(){
 	});
 
 	//Script para actualizar la cantidad de cada producto
-	$('.items-carrito').on('click', '.btnItem-Actualizar', function(e){
+	$('.items-carrito, #item-carrito').on('click', '.btnItem-Actualizar', function(e){
 		e.preventDefault();
 		var form = $(this).closest('form').attr('id');
 		var frmCantidad = $(this).closest('.item-cantidad').attr('data-id');
@@ -250,9 +234,11 @@ $(document).on("ready", function(){
 	});
 
 	//Script para agregar elementos css a controles de inicio de sesión
-	$('#frmRegUsuario label').addClass('col-sm-5 control-label');
+	$('#frmRegUsuario label').addClass('control-label');
 	$('#id_username').addClass('form-control input-lg');
 	$('#id_password').addClass('form-control input-lg');
+
+	$('#panel-direccion input, #panel-direccion select, #panel-direccion textarea').addClass('form-control');
 
 	//Active para imagenes miniatura en detalle
 	$('#no-template-pager img').on('click', function(){
@@ -260,8 +246,48 @@ $(document).on("ready", function(){
 		$(this).addClass('active_img');
 	});
 
-	$('#s2').cycle({
-		fx: 'scrollDown'
+	$('.s2').cycle({
+		fx: 'fade'
 	});
 
+
+	//Script para capturar el url de la pagina actual
+	var home = 'http://127.0.0.1:8000/';
+	var href = $(location).attr('href');
+	if (home == href) {
+		$('#myCarousel').css('display', 'block');
+	};
+
+	var marcas = home + 'marcas/';
+	var ingresar = home + 'ingresar/';
+	var registrar = home + 'registro/';
+	if (href == marcas || href == ingresar || href == registrar) {
+		$('#list_carousel').css('display', 'none');
+	};
+
+	$('#carouMarcas').carouFredSel({
+		items: {
+			width: 200,
+		//	height: '30%',	//	optionally resize item-height
+			visible: {
+				min: 2,
+				max: 6
+			}
+		},
+		prev: '#prev2',
+		next: '#next2',
+
+		mousewheel: true,
+		responsive: true,
+		scroll: 2,
+		swipe: {
+			onMouse: true,
+			onTouch: true
+		},
+		width: '100%',
+	});
+
+	//Script para el boton imprimir
+
+	$('#frmDireccion input, #frmDireccion select, #frmDireccion textarea').attr('required', 'True');
 });

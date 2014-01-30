@@ -3,8 +3,9 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Detalle_Perfil(models.Model):
+	RNP=models.CharField(max_length=20, help_text='RNP del Usuario', verbose_name=u'RNP')
 	Direccion = models.CharField(max_length=250, help_text='Direccion residencial del usuario', verbose_name=u'Direccion', null=True, blank=True)
-	Telefono = models.IntegerField(null=True, blank=True, help_text='Teléfono del usuario', verbose_name=u'Telefono')
+	Telefono = models.CharField(max_length=10, null=True, blank=True, help_text='Teléfono del usuario', verbose_name=u'Telefono')
 	Usuario = models.ForeignKey(User, unique=True, help_text='Usuario al que pertenece la dirección', verbose_name=u'Usuario')
 
 	def __unicode__(self):
@@ -33,6 +34,7 @@ class Producto(models.Model):
 	Destacado = models.BooleanField(help_text='Describe si el producto es destacado', verbose_name=u'Destacado')
 	Oferta = models.BooleanField(help_text='Describe si el producto esta en oferta', verbose_name=u'Oferta')
 	Imagen = models.ImageField(upload_to='img_productos',verbose_name=u'Imágen')
+	Fecha = models.DateField(auto_now_add=True, blank=True, null=True)
 	
 	def __unicode__(self):
 		return self.Descripcion
@@ -40,11 +42,14 @@ class Producto(models.Model):
 class Detalle_Imagen(models.Model):
 	Imagen = models.ImageField(upload_to='img_detalle',verbose_name=u'Imágen')
 	Producto = models.ForeignKey(Producto, help_text='Producto asociado a la imagen', verbose_name=u'Producto')
+	class Meta:
+		verbose_name=u'Detalle Imagen'
+		verbose_name_plural=u'Detalle Imagen'
 	def __unicode__(self):
 		return self.Producto.Descripcion +' - '+ str(self.Imagen)
 
 class Estado(models.Model):
-	Estado = models.CharField(max_length=45, help_text='Describe el estado de la orden', verbose_name=u'Estado de Orden')
+	Estado = models.CharField(max_length=45, help_text='Describe el estado del carrito', verbose_name=u'Estado de Carrito')
 	def __unicode__(self):
 		return self.Estado
 
@@ -63,27 +68,42 @@ class Detalle_Carrito(models.Model):
 
 class Pais(models.Model):
 	Pais = models.CharField(max_length=45, help_text='Ingrese el nombre del país', verbose_name=u'País')
+	class Meta:
+		verbose_name=u'Pais'
+		verbose_name_plural=u'Paises'
 	def __unicode__(self):
 		return self.Pais
+
+class Region(models.Model):
+	Region=models.CharField(max_length=100, verbose_name=u'Región')
+	Precio=models.DecimalField(max_digits=5, decimal_places=2, verbose_name=u'Precio')
+	Pais=models.ForeignKey(Pais, verbose_name=u'País')
+	def __unicode__(self):
+		return self.Region
 
 class Direccion_Orden(models.Model):
 	Nombre = models.CharField(max_length=50, help_text='Ingrese el nombre completo del contacto', verbose_name=u'Nombre')
 	Direccion = models.TextField(help_text='Ingrese la dirección para el envío', verbose_name=u'Dirección')
 	Ciudad = models.CharField(max_length=50, help_text='Ingresa una ciudad para la dirección')
-	Region = models.CharField(max_length=50, help_text='Ingresar una región, estado o provincia', verbose_name=u'Estado')
-	Postal = models.IntegerField(help_text='Ingrese el codigo postal del pais de ubicación', verbose_name=u'Codigo Postal')
+	Region = models.ForeignKey(Region, help_text='Ingresar una región, estado o provincia', verbose_name=u'Estado')
 	Pais = models.ForeignKey(Pais)
-	Telefono = models.IntegerField(help_text='Ingrese el teléfono de contacto', verbose_name=u'Teléfono')
+	Telefono = models.CharField(max_length=10, help_text='Ingrese el teléfono de contacto', verbose_name=u'Teléfono')
+	Usuario = models.ForeignKey(User, help_text='Seleccionar el usuario', verbose_name=u'Usuario', blank=True, null=True)
 
 	def __unicode__(self):
 		return self.Direccion +' '+ self.Ciudad +', '+ self.Region +', '+ self.Pais.Pais
 
+class Orden_Estado(models.Model):
+	Estado=models.CharField(max_length=50, help_text='Estado de la orden', verbose_name=u'Estado')
+	
+	def __unicode__(self):
+		return self.Estado
+
 class Orden(models.Model):
 	Fecha = models.DateField(help_text='Ingresar Fecha de la orden', verbose_name=u'Fecha', null=True, blank=True)
 	Carrito = models.ForeignKey(Carrito, help_text='Ingrese el carrito que va a comprar', verbose_name=u'Carrito')
-	Estado = models.ForeignKey(Estado, help_text='Estado de la orden de productos', null=True, blank=True)
+	Estado = models.ForeignKey(Orden_Estado, help_text='Estado de la orden de productos', null=True, blank=True)
 	Direccion = models.ForeignKey(Direccion_Orden, help_text='Ingresar la dirección para el envío del producto', verbose_name=u'Dirección', null=True, blank=True)
-
 	def __unicode__(self):
 		return str(self.pk)
 
@@ -93,3 +113,47 @@ class Marca(models.Model):
 
 	def __unicode__(self):
 		return self.Marca
+
+class Precio_Combustible(models.Model):
+	Precio=models.DecimalField(max_digits=5, decimal_places=2, unique=True, help_text='Precio real en L. del combustible por galón ', verbose_name=u'Precio')
+	Distancia_por_galon=models.DecimalField(max_digits=5, decimal_places=2, help_text='Distancia recorrida del vehiculo por galón', verbose_name=u'Consumo')
+	Fecha=models.DateField(auto_now_add=True)
+	def __unicode__(self):
+		return 'L. '+ str(self.Precio)+' - Precio desde la fecha ' + str(self.Fecha)
+
+class Servicio_Flete(models.Model):
+	Lugar_Cliente=models.CharField(max_length=100, unique=True, help_text='Nombre del lugar destino del flete', verbose_name=u'Destino')
+	Distancia=models.DecimalField(max_digits=5, decimal_places=2, help_text='Distancia del destino en kilometros', verbose_name=u'Distancia')
+	Precio=models.ForeignKey(Precio_Combustible, help_text='Fecha del ultimo precio del combustible', verbose_name=u'Precio')
+	def __unicode__(self):
+		return self.Lugar_Cliente
+
+class DatosTransaccion(models.Model):
+	Orden=models.ForeignKey(Orden)
+	NumeroTransaccion=models.BigIntegerField()
+	NumeroReferencia=models.BigIntegerField()
+	NumeroAutorizacion=models.BigIntegerField()
+	Fecha=models.DateTimeField(auto_now_add=True)
+	def __unicode__(self):
+		return self.Orden.id
+
+class Credito(models.Model):
+	Fecha=models.DateField()
+	Plazo=models.IntegerField()
+	Monto=models.DecimalField(max_digits=6, decimal_places=2)
+	Cuota=models.DecimalField(max_digits=6, decimal_places=2)
+	Usuario=models.ForeignKey(User)
+	def __unicode__(self):
+		return str(self.Fecha) + ' Monto L.' + str(self.Monto)
+
+class Pagos(models.Model):
+	Cuota=models.CharField(max_length=10)
+	Fecha_Vencimiento=models.DateField()
+	Valor_Cuota=models.DecimalField(max_digits=6, decimal_places=2)
+	Mora=models.DecimalField(max_digits=5, decimal_places=2)
+	Total_Pagado=models.DecimalField(max_digits=6, decimal_places=2)
+	Estado=models.BooleanField(verbose_name=u'Pagado')
+	Credito=models.ForeignKey(Credito)
+	def __unicode__(self):
+		return str(self.Cuota)
+

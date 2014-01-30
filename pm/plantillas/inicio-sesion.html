@@ -1,7 +1,32 @@
 {% extends 'base.html' %}
 {% block titulo %}Iniciar Sesión{% endblock %}
 {% block contenido %}
-<div class="w-clearfix section contenido">
+    <div id="InicioSesion" class="row">
+        <article  class="col-sm-offset-3 col-sm-6">
+            <div class="contenido-titulo row">
+                <h1 class="titulo">Iniciar Sesión</h1>
+            </div>
+            <div class="row">
+                <form role="form" id="frmRegUsuario" class="cuerpo-contenido row" name="frmRegUsuario" method="post" action="{%  url 'django.contrib.auth.views.login' %}">{% csrf_token %}
+                    <div class="form-group">
+                        <h3>{{ form.username.label_tag }}</h3>
+                            {{ form.username }}  
+                    </div>
+                    <div class="form-group">
+                        <h3>{{ form.password.label_tag }}</h3>
+                            {{ form.password }}
+                    </div>
+                    <div class="form-group">
+                        <div>
+                            <input type="submit" class="btn btn-default" value="Ingresar" />
+                            <input type="hidden" name="next" value="{{next}}" />
+                        </div>
+                    </div>
+                </form>    
+            </div>
+        </article>
+    </div>
+<!--div class="w-clearfix section contenido">
         <div class="inicio-caja1">
             <div class="contenido-paginas">
             </div>
@@ -27,13 +52,13 @@
                             <div class="form-group">
                                 <div class="col-sm-offset-5 col-sm-5">
                                     <input type="submit" class="btn btn-default" value="Ingresar" />
-                                    <input type="hidden" name="next" value="{{ next }}" />
+                                    <input type="hidden" name="next" value="{{next}}" />
                                 </div>
                             </div>
                         </form>
                     </article>
                 </section>
-                <!--section id="section-carrito" class="pagina-contenido-caja2">
+                <!section id="section-carrito" class="pagina-contenido-caja2">
                     <div id="detalle-carrito">
                         <div class="cotenido-paginas contenido-carrito">
                             <h4 class="titulo h4">Carrito</h4>
@@ -43,8 +68,8 @@
                             <p>Cantidad: 5</p>
                         </div>
                     </div>
-                </section-->
+                </section>
             </div>
         </div>
-    </div>
+    </div-->
 {% endblock %}

@@ -1,54 +1,39 @@
 {% extends 'base.html' %}
 
-{% block titulo %}Paper & More{% endblock %}
+{% block titulo %}Paper & More - Inicio{% endblock %}
 
 {% block contenido %}
-<!-- Carousel
-    ================================================== -->
-    <div id="myCarousel" class="carousel slide" data-ride="carousel">
-      <!-- Indicators -->
-    	<ol class="carousel-indicators">
-    		<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-			<li data-target="#myCarousel" data-slide-to="1"></li>
-        	<li data-target="#myCarousel" data-slide-to="2"></li>
-      	</ol>
-    	<div class="carousel-inner">
-        	<div class="item active">
-          		<img id="baner1" src="{{STATIC_URL}}img/baner1.jpg"  alt="First slide">
-              <img id="baner_movil1" src="{{STATIC_URL}}img/baner_movil1.jpg">
-      			<div class="container">
-        			<div class="carousel-caption">
-          				<h1>Paper and More</h1>
-          				<p></p>
-        			</div>
-      			</div>
-        	</div>
-        	<div class="item">
-          		<img id="baner2" src="{{STATIC_URL}}img/baner2.jpg" alt="Second slide">
-          		<div class="container">
-            		<div class="carousel-caption">
-              			<h1>Paper and More | MegaStore</h1>
-              			<p></p>
-            		</div>
-          		</div>
-        	</div>
-        	<div class="item">
-          		<img id="baner2" src="{{STATIC_URL}}img/baner3.jpg" alt="Third slide">
-          		<div class="container">
-            		<div class="carousel-caption">
-              			<h1>Paper and More Soporte Ténico</h1>
-              			<p></p>
-            		</div>
-          		</div>
-        	</div>
-      	</div>
-      	<a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
-    	<a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
-    </div><!-- /.carousel -->
-
-	<!--CONTENIDO -->
+  <div class="row">
+    <article id="caja-contenido" class="col-xs-12 col-sm-8 col-md-9">
+      <div class="row">
+        <ul id="myTab" class="nav nav-tabs">
+          <li class="active"><a id="ofertas"  href="#">Ofertas</a></li>
+          <li><a id="destacados" href="#">Destacados</a></li>
+          <li><a id="novedades" href="#">Novedades</a></li>
+        </ul>
+        <article id="resultado-productos" class="cuerpo-contenido row"></article>
+      </div>
+    </article>
+    <aside id="contenido-lateral" class="hidden-xs col-sm-4 col-md-3 contenido-lateral">
+      <div class="row">
+        <a href="#">
+          <img src="http://www.ingvillamizar.com/wp-content/uploads/2013/01/logo-facebook-300x200.jpg" class="img-rounded">
+        </a>
+      </div>
+      <div class="row">
+        <a href="#">
+          <img class="img-rounded" src="http://www.ingvillamizar.com/wp-content/uploads/2013/01/logo-facebook-300x200.jpg" alt="dell_inspiron_640m.jpg">
+        </a>
+      </div>
+      <div class="row">
+        <a href="#">
+          <img class="img-rounded" src="http://www.ingvillamizar.com/wp-content/uploads/2013/01/logo-facebook-300x200.jpg" alt="dell_inspiron_640m.jpg">
+        </a>
+      </div>
+    </aside> 
+  </div>
+	<!--CONTENIDO>
 	<div class="w-clearfix section contenido">
-    
     <div class="inicio-caja1">
       <div class="w-row">
         <div class="w-col w-col-9 inicio-caja1-columna1">
@@ -80,4 +65,5 @@
       </div>
     </div>
   </div>
+  -->
 {% endblock %}

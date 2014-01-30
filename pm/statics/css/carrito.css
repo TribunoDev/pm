@@ -26,3 +26,99 @@
 .icon-carritocart:before {
 	content: "\e602";
 }
+
+@font-face {
+	font-family: 'flechitas';
+	src:url('../fonts/flechitas.eot');
+	src:url('../fonts/flechitas.eot?#iefix') format('embedded-opentype'),
+		url('../fonts/flechitas.woff') format('woff'),
+		url('../fonts/flechitas.ttf') format('truetype'),
+		url('../fonts/flechitas.svg#flechitas') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+.icon {
+	font-family: 'flechitas';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-flechitaderecha:before {
+	content: "\e600";
+}
+.icon-flechitaizquierda:before {
+	content: "\e601";
+}
+
+@font-face {
+	font-family: 'ico-mail';
+	src:url('../fonts/ico-mail.eot');
+	src:url('../fonts/ico-mail.eot?#iefix') format('embedded-opentype'),
+		url('../fonts/ico-mail.woff') format('woff'),
+		url('../fonts/ico-mail.ttf') format('truetype'),
+		url('../fonts/ico-mail.svg#ico-mail') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+.icon-mail {
+	font-family: 'ico-mail';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-mail:before {
+	content: "\e600";
+}
+.icon-mail2:before {
+	content: "\e601";
+}
+.icon-mail3:before {
+	content: "\e602";
+}
+
+@font-face {
+	font-family: 'ico-printer';
+	src:url('../fonts/ico-printer.eot');
+	src:url('../fonts/ico-printer.eot?#iefix') format('embedded-opentype'),
+		url('../fonts/ico-printer.woff') format('woff'),
+		url('../fonts/ico-printer.ttf') format('truetype'),
+		url('../fonts/ico-printer.svg#ico-printer') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+.icon-printer {
+	font-family: 'ico-printer';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-printer:before {
+	content: "\e600";
+}

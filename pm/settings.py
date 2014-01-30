@@ -134,6 +134,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'web',
     'pedidos',
+    'mathfilters',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
@@ -168,3 +169,14 @@ LOGGING = {
 }
 LOGIN_REDIRECT_URL = '/home'
 LOGIN_URL = '/'
+
+#Configuraciones para enviar mensajes usando gmail.
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'mail.pm.hn'
+EMAIL_HOST_USER = 'no_reply+pm.hn'
+EMAIL_HOST_PASSWORD = 'cast@1978'
+EMAIL_PORT = 26
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = 'mjbc007@gmail.com'
+# EMAIL_HOST_PASSWORD = 'ConfidenciaL'
+# EMAIL_PORT = 587

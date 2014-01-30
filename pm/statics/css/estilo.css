@@ -427,7 +427,7 @@ html, body{
 #resultado-productos{
 	height: 100%;
 	padding: 2%;
-	position: relative;;
+	position: relative;
 }
 
 #telefono, #frm-input{
@@ -506,10 +506,7 @@ html, body{
 	position: relative;
 }
 
-.contenedor #caja-contenido{
-	margin-bottom: 15px;
-	padding: 0;
-}
+
 
 .contenedor #caja-contenido .elemento-producto{
 	float:none;
@@ -543,8 +540,6 @@ html, body{
 }
 
 .contenido-lateral .producto-elemento figure{
-	border: 1px solid #dddddd;
-	padding: 0 0.5% ;
 	vertical-align: top;
 	width: 39%;
 }
@@ -568,13 +563,6 @@ html, body{
 	padding-top: 3px;
 }
 
-.cuerpo-contenido{
-	border: 1px solid #bdc3c7;
-	border-radius: 5px;
-	margin-top: 10px;
-	padding: 0.7% 1%;
-}
-
 .cuerpo-contenido .precio-producto{
 	border: none;
 	float: none;
@@ -587,10 +575,10 @@ html, body{
 }
 
 .datos-carrito{
-	border: 1px solid #bdc3c7;
 	border-radius: 3px;
 	font-size: 14px;
-	padding: 3% 3%;
+	margin-bottom: 5px;
+	padding: 0.5% 0.5%;
 }
 
 .descrip-producto{
@@ -764,12 +752,11 @@ html, body{
 }
 
 .item-carrito figure{
-	border: 1px solid #bdc3c7;
+	border: 1px solid #E6E6E6;
 	display: inline-block;
 	float: left;
 	height: auto;
 	padding: 0.3em;
-	width: 112px;
 }
 
 .item-carrito label{
@@ -781,15 +768,6 @@ html, body{
 	float: left;
 	padding: 0.3em;
 	position: relative;
-	width: 50%;
-}
-
-.item-carrito .item-precio-cantidad{
-	display: inline-block;
-	float: left;
-	padding: 0.3em;
-	position: relative;
-	width: 30%;
 }
 
 .item-carrito .item-precio-cantidad div{
@@ -800,7 +778,6 @@ html, body{
 
 .item-carrito .item-precio-cantidad .item-cantidad{
 	text-align: center;
-	width: 40%;
 }
 
 .item-carrito .item-precio-cantidad .item-cantidad a{
@@ -827,7 +804,6 @@ html, body{
 
 .item-carrito .item-precio-cantidad .item-precio{
 	text-align: center;
-	width: 60%;
 }
 
 .item-precio p{
