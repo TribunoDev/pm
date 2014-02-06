@@ -6,7 +6,7 @@
 	<div class="row">
 		<article id="caja-contenido" class="col-xs-12 col-sm-8 col-md-9">
 			<div class="contenido-titulo row">
-				<h2 class="titulo">Productos en Ofertas</h2>
+				<h2 class="titulo">Nuestras Marcas</h2>
 			</div>
 			<div class="row">
 				<article id="logos-marcas" class="cuerpo-contenido row">
@@ -52,7 +52,7 @@
                                 </div>
 							</div>
 						</div>
-						<div class="row"><p>{{item.Descripcion|truncatewords:4}}</p></div>
+						<div class="row"><p>{{item.Descripcion|truncatewords:4|safe}}</p></div>
 					</article>
 					{% endfor %}
 				</div>
@@ -88,7 +88,42 @@
                                 </div>
 							</div>
 						</div>
-						<div class="row"><p>{{item.Descripcion|truncatewords:4}}</p></div>
+						<div class="row"><p>{{item.Descripcion|truncatewords:4|safe}}</p></div>
+					</article>
+					{% endfor %}
+				</div>
+				<div class="row producto-filtro-lateral">
+				<div class="row">
+					<h2 class="titulo">Novedades</h2>
+				</div>
+				<div  class="cuerpo-contenido row">
+					{% for item in novedades %}
+					<article class="producto-elemento row">
+						<div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
+						<div class="row">
+							<figure id="s2" class="s2 demo">
+								<img src="{{MEDIA_URL}}{{item.Imagen}}">
+								{% for img in detalle_img %}
+									{% if img.Producto == item %}
+										<img src="{{MEDIA_URL}}{{img.Imagen}}" >
+									{% endif %}
+								{% endfor %}
+							</figure>
+							<div class="contenido-lateral-precio ">
+								<div class="row">
+									{% load humanize %}
+									<h3 ><span class="label label-danger">L.{{item.Precio|intcomma}}</span></h3>
+								</div>
+								<div class="row producto-caja-btn">
+                                    <form method="post" action="/agregar-carrito/">{% csrf_token %}
+                                        <input type="hidden" value="{{item.pk}}" name="Producto">
+                                        <input type="hidden" value="1" name="Cantidad">
+                                        <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.pk}}" class="btn btn-default" role="button">Ver</a></p>
+                                    </form>
+                                </div>
+							</div>
+						</div>
+						<div class="row"><p>{{item.Descripcion|truncatewords:4|safe}}</p></div>
 					</article>
 					{% endfor %}
 				</div>

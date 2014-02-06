@@ -160,6 +160,7 @@
 			</div>
 		</article>
     </div>
+    <!--Modal Horario-->
     <div class="modal fade" id="myModalHorarioServicio">
 	  	<div class="modal-dialog">
 	    	<div class="modal-content">
@@ -187,6 +188,72 @@
 	  	</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 
+	<!--Modal Empleos-->
+    <div class="modal fade" id="myModalEmpleos">
+	  	<div class="modal-dialog">
+	    	<div class="modal-content">
+	      		<div class="modal-header">
+	        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	        		<h4 class="modal-title">Empleos</h4>
+	      		</div>
+	      		<div class="modal-body">
+	      			<div class="media">
+					  	<a class="pull-left" href="#">
+					    	<img class="media-object" src="{{STATIC_URL}}img/empleos.jpg" alt="...">
+					  	</a>
+					  	<div class="media-body">
+					    	<h4 class="media-heading">¿Quieres formar parte de nuesto equipo de trabajo?</h4>
+					    	<p  class="text-justify">Si te interesan las áreas de mercadeo, ventas y soporte técnico; puedes aplicar enviandonos tu hoja de vida a la siguiente dirección de correo electrónico: <a href="mailto:empleos@pm.hn">empleos@pm.hn</a>, especificando cual de las siguientes modalidades de empleos te interesan</p>
+					    	<div class="espacio"></div>
+					    	<ul>
+					    		<li>Voluntario – Aprendiz por corto tiempo ó periodo de vacaciones</li>
+					    	</ul>
+					  	</div>
+					</div>
+	      		</div>
+	      		<div class="modal-footer">
+	        		<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+	      		</div>
+	   		</div><!-- /.modal-content -->
+	  	</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
+	<!--Modal Horario-->
+    <div class="modal fade" id="myModalRecomendacion">
+	  	<div class="modal-dialog">
+	    	<div class="modal-content">
+	      		<div class="modal-header">
+	        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	        		<h4 class="modal-title">Recomendar esta página a un amigo</h4>
+	      		</div>
+	      		<form id="formularioEmail" role="form" method="post" action="/enviar-email/">
+		      		<div class="modal-body">
+		      			{% csrf_token %}
+                        <div class="form-group">
+                            <label>Para:</label>
+                            <input type="text" class="form-control" id="id_amigo" name="amigo">
+                        </div>
+                        <div class="form-group">
+                            <label>De:</label>
+                            <input type="text" class="form-control" id="id_correo" name="correo">
+                        </div>
+                        <div class="form-group">
+                            <label>Mensaje:</label>
+                            <textarea cols="40" id="id_mensaje" name="mensaje" rows="10" class="form-control" required="required"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" id="id_url" name="url" maxlength="500">
+                        </div>
+		      		</div>
+		      		<div class="modal-footer">
+		        		<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+		        		<button type="submit" class="btn btn-default">Enviar</button>
+		      		</div>
+		      	</form>
+	   		</div><!-- /.modal-content -->
+	  	</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
     </section>
 	{% csrf_token %}
 	<footer>
@@ -206,9 +273,10 @@
 			<article id="caja2-foot">
 				<p>
 					<a href="/ofertas/">Promociones y Ofertas</a> |
+					<a href="/destacados/">Destacados</a> |
 					<a href="/marcas/">Marcas</a> |
-					<a href="#">Empleos</a> |
-					<a href="#">Recomendar a un amigo</a> |
+					<a href="#" data-toggle="modal" data-target="#myModalEmpleos">Empleos</a> |
+					<a href="#" data-toggle="modal" data-target="#myModalRecomendacion">Recomendar a un amigo</a> |
 					<a href="#">Privacidad y Seguridad</a> |
 					<a href="#" data-toggle="modal" data-target="#myModalHorarioServicio">Horarios de Servicio</a> |
 				</p>
@@ -239,13 +307,13 @@
 	{var ficha=document.getElementById(muestra);var ventimp=window.open(' ','popimpr');ventimp.document.write(ficha.innerHTML);ventimp.document.close();ventimp.print();ventimp.close();}
 	</script>
 	<div id="fb-root"></div>
-	<!--script>(function(d, s, id) {
+	<script>(function(d, s, id) {
 	  var js, fjs = d.getElementsByTagName(s)[0];
 	  if (d.getElementById(id)) return;
 	  js = d.createElement(s); js.id = id;
 	  js.src = "//connect.facebook.net/es_LA/all.js#xfbml=1&appId=1375158249407034";
 	  fjs.parentNode.insertBefore(js, fjs);
 	}(document, 'script', 'facebook-jssdk'));
-	</script-->
+	</script>
 </body>
 </html>

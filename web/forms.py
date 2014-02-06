@@ -25,6 +25,7 @@ class ContactoForm(forms.Form):
 	amigo=forms.EmailField(label='Para:')
 	correo=forms.EmailField(label='De:')
 	mensaje=forms.CharField(widget=forms.Textarea)
+	url=forms.URLField(max_length=500)
 
 class Direccion_OrdenForm(ModelForm):
     class Meta:

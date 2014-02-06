@@ -234,9 +234,10 @@ $(document).on("ready", function(){
 	});
 
 	//Script para agregar elementos css a controles de inicio de sesión
-	$('#frmRegUsuario label').addClass('control-label');
+	$('#frmRegUsuario label, #formularioEmail label').addClass('control-label');
 	$('#id_username').addClass('form-control input-lg');
 	$('#id_password').addClass('form-control input-lg');
+	$('#id_amigo, #id_correo, #id_mensaje').addClass('form-control')
 
 	$('#panel-direccion input, #panel-direccion select, #panel-direccion textarea').addClass('form-control');
 
@@ -261,7 +262,8 @@ $(document).on("ready", function(){
 	var marcas = home + 'marcas/';
 	var ingresar = home + 'ingresar/';
 	var registrar = home + 'registro/';
-	if (href == marcas || href == ingresar || href == registrar) {
+	var rec_contrasena = home + 'recuperar-contrasena/';
+	if (href == marcas || href == ingresar || href == registrar || href == rec_contrasena) {
 		$('#list_carousel').css('display', 'none');
 	};
 
@@ -288,6 +290,156 @@ $(document).on("ready", function(){
 	});
 
 	//Script para el boton imprimir
-
 	$('#frmDireccion input, #frmDireccion select, #frmDireccion textarea').attr('required', 'True');
+
+	//Script para validar el usuario a registrar
+	$('#username').on('blur', function(){
+		username=$('#username').val();
+		$.ajax({
+			type: 	'POST',
+			url: 	'/verificar-usuario/',
+			data: 	{
+				'usuario':username,
+				'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
+			},
+			success: function(data){
+				if (data.tUser==1) {
+					$('#verificaUser').text("El nombre de usuario '" +username+ "' ya existe");
+					$('#username').val("");
+				}else{
+					$('#verificaUser').text("");
+				};
+			},
+			dataType: 'json'
+		});
+	});
+
+	//Script para verificar email a registrar
+	$('#email').on('blur', function(){
+		email=$('#email').val();
+		$.ajax({
+			type: 	'POST',
+			url: 	'/verificar-email/',
+			data: 	{
+				'email':email,
+				'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
+			},
+			success: function(data){
+				if (data.tUser==1) {
+					$('#verificarEmail').text("El e-mail '" +email+ "' ya está registrado");
+					$('#email').val("");
+				}else{
+					$('#verificarEmail').text("");
+				};
+			},
+			dataType: 'json'
+		});
+	});
+
+	//Script para verificar email al reponer contrasena
+	$('#recEmail').on('blur', function(){
+		email=$('#recEmail').val();
+		$.ajax({
+			type: 	'POST',
+			url: 	'/verificar-email/',
+			data: 	{
+				'email':email,
+				'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
+			},
+			success: function(data){
+				if (data.tUser==0) {
+					$('#verificarEmail').text("El e-mail '" +email+ "' ya está registrado");
+					$('#email').val("");
+				}else{
+					$('#verificarEmail').text("");
+				};
+			},
+			dataType: 'json'
+		});
+	});
+
+	//Script para verificar RNP ya registrado
+	$('#RNP').on('blur', function(){
+		RNP=$('#RNP').val();
+		$.ajax({
+			type: 	'POST',
+			url: 	'/verificar-rnp/',
+			data: 	{
+				'rnp':RNP,
+				'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
+			},
+			success: function(data){
+				if (data.tUser==1) {
+					$('#verificaRNP').text("El RNP '" +RNP+ "' ya está registrado");
+					$('#RNP').val("");
+				}else{
+					$('#verificaRNP').text("");
+				};
+			},
+			dataType: 'json'
+		});
+	});
+
+
+	//Script para cargar la url para compartir por email
+	$('#id_url').val(href);
+	$('#id_amigo').attr('required', 'required');
+	$('#id_correo').attr('required', 'required');
+	$('#id_mensaje').attr('required', 'required')
+
+	$('#myModalRecomendacion #id_url').val("www.pm.hn");
+
+
+	//Script para cargar combo Región desde el combo País
+	$('#id_Region').attr('disabled', 'disabled');
+	$('#id_Ciudad').attr('disabled', 'disabled');
+	$('#id_Pais').on('click', function(){
+		if ($(this).val()=="") {
+			$('#id_Region, #id_Ciudad').val("");
+			$('#id_Region').attr('disabled', 'disabled');
+			$('#id_Ciudad').attr('disabled', 'disabled');
+		}else{
+			$('#id_Region').removeAttr('disabled');
+		};
+	});
+
+	$('#id_Pais').change(function(){
+		$.ajax({
+			type: 	'POST',
+			url: 	'/cargar-region/',
+			data: 	{
+				'pais':$(this).val(),
+				'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
+			},
+			success: function(data){
+				$('#id_Region').html(data);
+			},
+			dataType: 'html'
+		});
+	});
+
+	//Script para cargar el combo Ciudad
+	$('#id_Region').on('click', function(){
+		if ($(this).val()=="") {
+			$('#id_Ciudad').val("");
+			$('#id_Ciudad').attr('disabled', 'disabled');
+		}else{
+			$('#id_Ciudad').removeAttr('disabled');
+		};
+	});
+	$('#id_Region').change(function(){
+		$.ajax({
+			type: 	'POST',
+			url: 	'/cargar-ciudad/',
+			data: 	{
+				'region':$(this).val(),
+				'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
+			},
+			success: function(data){
+				$('#id_Ciudad').html(data);
+			},
+			dataType: 'html'
+		});
+	});
+
 });

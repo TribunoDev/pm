@@ -72,8 +72,8 @@
 						  			<address id="direccionPago">
 										<strong>{{direccion.Nombre}}</strong><br>
 										{{direccion.Direccion}}<br>
-										{{direccion.Ciudad}}, {{direccion.Region}}, {{direccion.Pais}} ({{direccion.Postal}})<br>
-										<abbr title="Phone">Tel:</abbr> {{direccion.Telefono}}
+										{{direccion.Ciudad}}, {{direccion.Region}}, {{direccion.Pais}}<br>
+										<abbr title="Teléfono">Tel:</abbr> {{direccion.Telefono}}
 									</address>
 						  		</div>
 						  		<div class="col-md-6">
@@ -90,7 +90,7 @@
 												  	</li>
 												  	<li><span class="badge pull-right">L. {{subtotal}}</span><label>Sub-total:</label></li>
 												  	<li>
-												      	<span class="badge pull-right">L. {{direccion.Region.Precio}}</span>
+												      	<span class="badge pull-right">L. {{direccion.Ciudad.Servicio_Domicilio}}</span>
 												     	<label>Servicio de envío:</label>
 												  	</li>
 												  	<li>
@@ -139,7 +139,7 @@
                                 </div>
 							</div>
 						</div>
-						<div class="row"><p>{{item.Descripcion|truncatewords:4}}</p></div>
+						<div class="row"><p>{{item.Descripcion|truncatewords:4|safe}}</p></div>
 					</article>
 					{% endfor %}
 				</div>
@@ -176,7 +176,44 @@
                                 </div>
 							</div>
 						</div>
-						<div class="row"><p>{{item.Descripcion|truncatewords:4}}</p></div>
+						<div class="row"><p>{{item.Descripcion|truncatewords:4|safe}}</p></div>
+					</article>
+					{% endfor %}
+				</div>
+			</div>
+			<div class="row espacio"></div>
+			<div class="row">
+				<div class="row">
+					<h2 class="titulo">Novedades</h2>
+				</div>
+				<div  class="cuerpo-contenido row">
+					{% for item in novedades %}
+					<article class="producto-elemento row">
+						<div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
+						<div class="row">
+							<figure id="s2" class="s2 demo">
+								<img src="{{MEDIA_URL}}{{item.Imagen}}">
+								{% for img in detalle_img %}
+									{% if img.Producto == item %}
+										<img src="{{MEDIA_URL}}{{img.Imagen}}">
+									{% endif %}
+								{% endfor %}
+							</figure>
+							<div class="contenido-lateral-precio">
+								<div class="row">
+									{% load humanize %}
+									<h3 ><span class="label label-success">L.{{item.Precio|intcomma}}</span></h3>
+								</div>
+								<div class="row producto-caja-btn">
+                                    <form method="post" action="/agregar-carrito/">{% csrf_token %}
+                                        <input type="hidden" value="{{item.pk}}" name="Producto">
+                                        <input type="hidden" value="1" name="Cantidad">
+                                        <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.pk}}" class="btn btn-default" role="button">Ver</a></p>
+                                    </form>
+                                </div>
+							</div>
+						</div>
+						<div class="row"><p>{{item.Descripcion|truncatewords:4|safe}}</p></div>
 					</article>
 					{% endfor %}
 				</div>

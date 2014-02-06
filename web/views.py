@@ -116,6 +116,7 @@ def marcas(request):
 	diccionario['marcas']=Marca.objects.all()
 	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
 	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
@@ -315,6 +316,7 @@ def carrito(request):
 	diccionario['marcas']=Marca.objects.all()
 	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
 	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
@@ -365,6 +367,7 @@ def perfil_usuario(request):
 		diccionario['dPerfil']=Detalle_Perfil.objects.get(Usuario=request.user)
 		diccionario['marcas']=Marca.objects.all()
 		diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+		diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
 		diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
 		diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	return render_to_response('perfil-usuario.html',diccionario, context_instance=RequestContext(request))
@@ -395,15 +398,34 @@ def items_en_carrito(request):
 
 #Vista que devuelve a la pagina ofertas
 def productos_ofertas(request):
+	diccionario={}
 	centinela = False
 	usuario = ""
 	if not request.user.is_anonymous():
-		usuario = request.user
-		centinela = True
-	ofertas = Producto.objects.filter(Oferta__exact=True)
-	destacados = Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-	detalle_img = Detalle_Imagen.objects.all()
-	return render_to_response('ofertas.html', {'datos':ofertas, 'centinela': centinela, 'usuario':usuario, 'destacados':destacados, 'detalle_img':detalle_img}, context_instance=RequestContext(request))
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['ofertas'] = Producto.objects.filter(Oferta__exact=True)
+	diccionario['destacados'] = Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:3]
+	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:3]
+	diccionario['detalle_img'] = Detalle_Imagen.objects.all()
+	return render_to_response('ofertas.html', diccionario, context_instance=RequestContext(request))
+
+
+def productos_destacados(request):
+	diccionario={}
+	centinela = False
+	usuario = ""
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['ofertas'] = Producto.objects.filter(Oferta__exact=True)[:3]
+	diccionario['destacados'] = Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')
+	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:3]
+	diccionario['detalle_img'] = Detalle_Imagen.objects.all()
+	return render_to_response('destacados.html', diccionario, context_instance=RequestContext(request))
+
 
 #Vista que retorna los datos del servicio de flete
 def servicio_flete(request):
@@ -422,6 +444,7 @@ def enviar_email(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
 	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
 	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	if not request.user.is_anonymous():
@@ -432,8 +455,11 @@ def enviar_email(request):
 		if formulario.is_valid():
 			titulo = 'Mensaje desde la pagina web de Paper & More'
 			amigo=formulario.cleaned_data['amigo']
-			contenido=formulario.cleaned_data['mensaje'] + "\n"
-			contenido += 'Comunicarse a: ' + formulario.cleaned_data['correo']
+			contenido = 'Mensaje enviado por: ' + formulario.cleaned_data['correo'] + "\n\n"
+			contenido+=formulario.cleaned_data['mensaje'] + "\n\n"
+			contenido+='Da click en el siguiente enlace para ver la informacion compartida:\n'
+			contenido+=formulario.cleaned_data['url']+ "\n"
+			
 			correo=EmailMessage(titulo, contenido, to=[amigo])
 			correo.send()
 		else:
@@ -461,6 +487,7 @@ def envio_direccion(request):
 	diccionario['marcas']=Marca.objects.all()
 	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
 	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
@@ -481,6 +508,7 @@ def envio_pago(request):
 	diccionario['marcas']=Marca.objects.all()
 	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
 	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
@@ -508,7 +536,7 @@ def envio_pago(request):
 		idDir=request.POST['idDireccion']
 		diccionario['direccion']=Direccion_Orden.objects.get(Usuario=request.user, pk=idDir)
 		dire=Direccion_Orden.objects.get(pk=idDir)
-		diccionario['total']=precio+dire.Region.Precio
+		diccionario['total']=precio+dire.Ciudad.Servicio_Domicilio
 		diccionario['region']=dire
 				
 	return render_to_response('enviar-pago.html', diccionario, context_instance=RequestContext(request))
@@ -523,6 +551,7 @@ def envio_pago_directo(request):
 	diccionario['marcas']=Marca.objects.all()
 	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
 	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
 	anos=[]
@@ -548,6 +577,7 @@ def procesar_pago(request):
 	diccionario['marcas']=Marca.objects.all()
 	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
 	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	if not request.user.is_anonymous():
 		usuario = request.user
@@ -559,6 +589,7 @@ def procesar_pago(request):
 	diccionario['marcas']=Marca.objects.all()
 	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
 	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 
 	if request.method=='POST':
@@ -576,7 +607,7 @@ def procesar_pago(request):
 		
 		if len(idDir) > 0:
 			dire=Direccion_Orden.objects.get(pk=idDir)
-			Tot=precio+dire.Region.Precio
+			Tot=precio+dire.Ciudad.Servicio_Domicilio
 		else:
 			Tot=precio
 
@@ -686,7 +717,7 @@ def guardar_direccion(request):
 		frmDir = Direccion_OrdenForm(request.POST)
 		if frmDir.is_valid():
 			contacto = frmDir.cleaned_data['Nombre']
-			ciudad = frmDir.cleaned_data['Ciudad']
+			idCiudad = frmDir.cleaned_data['Ciudad']
 			idRegion = request.POST['Region']
 			#region = Region.objects.get(id=idRegion)
 			pais = frmDir.cleaned_data['Pais']
@@ -695,31 +726,33 @@ def guardar_direccion(request):
 			Dir = Direccion_Orden(
 					Nombre=contacto,
 					Direccion=direccion,
-					Ciudad=ciudad,
+					Ciudad=idCiudad,
 					Region=Region.objects.get(pk=idRegion),
 					Pais=pais,
 					Telefono=telefono,
 					Usuario=request.user
 				)
 			Dir.save()
-			diccionario['direccion']=Direccion_Orden.objects.get(Nombre=contacto, Direccion=direccion, Ciudad=ciudad, Region=idRegion, Pais=pais, Telefono=telefono, Usuario=request.user)
+			direccion=Direccion_Orden.objects.get(Nombre=contacto, Direccion=direccion, Ciudad=idCiudad, Region=idRegion, Pais=pais, Telefono=telefono, Usuario=request.user)
+			diccionario['direccion']=direccion
 			diccionario['usuario']=request.user
 			diccionario['centinela']=True
 			carrito=Carrito.objects.get(Usuario=request.user, Estado=Estado.objects.get(pk=1))
 			diccionario['marcas']=Marca.objects.all()
 			diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
 			diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+			diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
 			diccionario['detalle_img']= Detalle_Imagen.objects.all()
 			detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
-			region=Region.objects.get(pk=idRegion)
+			#ciudad=Ciudad.objects.get(pk=idCiudad)
 			for item in detalle:
 				cantidad += item.Cantidad
 				precio += item.Producto.Precio * item.Cantidad
 			diccionario['cantidad']=cantidad
 			diccionario['subtotal']=precio
-			diccionario['total']=precio+region.Precio
+			diccionario['total']=precio+direccion.Ciudad.Servicio_Domicilio
 			diccionario['carrito']=carrito
-			diccionario['region']=region
+			#diccionario['ciudad']=ciudad
 			
 			return render_to_response('enviar-pago.html', diccionario, context_instance=RequestContext(request))
 			#return HttpResponse(json.dumps({'texto':texto}), content_type='application/json')
@@ -737,6 +770,7 @@ def editar_perfil(request):
 		diccionario['marcas']=Marca.objects.all()
 		diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
 		diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+		diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
 		diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	return render_to_response('editar-perfil.html', diccionario, context_instance=RequestContext(request))
 
@@ -775,6 +809,7 @@ def editar_contrasena(request):
 		diccionario['marcas']=Marca.objects.all()
 		diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
 		diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+		diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
 		diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	return render_to_response('editar-contrasena.html', diccionario, context_instance=RequestContext(request))
 
@@ -784,6 +819,7 @@ def actualizar_contrasena(request):
 	diccionario['marcas']=Marca.objects.all()
 	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
 	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	if not request.user.is_anonymous():
 		usuario=User.objects.get(pk=request.user.id)
@@ -800,6 +836,7 @@ def historial_compra(request):
 	diccionario['marcas']=Marca.objects.all()
 	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
 	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
@@ -813,6 +850,7 @@ def detalle_compra(request, id_orden):
 	diccionario['marcas']=Marca.objects.all()
 	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
 	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
@@ -855,3 +893,51 @@ def detalle_credito(request, id_credito):
 	diccionario['pagos']=Pagos.objects.filter(Credito=credito)
 	diccionario['credito']=credito
 	return render_to_response('detalle-credito.html', diccionario, context_instance=RequestContext(request))
+#Vista para verificar el Usuario a registrar--Ajax
+def verificar_usuario(request):
+	if request.is_ajax():
+		if request.method=='POST':
+			user=request.POST['usuario']
+			cUser=User.objects.filter(username=user).count()
+			if cUser >=1:
+				tUser=1
+			else:
+				tUser=0
+	return HttpResponse(json.dumps({'tUser':tUser}), content_type='application/json')
+
+#Vista para verificar el email a registrar--Ajax
+def verificar_email(request):
+	if request.is_ajax():
+		if request.method=='POST':
+			email=request.POST['email']
+			cUser=User.objects.filter(email=email).count()
+			if cUser >=1:
+				tUser=1
+			else:
+				tUser=0
+	return HttpResponse(json.dumps({'tUser':tUser}), content_type='application/json')
+
+def verificar_rnp(request):
+	if request.is_ajax():
+		if request.method=='POST':
+			rnp=request.POST['rnp']
+			cUser=Detalle_Perfil.objects.filter(RNP=rnp).count()
+			if cUser >=1:
+				tUser=1
+			else:
+				tUser=0
+	return HttpResponse(json.dumps({'tUser':tUser}), content_type='application/json')
+
+def cargar_region(request):
+	if request.is_ajax():
+		if request.method=='POST':
+			pais = request.POST['pais']
+			region = Region.objects.filter(Pais=Pais.objects.get(pk=pais))
+	return render_to_response('cargar-combo.html', {'datos':region, 'r':True},context_instance=RequestContext(request))
+
+def cargar_ciudad(request):
+	if request.is_ajax():
+		if request.method=='POST':
+			region = request.POST['region']
+			ciudad = Ciudad.objects.filter(Region=Region.objects.get(pk=region))
+	return render_to_response('cargar-combo.html', {'datos':ciudad, 'c':True},context_instance=RequestContext(request))

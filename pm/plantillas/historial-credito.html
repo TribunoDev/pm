@@ -62,7 +62,7 @@
                                 </div>
 							</div>
 						</div>
-						<div class="row"><p>{{item.Descripcion|truncatewords:4}}</p></div>
+						<div class="row"><p>{{item.Descripcion|truncatewords:4|safe}}</p></div>
 					</article>
 					{% endfor %}
 				</div>
@@ -99,7 +99,7 @@
                                 </div>
 							</div>
 						</div>
-						<div class="row"><p>{{item.Descripcion|truncatewords:4}}</p></div>
+						<div class="row"><p>{{item.Descripcion|truncatewords:4|safe}}</p></div>
 					</article>
 					{% endfor %}
 				</div>
@@ -135,7 +135,7 @@
 	                            </div>
 	                        </div>
 	                    </div>
-	                    <div class="row"><p>{{item.Descripcion|truncatewords:4}}</p></div>
+	                    <div class="row"><p>{{item.Descripcion|truncatewords:4|safe}}</p></div>
 	                </article>
                 {% endfor %}
             	</div>

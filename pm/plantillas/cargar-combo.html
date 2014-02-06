@@ -1,0 +1,11 @@
+<option value="">---------</option>
+{% if r == True %}
+	{% for item in datos %}
+		<option value="{{item.pk}}">{{item.Region}}</option>
+	{% endfor %}
+{% endif %}
+{% if c == True %}
+{% for item in datos %}
+		<option value="{{item.pk}}">{{item.Ciudad}}</option>
+	{% endfor %}
+{% endif %}

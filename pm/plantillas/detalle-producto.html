@@ -15,8 +15,13 @@
                 <div class="col col-sm-12 col-md-12">
                      <div id="muestra">
                     <article id="producto-detalle" class="cuerpo-contenido row">
+                            <div class="row no-print social">
+                                    <div class="fb-share-button" data-href="http://developers.facebook.com/docs/plugins/" data-type="button"></div>
+                                    <a href="https://twitter.com/share" class="twitter-share-button" data-url="www.pm.hn" data-text="Visita nuestro sitio y conoce de nuestros precios" data-via="papermore" data-lang="es" data-count="none">Twittear</a>
+                                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+                            </div>
                             <div id="print-imagen-producto">
-                            <div class="col-sm-5">
+                            <div class="col col-sm-5">
                                 <figure class="cycle-slideshow img-thumbnail" data-cycle-fx=scrollHorz data-cycle-timeout=0 data-cycle-pager="#no-template-pager" data-cycle-pager-template="">
                                     <img src="{{MEDIA_URL}}{{detalle.Imagen}}" />
                                     {% for imagen in detalle_img %}
@@ -29,20 +34,17 @@
                                     <img src="{{MEDIA_URL}}{{imagen.Imagen}}" width="20" height="auto">
                                     {% endfor %}
                                 </figure>
-                                <div class="row no-print">
-                                    <div class="fb-share-button" data-href="http://developers.facebook.com/docs/plugins/" data-type="button"></div>
-                                    <a href="https://twitter.com/share" class="twitter-share-button" data-url="www.pm.hn" data-text="Visita nuestro sitio y conoce de nuestros precios" data-via="papermore" data-lang="es" data-count="none">Twittear</a>
-                                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+                                <div id="panel-opciones" class="row no-print">
                                     <!-- Button trigger modal -->
-                                    <button class="btn btn-primary btn-default" data-toggle="modal" data-target="#myModal"><span class="icon-mail icon-mail3"></span></button>
-                                    <button id="printer" class="btn btn-primary btn-default"><span class="icon-printer icon-printer"></span></button>
-                                    <a href="javascript:window.print()"> Imprimir</a>
+                                    <button class="btn btn-primary btn-default btnEmailProducto" data-toggle="modal" data-target="#myModal"><span class="icon-mail icon-mail3"></span></button>
+                                    <a href="javascript:window.print()" class="btn btn-primary btn-default btnImprimirProducto"><span class="icon-printer icon-printer"></span></a>
                                 </div>
                             </div>
+                            <div class="espacio"></div>
                             </div><!--Fin #print-imagen-producto -->
                             <div id="producto-detalle-descripcion" class="col col-xs-12 col-sm-7">
                                 <div class="detalle-nombre row">
-                                    <h3>{{detalle.Descripcion}}</h3>
+                                    <h3>{{detalle.Descripcion|safe}}</h3>
                                 </div>
                                 <form method="post" action="/agregar-carrito/" class="detalle-cantidad row no-print">{% csrf_token %}
                                     <div class="col col-xs-3">
@@ -61,6 +63,11 @@
                                 <div class="row detalle-existencia">
                                     <p>En exitencia: {{detalle.Existencia}} unidades</p>
                                 </div>
+                                
+                                <div class="row">
+                                    <div class="espacio"></div>
+                                    <p>{{detalle.Comentarios|safe}}</p>
+                                </div>
                             </div>
                        
                     </article>
@@ -75,12 +82,30 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" id="myModalLabel">Enviar e-mail</h4>
                     </div>
+                    <form id="formularioEmail" role="form" method="post" action="/enviar-email/">
                     <div class="modal-body">
-                        <form id="formulario" method="post" action="/enviar-email/">{% csrf_token %}
-                            {{formulario.as_p}}
-                            <p><input type="submit" value="Confirmar"></p>
-                        </form>
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>Para:</label>
+                            {{formulario.amigo}}
+                        </div>
+                        <div class="form-group">
+                            <label>De:</label>
+                            {{formulario.correo}}
+                        </div>
+                        <div class="form-group">
+                            <label>Mensaje:</label>
+                            {{formulario.mensaje}}
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" id="id_url" name="url" maxlength="500">
+                        </div>
                     </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                    </div>
+                    </form>
                 </div><!-- /.modal-content -->
               </div><!-- /.modal-dialog -->
             </div><!-- /.modal -->
@@ -117,7 +142,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row"><p>{{item.Descripcion|truncatewords:4}}</p></div>
+                        <div class="row"><p>{{item.Descripcion|truncatewords:4|safe}}</p></div>
                     </article>
                     {% endfor %}
                 </div>
@@ -153,7 +178,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row"><p>{{item.Descripcion|truncatewords:4}}</p></div>
+                        <div class="row"><p>{{item.Descripcion|truncatewords:4|safe}}</p></div>
                     </article>
                     {% endfor %}
                 </div>
@@ -189,7 +214,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row"><p>{{item.Descripcion|truncatewords:4}}</p></div>
+                        <div class="row"><p>{{item.Descripcion|truncatewords:4|safe}}</p></div>
                     </article>
                     {% endfor %}
                 </div>

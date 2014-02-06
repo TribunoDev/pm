@@ -15,61 +15,20 @@
                     <div class="form-group">
                         <h3>{{ form.password.label_tag }}</h3>
                             {{ form.password }}
+                            <!--a href="/recuperar-contrasena/">Olvidé mi contraseña</a-->
                     </div>
+
                     <div class="form-group">
                         <div>
                             <input type="submit" class="btn btn-default" value="Ingresar" />
                             <input type="hidden" name="next" value="{{next}}" />
                         </div>
                     </div>
-                </form>    
+                </form>
+                <div class="row">
+                    <a href="/registro/">Registrarse</a>
+                </div>    
             </div>
         </article>
     </div>
-<!--div class="w-clearfix section contenido">
-        <div class="inicio-caja1">
-            <div class="contenido-paginas">
-            </div>
-            <div class="cotenido-paginas">
-                <section id="cuerpo-detalle" class="pagina-contenido-caja">
-                    <article class="pagina-caja1-1">
-                        <div class="cotenido-paginas"><h2 class="titulo">Iniciar Sesión</h2></div>
-                    </article>
-                    <article id="formulario" class="pagina-caja1-2">
-                        <form role="form" class="form-horizontal" id="frmRegUsuario" name="frmRegUsuario" method="post" action="{%  url 'django.contrib.auth.views.login' %}">{% csrf_token %}
-                            <div class="form-group">
-                                <h3>{{ form.username.label_tag }}</h3>
-                                <div class="col-sm-6">
-                                    {{ form.username }}  
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <h3>{{ form.password.label_tag }}</h3>
-                                <div class="col-sm-6">
-                                    {{ form.password }}
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-offset-5 col-sm-5">
-                                    <input type="submit" class="btn btn-default" value="Ingresar" />
-                                    <input type="hidden" name="next" value="{{next}}" />
-                                </div>
-                            </div>
-                        </form>
-                    </article>
-                </section>
-                <!section id="section-carrito" class="pagina-contenido-caja2">
-                    <div id="detalle-carrito">
-                        <div class="cotenido-paginas contenido-carrito">
-                            <h4 class="titulo h4">Carrito</h4>
-                        </div>
-                        <div id="datos-carrito">
-                            <p>Producto: 1</p>
-                            <p>Cantidad: 5</p>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </div>
-    </div-->
 {% endblock %}

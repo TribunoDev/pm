@@ -35,6 +35,8 @@ class Producto(models.Model):
 	Oferta = models.BooleanField(help_text='Describe si el producto esta en oferta', verbose_name=u'Oferta')
 	Imagen = models.ImageField(upload_to='img_productos',verbose_name=u'Imágen')
 	Fecha = models.DateField(auto_now_add=True, blank=True, null=True)
+	Comentarios=models.TextField(help_text='Ingrese especificaciones del producto', verbose_name=u'Comentarios')
+	Notas=models.CharField(max_length=200, help_text='Ingrese la marca del producto', verbose_name=u'Notas')
 	
 	def __unicode__(self):
 		return self.Descripcion
@@ -81,10 +83,17 @@ class Region(models.Model):
 	def __unicode__(self):
 		return self.Region
 
+class Ciudad(models.Model):
+	Ciudad=models.CharField(max_length=200, verbose_name=u'Ciudad')
+	Region=models.ForeignKey(Region, verbose_name=u'Región')
+	Servicio_Domicilio=models.DecimalField(max_digits=5, decimal_places=2)
+	def __unicode__(self):
+		return self.Ciudad
+
 class Direccion_Orden(models.Model):
 	Nombre = models.CharField(max_length=50, help_text='Ingrese el nombre completo del contacto', verbose_name=u'Nombre')
 	Direccion = models.TextField(help_text='Ingrese la dirección para el envío', verbose_name=u'Dirección')
-	Ciudad = models.CharField(max_length=50, help_text='Ingresa una ciudad para la dirección')
+	Ciudad = models.ForeignKey(Ciudad, help_text='Ingresa una ciudad para la dirección')
 	Region = models.ForeignKey(Region, help_text='Ingresar una región, estado o provincia', verbose_name=u'Estado')
 	Pais = models.ForeignKey(Pais)
 	Telefono = models.CharField(max_length=10, help_text='Ingrese el teléfono de contacto', verbose_name=u'Teléfono')
