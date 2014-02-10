@@ -18,10 +18,12 @@
 							</thead>
 							<tbody>
 							{% for compra in compras %}
+								{% if compra.Carrito.Usuario == usuario %}
 								<tr>
 									<td>{{compra.Fecha}}</td>
 									<td><a href="/detalle-compra/{{compra.id}}">Detalle</a></td>
 								</tr>
+								{% endif %}
 							{% endfor %}
 							</tbody>
 						</table>

@@ -662,12 +662,15 @@ def procesar_pago(request):
 				#template='transaccion-denegada.html'
 				o = Orden.objects.get(Carrito=car)
 				d=Detalle_Carrito.objects.filter(Carrito=car)
+				u=User.objects.get(pk=request.user.id)
 				titulo = 'Orden de Compra desde la tienda online.'
 				desde='no_reply@pm.hn'
 				amigo='mjbc007@gmail.com'
 				html='<h2>Detalle de Orden</h2>'
-				html='<p>Numero de Orden: '+ str(o.id) +'</p>'
-				html='<p>Nombre del Cliente: '+ str(o.Carrito.Usuario.username) +'</p>'
+				html+='<p>Numero de Orden: '+ str(o.id) +'</p>'
+				#html+='<p>Nombre del Cliente: '+ str(o.Carrito.Usuario.username) +'</p>'
+				html+='<p>Nombre del Cliente: '+ str(u.first_name) + ' ' + str(u.last_name)+ '</p>'
+				html+='<p>Direccion de envio: '+ str(o.Direccion.Direccion) +'</p>'
 				html+='<table>'
 				html+='<thead>'
 				html+='<tr>'

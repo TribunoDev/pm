@@ -7,6 +7,9 @@
                 <h1 class="titulo">Iniciar Sesión</h1>
             </div>
             <div class="row">
+                {% if form.errors %}
+                <p>Su usuario y contraseña no coinciden. Porfavor intentelo otra vez.</p>
+                {% endif %}
                 <form role="form" id="frmRegUsuario" class="cuerpo-contenido row" name="frmRegUsuario" method="post" action="{%  url 'django.contrib.auth.views.login' %}">{% csrf_token %}
                     <div class="form-group">
                         <h3>{{ form.username.label_tag }}</h3>

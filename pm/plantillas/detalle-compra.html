@@ -28,6 +28,7 @@
 								<table class="table table-bordered">
 									<thead>
 										<tr>
+											<th>Codigo</th>
 											<th>Producto</th>
 											<th>Cantidad</th>
 											<th>Precio</th>
@@ -38,6 +39,7 @@
 										{% load mathfilters %}
 										{% for item in detalle %}
 											<tr>
+												<td>{{item.Producto.Codigo|safe}}</td>
 												<td>{{item.Producto.Descripcion|safe}}</td>
 												<td>{{item.Cantidad}}</td>
 												<td>L. {{item.Producto.Precio}}</td>
