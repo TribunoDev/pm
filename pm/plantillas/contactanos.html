@@ -1,44 +1,32 @@
 {% extends 'base.html' %}
-
-{% block titulo %}Paper & More{% endblock %}
-
+{% block titulo %}Contactanos{% endblock %}
 {% block contenido %}
-{% load humanize %}
-	<ol class="breadcrumb">
-	  	<li><a href="/marcas/">Marcas</a></li>
-	  	<li class="active">{{marca.Marca}}</li>
-	</ol>
 	<div class="row">
-		<article id="caja-contenido" class="col-xs-12 col-sm-8 col-md-9">
+			<article id="caja-contenido" class="col-xs-12 col-sm-8 col-md-9">
 			<div class="contenido-titulo row">
-				<h2 class="titulo">{{marca.Marca}}</h2>
+				<h2 class="titulo">Contactanos</h2>
 			</div>
 			<div  class="row">
 				<article class="cuerpo-contenido row">
-					{% for elemento in productos %}
-					   <div class="producto-elemento col-xs-6 col-sm-6 col-md-4">
-					    <div class="thumbnail">
-				    		{% for imagen in detalle_img%}
-				                {% if imagen.Producto == elemento %}
-				                    {% if forloop.first %}
-				                    <a href="/detalle-producto/{{elemento.pk}}"><img src="{{MEDIA_URL}}{{imagen.Imagen}}" class="img-thumbnail"></a>
-				                    {% endif %}
-				                {% endif %}
-				            {% endfor %}
-				      		<div class="caption">
-				        		<h3 class="nombre-producto">{{elemento.Descripcion|truncatewords:4|safe}}</h3>
-				        		<p class="caption-precio">L.{{elemento.Precio|intcomma}}</p>
-				        		<form method="post" action="/agregar-carrito/">{% csrf_token %}
-				        			<input type="hidden" value="{{elemento.pk}}" name="Producto">
-				        			<input type="hidden" value="1" name="Cantidad">
-				        			<p class="producto-caja-btn">
-				        			<button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{elemento.pk}}" class="btn btn-default" role="button">Detalles</a></p>
-				        			
-				        		</form>
-				      		</div>
-				    	</div>
-					  </div>
-					{% endfor %}
+					<div class="row">
+						<!-- ACORDEON -->
+						<div class="panel-group" id="accordion">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+							      	<h4 class="panel-title">
+							        	<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Cesar A. Coello</a>
+							      	</h4>
+							    </div>
+							    <div id="collapseOne" class="panel-collapse collapse in">
+							    	<div class="panel-body">
+							    		-Gerente General
+							    		-<a href="mailto:cesar@pm.hn">cesar@pm.hn</a>
+							    	</div>
+							    </div>
+							</div>
+						</div>
+						<!-- FIN ACORDEON -->
+					</div>
 				</article>
 			</div>
 		</article>
@@ -116,42 +104,43 @@
 					{% endfor %}
 				</div>
 			</div>
-			<div class="row producto-filtro-lateral">
-                <div class="row">
-                    <h2 class="titulo">Novedades</h2>
-                </div>
-                <div  class="cuerpo-contenido row">
-                    {% for item in novedades %}
-                    <article class="producto-elemento row">
-                        <div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
-                        <div class="row">
-                            <figure id="s2" class="s2 demo">
-                                <img src="{{MEDIA_URL}}{{item.Imagen}}">
-                                {% for img in detalle_img %}
-                                    {% if img.Producto == item %}
-                                        <img src="{{MEDIA_URL}}{{img.Imagen}}" >
-                                    {% endif %}
-                                {% endfor %}
-                            </figure>
-                            <div class="contenido-lateral-precio ">
-                                <div class="row">
-                                    {% load humanize %}
-                                    <h3 ><span class="label label-success">L.{{item.Precio|intcomma}}</span></h3>
-                                </div>
-                                <div class="row producto-caja-btn">
+			<div class="row espacio"></div>
+			<div class="row">
+				<div class="row">
+					<h2 class="titulo">Novedades</h2>
+				</div>
+				<div  class="cuerpo-contenido row">
+					{% for item in novedades %}
+					<article class="producto-elemento row">
+						<div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
+						<div class="row">
+							<figure id="s2" class="s2 demo">
+								<img src="{{MEDIA_URL}}{{item.Imagen}}">
+								{% for img in detalle_img %}
+									{% if img.Producto == item %}
+										<img src="{{MEDIA_URL}}{{img.Imagen}}">
+									{% endif %}
+								{% endfor %}
+							</figure>
+							<div class="contenido-lateral-precio">
+								<div class="row">
+									{% load humanize %}
+									<h3 ><span class="label label-success">L.{{item.Precio|intcomma}}</span></h3>
+								</div>
+								<div class="row producto-caja-btn">
                                     <form method="post" action="/agregar-carrito/">{% csrf_token %}
                                         <input type="hidden" value="{{item.pk}}" name="Producto">
                                         <input type="hidden" value="1" name="Cantidad">
                                         <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.pk}}" class="btn btn-default" role="button">Ver</a></p>
                                     </form>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row"><p>{{item.Descripcion|truncatewords:4|safe}}</p></div>
-                    </article>
-                    {% endfor %}
-                </div>
-            </div>
+							</div>
+						</div>
+						<div class="row"><p>{{item.Descripcion|truncatewords:4|safe}}</p></div>
+					</article>
+					{% endfor %}
+				</div>
+			</div>
 		</article>
 	</div>
 {% endblock %}

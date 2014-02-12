@@ -11,7 +11,14 @@
 	<div  class="item-carrito">
 		<div class="col col-sm-8">
 			<figure class="col col-xs-3 col-sm-3">
-				<img src="{{MEDIA_URL}}{{item.Producto.Imagen}}" alt="Imagen de Producto">
+			{% for imagen in detalle_img%}
+                {% if imagen.Producto == item.Producto %}
+                    {% if forloop.first %}
+                    <a href="/detalle-producto/{{item.Producto.pk}}"><img src="{{MEDIA_URL}}{{imagen.Imagen}}" class="img-thumbnail"></a>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+				<!--img src="{{MEDIA_URL}}{{item.Producto.Imagen}}" alt="Imagen de Producto"-->
 			</figure>
 			<div class="item-descripcion col col-xs-9 col-sm-9">
 				<h3>{{item.Producto.Descripcion|safe}}</h3>

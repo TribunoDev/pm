@@ -11,7 +11,13 @@
 					{% for elemento in resultado %}
 					   <div class="producto-elemento col-xs-6 col-sm-6 col-md-4">
 					    <div class="thumbnail">
-				    		<a href="/detalle-producto/{{elemento.pk}}"><img src="{{MEDIA_URL}}{{elemento.Imagen}}" class="img-thumbnail"></a>
+				    		{% for imagen in detalle_img%}
+				                {% if imagen.Producto == elemento %}
+				                    {% if forloop.first %}
+				                    <a href="/detalle-producto/{{elemento.pk}}"><img src="{{MEDIA_URL}}{{imagen.Imagen}}" class="img-thumbnail"></a>
+				                    {% endif %}
+				                {% endif %}
+				            {% endfor %}
 				      		<div class="caption">
 				      			{% load humanize %}
 				        		<h3 class="nombre-producto">{{elemento.Descripcion|truncatewords:4|safe}}</h3>

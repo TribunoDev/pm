@@ -142,13 +142,17 @@ def marca_producto(request, id_marca):
 
 #Vista para devolver los productos con categoria "Novedades"
 def destacados(request):
-	destacados = Producto.objects.filter(Destacado__exact=True)[:12]
-	return render_to_response('contenido-productos.html', {'datos': destacados}, context_instance= RequestContext(request))
+	diccionario={}
+	diccionario['datos'] = Producto.objects.filter(Destacado__exact=True)[:12]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	return render_to_response('contenido-productos.html', diccionario, context_instance= RequestContext(request))
 
 #Vista que devuelve los productos que estan en la categoria de Ofertas
 def ofertas(request):
-	ofertas = Producto.objects.filter(Oferta__exact=True)[:12]
-	return render_to_response('contenido-productos.html', {'datos':ofertas}, context_instance=RequestContext(request))
+	diccionario={}
+	diccionario['datos'] = Producto.objects.filter(Oferta__exact=True)[:12]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	return render_to_response('contenido-productos.html', diccionario, context_instance=RequestContext(request))
 
 def novedades(request):
 	mes=datetime.now().month
@@ -391,6 +395,7 @@ def items_en_carrito(request):
 		carrito = Carrito.objects.get(Usuario=usuario, Estado=1)
 	if Detalle_Carrito.objects.filter(Carrito=carrito).count() != 0:
 		diccionario['detalle']=Detalle_Carrito.objects.filter(Carrito=carrito)
+		diccionario['detalle_img']= Detalle_Imagen.objects.all()
 		template = 'items-en-carrito.html'
 	else:
 		template = 'no-hay-items-carrito.html'
@@ -944,3 +949,12 @@ def cargar_ciudad(request):
 			region = request.POST['region']
 			ciudad = Ciudad.objects.filter(Region=Region.objects.get(pk=region))
 	return render_to_response('cargar-combo.html', {'datos':ciudad, 'c':True},context_instance=RequestContext(request))
+
+def contactanos(request):
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	return render_to_response('contactanos.html', diccionario, context_instance=RequestContext(request))

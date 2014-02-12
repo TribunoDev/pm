@@ -6,6 +6,13 @@ class Editor(admin.ModelAdmin):
 	class Media:
 		js = ('../static/js/tiny_mce/tiny_mce.js', '../static/js/editores/textareas.js')
 
+class ImageArchive(admin.TabularInline):
+	model = Detalle_Imagen
+	extra = 5
+
+class ImageAdmin(admin.ModelAdmin):
+	inlines = [ImageArchive, ]
+
 admin.site.register(Producto, Editor)
 admin.site.register(Categoria)
 admin.site.register(SubCategoria)
