@@ -27,19 +27,18 @@ class SubCategoria(models.Model):
 
 class Producto(models.Model):
 	Codigo = models.BigIntegerField(primary_key=True, help_text='Código del producto', verbose_name=u'Código')
-	Descripcion = models.TextField(help_text='Descripción del producto', verbose_name=u'Descripción')
+	Descripcion = models.CharField(max_length=200, help_text='Descripción del producto', verbose_name=u'Descripción')
 	Existencia = models.IntegerField(help_text='Cantidad de unidades en existencia del producto', verbose_name=u'Existencia')
 	Precio = models.DecimalField(max_digits=10, decimal_places=2, help_text='Precio unitario del producto', verbose_name=u'Precio')
 	Subcategoria = models.ForeignKey(SubCategoria, help_text='Sub-categoría del producto', verbose_name=u'Sub-categoría')
 	Destacado = models.BooleanField(help_text='Describe si el producto es destacado', verbose_name=u'Destacado')
 	Oferta = models.BooleanField(help_text='Describe si el producto esta en oferta', verbose_name=u'Oferta')
-	Imagen = models.ImageField(upload_to='img_productos',verbose_name=u'Imágen')
 	Fecha = models.DateField(auto_now_add=True, blank=True, null=True)
 	Comentarios=models.TextField(help_text='Ingrese especificaciones del producto', verbose_name=u'Comentarios')
 	Notas=models.CharField(max_length=200, help_text='Ingrese la marca del producto', verbose_name=u'Notas')
 	
 	def __unicode__(self):
-		return self.Descripcion
+		return str(self.Descripcion)
 
 class Detalle_Imagen(models.Model):
 	Imagen = models.ImageField(upload_to='img_detalle',verbose_name=u'Imágen')

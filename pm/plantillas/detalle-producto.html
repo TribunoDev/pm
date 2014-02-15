@@ -27,15 +27,13 @@
                             <div id="print-imagen-producto">
                             <div class="col col-sm-5">
                                 <figure class="cycle-slideshow img-thumbnail" data-cycle-fx=scrollHorz data-cycle-timeout=0 data-cycle-pager="#no-template-pager" data-cycle-pager-template="">
-                                    <img src="{{MEDIA_URL}}{{detalle.Imagen}}" />
                                     {% for imagen in detalle_img %}
-                                        <img src="{{MEDIA_URL}}{{imagen.Imagen}}" />
+                                        <img src="{{MEDIA_URL}}{{imagen.Imagen}}"/>
                                     {% endfor %}
                                 </figure>
                                 <figure id="no-template-pager" class="cycle-pager external no-print">
-                                    <img src="{{MEDIA_URL}}{{detalle.Imagen}}" width="30" height="auto" class="active_img">
                                     {% for imagen in detalle_img %}
-                                    <img src="{{MEDIA_URL}}{{imagen.Imagen}}" width="20" height="auto">
+                                    <img src="{{MEDIA_URL}}{{imagen.Imagen}}" width="20" height="auto" class="img-thumbnail">
                                     {% endfor %}
                                 </figure>
                                 <div id="panel-opciones" class="row no-print">
@@ -125,7 +123,6 @@
                         <div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
                         <div class="row">
                             <figure id="s2" class="s2 demo">
-                                <img src="{{MEDIA_URL}}{{item.Imagen}}" >
                                 {% for img in detalle_img %}
                                     {% if img.Producto == item %}
                                         <img src="{{MEDIA_URL}}{{img.Imagen}}" >
@@ -161,7 +158,7 @@
                         <div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
                         <div class="row">
                             <figure id="s2" class="s2 demo">
-                                <img src="{{MEDIA_URL}}{{item.Imagen}}">
+                                
                                 {% for img in detalle_img %}
                                     {% if img.Producto == item %}
                                         <img src="{{MEDIA_URL}}{{img.Imagen}}" >
@@ -197,7 +194,6 @@
                         <div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
                         <div class="row">
                             <figure id="s2" class="s2 demo">
-                                <img src="{{MEDIA_URL}}{{item.Imagen}}">
                                 {% for img in detalle_img %}
                                     {% if img.Producto == item %}
                                         <img src="{{MEDIA_URL}}{{img.Imagen}}" >

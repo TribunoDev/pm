@@ -173,10 +173,15 @@ label{
 }
 
 .frmCant{
-	padding-top: 25px;
+	padding: 5px 15px;
+}
+.frmCant input{
+	text-align: center;
 }
 
 .item-carrito .item-precio-cantidad{
+	border-radius: 4px;
+	background: #ecf0f1;
 	display: inline-block;
 	float: left;
 	padding: 0.3em;
@@ -308,7 +313,7 @@ label{
 
 	.titulo-precio-cantidad div{
 		background-color: #E6E6E6;
-		border-radius: 7px;
+		border-radius: 4px;
 		margin: 0 4%;
 	}
 

@@ -155,9 +155,11 @@ def ofertas(request):
 	return render_to_response('contenido-productos.html', diccionario, context_instance=RequestContext(request))
 
 def novedades(request):
+	diccionario={}
 	mes=datetime.now().month
-	novedades = Producto.objects.filter(Fecha__month=mes)[:12]
-	return render_to_response('contenido-productos.html', {'datos':novedades}, context_instance=RequestContext(request))
+	diccionario['datos'] = Producto.objects.filter(Fecha__month=mes)[:12]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	return render_to_response('contenido-productos.html', diccionario, context_instance=RequestContext(request))
 
 
 #Vista que genera los item de la pestaña productos en el menu principal
