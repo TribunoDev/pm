@@ -62,6 +62,20 @@
 											<input type="submit" class="btn btn-success" value="Enviar">
 										</div>
 									</div>
+									<div class="row">
+							  			<figure class="tarjetas col col-xs-1 col-sm-1"> 
+							  				<img src="{{STATIC_URL}}img/visa.jpg" alt="">
+							  			</figure>
+							  			<figure class="tarjetas col col-xs-1 col-sm-1">
+							  				<img src="{{STATIC_URL}}img/discover.jpg" alt="">
+							  			</figure>
+										<figure class="tarjetas col col-xs-1 col-sm-1">
+							  				<img src="{{STATIC_URL}}img/american_express.jpg" alt="">
+							  			</figure>
+							  			<figure class="tarjetas col col-xs-1 col-sm-1">
+							  				<img src="{{STATIC_URL}}img/mastercard.jpg" alt="">
+							  			</figure>
+							  		</div>
 							 	</div>
 							</div>
 						</form>
@@ -102,7 +116,6 @@
 						<div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
 						<div class="row">
 							<figure id="s2" class="s2 demo">
-								<img src="{{MEDIA_URL}}{{item.Imagen}}">
 								{% for img in detalle_img %}
 									{% if img.Producto == item %}
 										<img src="{{MEDIA_URL}}{{img.Imagen}}">
@@ -139,7 +152,6 @@
 						<div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
 						<div class="row">
 							<figure id="s2" class="s2 demo">
-								<img src="{{MEDIA_URL}}{{item.Imagen}}">
 								{% for img in detalle_img %}
 									{% if img.Producto == item %}
 										<img src="{{MEDIA_URL}}{{img.Imagen}}">
@@ -176,7 +188,6 @@
 						<div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
 						<div class="row">
 							<figure id="s2" class="s2 demo">
-								<img src="{{MEDIA_URL}}{{item.Imagen}}">
 								{% for img in detalle_img %}
 									{% if img.Producto == item %}
 										<img src="{{MEDIA_URL}}{{img.Imagen}}">

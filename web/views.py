@@ -677,8 +677,9 @@ def procesar_pago(request):
 				html+='<p>Numero de Orden: '+ str(o.id) +'</p>'
 				#html+='<p>Nombre del Cliente: '+ str(o.Carrito.Usuario.username) +'</p>'
 				html+='<p>Nombre del Cliente: '+ str(u.first_name) + ' ' + str(u.last_name)+ '</p>'
-				html+='<p>Direccion de envio: '+ str(o.Direccion.Direccion) +'</p>'
-				html+='<table>'
+				if len(idDir) > 0:
+					html+='<p>Direccion de envio: '+ str(o.Direccion.Direccion)+ ', '+ str(o.Direccion.Ciudad)+ ', '+ str(o.Direccion.Region)+ ', '+ str(o.Direccion.Pais) + '</p>'
+				html+='<table style="text-align:center">'
 				html+='<thead>'
 				html+='<tr>'
 				html+='<th>Codigo del Producto</th>'

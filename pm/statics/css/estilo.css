@@ -747,7 +747,7 @@ html, body{
 	display: block;
 	float: left;
 	margin-bottom: 4px;
-	padding: 5px 0.5em;
+	padding: 0.5em 0.5em;
 	position: relative;
 	width: 100%;
 }

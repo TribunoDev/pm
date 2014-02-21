@@ -17,7 +17,7 @@
 							        	<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Cesar A. Coello</a>
 							      	</h4>
 							    </div>
-							    <div id="collapseOne" class="panel-collapse collapse in">
+							    <div id="collapseOne" class="panel-collapse collapse">
 							    	<div class="panel-body">
 							    		-Gerente General
 							    		-<a href="mailto:cesar@pm.hn">cesar@pm.hn</a>
@@ -41,13 +41,12 @@
 						<div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
 						<div class="row">
 							<figure id="s2" class="s2 demo">
-								<img src="{{MEDIA_URL}}{{item.Imagen}}">
-								{% for img in detalle_img %}
-									{% if img.Producto == item %}
-										<img src="{{MEDIA_URL}}{{img.Imagen}}">
-									{% endif %}
-								{% endfor %}
-							</figure>
+                                {% for img in detalle_img %}
+                                    {% if img.Producto == item %}
+                                        <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+                                    {% endif %}
+                                {% endfor %}
+                            </figure>
 							<div class="contenido-lateral-precio">
 								<div class="row">
 									{% load humanize %}
@@ -78,13 +77,12 @@
 						<div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
 						<div class="row">
 							<figure id="s2" class="s2 demo">
-								<img src="{{MEDIA_URL}}{{item.Imagen}}">
-								{% for img in detalle_img %}
-									{% if img.Producto == item %}
-										<img src="{{MEDIA_URL}}{{img.Imagen}}">
-									{% endif %}
-								{% endfor %}
-							</figure>
+                                {% for img in detalle_img %}
+                                    {% if img.Producto == item %}
+                                        <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+                                    {% endif %}
+                                {% endfor %}
+                            </figure>
 							<div class="contenido-lateral-precio">
 								<div class="row">
 									{% load humanize %}
@@ -115,13 +113,12 @@
 						<div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
 						<div class="row">
 							<figure id="s2" class="s2 demo">
-								<img src="{{MEDIA_URL}}{{item.Imagen}}">
-								{% for img in detalle_img %}
-									{% if img.Producto == item %}
-										<img src="{{MEDIA_URL}}{{img.Imagen}}">
-									{% endif %}
-								{% endfor %}
-							</figure>
+                                {% for img in detalle_img %}
+                                    {% if img.Producto == item %}
+                                        <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+                                    {% endif %}
+                                {% endfor %}
+                            </figure>
 							<div class="contenido-lateral-precio">
 								<div class="row">
 									{% load humanize %}

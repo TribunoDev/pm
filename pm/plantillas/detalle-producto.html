@@ -1,10 +1,5 @@
 {% extends 'base.html' %}
 {% block titulo %}Detalle de Producto{% endblock %}
-{% block metadata %}
-    <meta property="og:image" content="http://miweb.com/images/im1.jpg" />
-    <meta property="og:url" content="http://127.0.0.1:8000/detalle-producto/{{detalle.pk}}" />
-    <meta property="og:url" content="http://127.0.0.1:8000/{{MEDIA_URL}}{{detalle.Imagen}}" />
-{% endblock %}
 {% block contenido %}
     <div class="row">
         <article id="caja-contenido" class="col-xs-12 col-sm-8 col-md-9">
@@ -115,17 +110,17 @@
         <article id="contenido-lateral" class="hidden-xs col-sm-4 col-md-3 contenido-lateral" >
             <div class="row">
                 <div class="row">
-                    <h2 class="titulo">Destacados</h2>
+                    <h2 class="titulo">Novedades</h2>
                 </div>
                 <div  class="cuerpo-contenido row">
-                    {% for item in destacados %}
+                    {% for item in novedades %}
                     <article class="producto-elemento row">
                         <div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
                         <div class="row">
                             <figure id="s2" class="s2 demo">
                                 {% for img in detalle_img %}
                                     {% if img.Producto == item %}
-                                        <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+                                        <img src="{{MEDIA_URL}}{{img.Imagen}}">
                                     {% endif %}
                                 {% endfor %}
                             </figure>
@@ -186,10 +181,10 @@
             </div>
             <div class="row producto-filtro-lateral">
                 <div class="row">
-                    <h2 class="titulo">Novedades</h2>
+                    <h2 class="titulo">Destacados</h2>
                 </div>
                 <div  class="cuerpo-contenido row">
-                    {% for item in novedades %}
+                    {% for item in destacados %}
                     <article class="producto-elemento row">
                         <div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
                         <div class="row">

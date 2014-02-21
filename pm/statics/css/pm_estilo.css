@@ -237,6 +237,10 @@ label{
 	font-size: 20px;
 }
 
+.tarjetas img{
+	display: inline-block;
+}
+
 .titulo-items{
 	padding: 5px 0.5em;
 }

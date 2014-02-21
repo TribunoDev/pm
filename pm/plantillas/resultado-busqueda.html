@@ -38,15 +38,14 @@
 		<article id="contenido-lateral" class="hidden-xs col-sm-4 col-md-3 contenido-lateral" >
 			<div class="row">
 				<div class="row">
-					<h2 class="titulo">Destacados</h2>
+					<h2 class="titulo">Novedades</h2>
 				</div>
 				<div  class="cuerpo-contenido row">
-				{% for item in destacados %}
+				{% for item in novedades %}
 					<article class="producto-elemento row">
 						<div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
 						<div class="row">
 							<figure id="s2" class="s2 demo">
-								<img src="{{MEDIA_URL}}{{item.Imagen}}">
 								{% for img in detalle_img %}
 									{% if img.Producto == item %}
 										<img src="{{MEDIA_URL}}{{img.Imagen}}">
@@ -83,7 +82,6 @@
 						<div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
 						<div class="row">
 							<figure id="s2" class="s2 demo">
-								<img src="{{MEDIA_URL}}{{item.Imagen}}">
 								{% for img in detalle_img %}
 									{% if img.Producto == item %}
 										<img src="{{MEDIA_URL}}{{img.Imagen}}">
@@ -111,15 +109,14 @@
 			</div>
 			<div class="row producto-filtro-lateral">
 	            <div class="row">
-	                <h2 class="titulo">Novedades</h2>
+	                <h2 class="titulo">Destacados</h2>
 	            </div>
             	<div  class="cuerpo-contenido row">
-                {% for item in novedades %}
+                {% for item in destacados %}
 	                <article class="producto-elemento row">
 	                    <div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
 	                    <div class="row">
 	                        <figure id="s2" class="s2 demo">
-	                            <img src="{{MEDIA_URL}}{{item.Imagen}}">
 	                            {% for img in detalle_img %}
 	                                {% if img.Producto == item %}
 	                                    <img src="{{MEDIA_URL}}{{img.Imagen}}" >
