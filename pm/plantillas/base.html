@@ -33,7 +33,7 @@
 				</figure>
 			</article>
 			<article id="buscar" class="no-print">
-				<label>Llámenos 12345678</label>
+				<label>Llámenos (+504) 2780-5200</label>
 				<form class="form-inline" role="form" method="post" action="/buscar/">{% csrf_token %}
 				  <div class="form-group">
 				    <input type="text" class="form-control" id="txtBuscar" name="txtBuscar" placeholder="Buscar...">
@@ -66,10 +66,19 @@
 			            			<a id="btnProductos" href="#" class="dropdown-toggle" data-toggle="dropdown">Productos <b class="caret"></b></a>
 			            			<ul class="dropdown-menu" id="categorias-productos"></ul>
 		                		</li>
+		                		<li class="dropdown">
+			            			<a id="btnProductos" href="#" class="dropdown-toggle" data-toggle="dropdown">Quienes somos <b class="caret"></b></a>
+			            			<ul class="dropdown-menu" id="categorias-productos">
+			            				<li><a href="/mision_vision/">Misión y Visión</a></li>
+							          	<li><a href="/politica/">Politicas</a></li>
+							           	<li><a href="/contactanos/">Contáctanos</a></li>
+							          	<li><a href="#">Ayuda</a></li>
+			            			</ul>
+		                		</li>
 			          		</ul>
 			          		<ul class="nav navbar-nav navbar-right">
 			          			{% if centinela == True %}
-			          				<li><a href="/carrito/">Carrito [<span id="total-item"></span>]</a></li>
+			          				<li><a href="/carrito/"><span class='icon-carrito icon-carritocart'> [<span id="total-item"></span>]</a></li>
 							      	<li class="dropdown">
 							        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{usuario.username|capfirst}} <b class="caret"></b></a>
 								        <ul class="dropdown-menu">
@@ -83,7 +92,6 @@
 							    {% else %}
 							   		<li><a id="iniciar-sesion" href="/ingresar/">Ingresar</a></li>
 				            		<li><a href="/registro/">Registrarse</a></li>
-				            		<li><a href="/carrito/">Carrito</a></li>
 							    {% endif %}
 						    </ul>
 			        	</nav>
@@ -198,7 +206,7 @@
 	      		</div>
 	      		<div class="modal-body">
 	      			<div class="media">
-					  	<a class="pull-left" href="#">
+					  	<a class="pull-left hidden-xs" href="#">
 					    	<img class="media-object" src="{{STATIC_URL}}img/empleos.jpg" alt="...">
 					  	</a>
 					  	<div class="media-body">
@@ -275,10 +283,12 @@
 					<a href="/ofertas/">Promociones y Ofertas</a> |
 					<a href="/destacados/">Destacados</a> |
 					<a href="/marcas/">Marcas</a> |
+					<a href="/contactanos/">Contactanos</a> |
 					<a href="#" data-toggle="modal" data-target="#myModalEmpleos">Empleos</a> |
 					<a href="#" data-toggle="modal" data-target="#myModalRecomendacion">Recomendar a un amigo</a> |
 					<a href="#">Privacidad y Seguridad</a> |
 					<a href="#" data-toggle="modal" data-target="#myModalHorarioServicio">Horarios de Servicio</a> |
+					<a href="/faq/">FAQ</a> |
 				</p>
 			</article>
 			<article id="caja3-foot">
@@ -315,5 +325,6 @@
 	  fjs.parentNode.insertBefore(js, fjs);
 	}(document, 'script', 'facebook-jssdk'));
 	</script>
+	{% block js %}{% endblock js %}
 </body>
 </html>

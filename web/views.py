@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from web.models import *
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 import json
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -16,6 +16,7 @@ from django.core.mail import EmailMessage
 import suds
 from suds.client import Client
 from datetime import datetime, timedelta, date
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 centinela = False
 
@@ -129,8 +130,17 @@ def marca_producto(request, id_marca):
 	diccionario={}
 	marca=get_object_or_404(Marca, pk=id_marca)
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['productos']=Producto.objects.filter(Descripcion__icontains=marca)
+	productos = Producto.objects.filter(Descripcion__icontains=marca)
 	diccionario['marca']=marca
+	paginador = Paginator(productos, 18)
+	pagina = request.GET.get('page','1')
+	try:
+		productos = paginador.page(pagina)
+	except PageNotAnInteger:
+		productos = paginador.page(1)
+	except EmptyPage:
+		productos = paginador.page(paginador.num_pages)
+	diccionario['productos'] = productos
 	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
 	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
 	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
@@ -176,7 +186,16 @@ def ver_subcategoria(request, id_subcat):
 	diccionario={}
 	subcat = get_object_or_404(SubCategoria, pk=id_subcat)
 	diccionario['datos']=subcat
-	diccionario['productos']=Producto.objects.filter(Subcategoria=subcat)
+	productos = Producto.objects.filter(Subcategoria=subcat)
+	paginador = Paginator(productos, 18)
+	pagina = request.GET.get('page','1')
+	try:
+		productos = paginador.page(pagina)
+	except PageNotAnInteger:
+		productos = paginador.page(1)
+	except EmptyPage:
+		productos = paginador.page(paginador.num_pages)
+	diccionario['productos'] = productos
 	diccionario['marcas']=Marca.objects.all()
 	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
 	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
@@ -212,10 +231,21 @@ def buscar(request):
 	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
 	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	
 	if request.method=='POST':
 		buscar = request.POST["txtBuscar"]
-		diccionario['resultado']=Producto.objects.filter(Descripcion__icontains=buscar)
+		resultado =Producto.objects.filter(Descripcion__icontains=buscar)
 		diccionario['dato']=buscar
+		paginador = Paginator(resultado, 18)
+		pagina = request.GET.get('page','1')
+		try:
+			resultado = paginador.page(pagina)
+		except PageNotAnInteger:
+			resultado = paginador.page(1)
+		except EmptyPage:
+			resultado = paginador.page(paginador.num_pages)
+		diccionario['resultado'] = resultado
+
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
@@ -412,10 +442,20 @@ def productos_ofertas(request):
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['ofertas'] = Producto.objects.filter(Oferta__exact=True)
+	pOfertas = Producto.objects.filter(Oferta__exact=True)
+	paginador = Paginator(pOfertas, 18)
+	pagina = request.GET.get('page','1')
+	try:
+		ofertas = paginador.page(pagina)
+	except PageNotAnInteger:
+		ofertas = paginador.page(1)
+	except EmptyPage:
+		ofertas = paginador.page(paginador.num_pages)
+
 	diccionario['destacados'] = Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:3]
 	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:3]
 	diccionario['detalle_img'] = Detalle_Imagen.objects.all()
+	diccionario['ofertas'] = ofertas
 	return render_to_response('ofertas.html', diccionario, context_instance=RequestContext(request))
 
 
@@ -428,9 +468,18 @@ def productos_destacados(request):
 		diccionario['centinela']=True
 	diccionario['marcas']=Marca.objects.all()
 	diccionario['ofertas'] = Producto.objects.filter(Oferta__exact=True)[:3]
-	diccionario['destacados'] = Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')
+	pDestacados = Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')
+	paginador = Paginator(pDestacados, 18)
+	pagina = request.GET.get('page','1')
+	try:
+		destacados = paginador.page(pagina)
+	except PageNotAnInteger:
+		destacados = paginador.page(1)
+	except EmptyPage:
+		destacados = paginador.page(paginador.num_pages)
 	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:3]
 	diccionario['detalle_img'] = Detalle_Imagen.objects.all()
+	diccionario['destacados'] = destacados
 	return render_to_response('destacados.html', diccionario, context_instance=RequestContext(request))
 
 
@@ -960,4 +1009,50 @@ def contactanos(request):
 	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
 	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	diccionario['contactos']= Contactos.objects.all()
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
 	return render_to_response('contactanos.html', diccionario, context_instance=RequestContext(request))
+
+def cargar_imagen(request):
+	formulario = CargarImagenForm()
+	return render_to_response('cargar_imagen_producto.html',{'form':formulario},context_instance=RequestContext(request))
+
+def faq(request):
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	diccionario['preguntas']=FAQ.objects.all()
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+	return render_to_response('faq.html',diccionario,context_instance=RequestContext(request))
+
+def mision_vision(request):
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+	return render_to_response('mision_vision.html', diccionario,context_instance=RequestContext(request))
+
+def politica(request):
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
+	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+	return render_to_response('politica.html', diccionario,context_instance=RequestContext(request))
+

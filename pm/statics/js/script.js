@@ -237,7 +237,7 @@ $(document).on("ready", function(){
 	$('#frmRegUsuario label, #formularioEmail label').addClass('control-label');
 	$('#id_username').addClass('form-control input-lg');
 	$('#id_password').addClass('form-control input-lg');
-	$('#id_amigo, #id_correo, #id_mensaje').addClass('form-control')
+	$('#id_amigo, #id_correo, #id_mensaje, #id_email').addClass('form-control');
 
 	$('#panel-direccion input, #panel-direccion select, #panel-direccion textarea').addClass('form-control');
 
@@ -441,5 +441,16 @@ $(document).on("ready", function(){
 			dataType: 'html'
 		});
 	});
+
+
+	//Script para cargar imagenes a un producto
+	/*$('#agregar_campo').on('click', function(){
+		var contar_campos = $('input[type="file"]').length;
+		var siguiente_campo = contar_campos + 1;
+		$('#carga_archivo').prepend('<div class="form-group"><label for="exampleInputFile">Imágen</label><input type="file" id="image" name="imagen_'+ siguiente_campo +'" /></div>');
+
+	});*/
+	
+	
 
 });

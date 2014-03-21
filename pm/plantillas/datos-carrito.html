@@ -12,16 +12,8 @@
 	</ul>
 </div>
 <form action="/enviar-datos-pago/" method="post" class="col col-sm-12">{% csrf_token %}
-	<!--div class="row">
-		<div class="col col-sm-offset-6 col-sm-4">
-	      <div class="checkbox">
-	        <label>
-	          <input type="checkbox"> Servicio de envío -
-	        </label>
-	        <a href="#">(Ver precios)</a>
-	      </div>
-	    </div>
-	</div-->
-	<input id="btnPagar" type="submit" class="btn btn-success" value="Realizar Pago">
+	{% if subtotal != 0 %}
+		<input id="btnPagar" type="submit" class="btn btn-success" value="Realizar Pago">
+	{% endif %}
 	<input type="hidden" name="txtCarrito" value="{{carrito.pk}}">
 </form>

@@ -23,12 +23,24 @@
                             <div class="col col-sm-5">
                                 <figure class="cycle-slideshow img-thumbnail" data-cycle-fx=scrollHorz data-cycle-timeout=0 data-cycle-pager="#no-template-pager" data-cycle-pager-template="">
                                     {% for imagen in detalle_img %}
-                                        <img src="{{MEDIA_URL}}{{imagen.Imagen}}"/>
+                                        {% if imagen.Producto == detalle%}
+                                            <img src="{{MEDIA_URL}}{{imagen.Imagen}}"/>
+                                        {% else %}
+                                            <img src="{{STATIC_URL}}img/sin_imagen.png">
+                                        {% endif %}
+                                    {% empty %}
+                                        <img src="{{STATIC_URL}}img/sin_imagen.png">
                                     {% endfor %}
                                 </figure>
                                 <figure id="no-template-pager" class="cycle-pager external no-print">
                                     {% for imagen in detalle_img %}
-                                    <img src="{{MEDIA_URL}}{{imagen.Imagen}}" width="20" height="auto" class="img-thumbnail">
+                                        {% if imagen.Producto == detalle%}
+                                            <img src="{{MEDIA_URL}}{{imagen.Imagen}}" width="20" height="auto" class="img-thumbnail">
+                                        {% else %}
+                                            <img src="{{STATIC_URL}}img/sin_imagen.png" width="20" height="auto" class="img-thumbnail">
+                                        {% endif %}
+                                    {% empty %}
+                                        <img src="{{STATIC_URL}}img/sin_imagen.png" width="20" height="auto" class="img-thumbnail">
                                     {% endfor %}
                                 </figure>
                                 <div id="panel-opciones" class="row no-print">
@@ -120,8 +132,12 @@
                             <figure id="s2" class="s2 demo">
                                 {% for img in detalle_img %}
                                     {% if img.Producto == item %}
-                                        <img src="{{MEDIA_URL}}{{img.Imagen}}">
+                                        <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+                                    {% else %}
+                                        <img src="{{STATIC_URL}}img/sin_imagen.png">
                                     {% endif %}
+                                {% empty %}
+                                    <img src="{{STATIC_URL}}img/sin_imagen.png">
                                 {% endfor %}
                             </figure>
                             <div class="contenido-lateral-precio">
@@ -153,11 +169,14 @@
                         <div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
                         <div class="row">
                             <figure id="s2" class="s2 demo">
-                                
                                 {% for img in detalle_img %}
                                     {% if img.Producto == item %}
                                         <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+                                    {% else %}
+                                        <img src="{{STATIC_URL}}img/sin_imagen.png">
                                     {% endif %}
+                                {% empty %}
+                                    <img src="{{STATIC_URL}}img/sin_imagen.png">
                                 {% endfor %}
                             </figure>
                             <div class="contenido-lateral-precio ">
@@ -192,7 +211,11 @@
                                 {% for img in detalle_img %}
                                     {% if img.Producto == item %}
                                         <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+                                    {% else %}
+                                        <img src="{{STATIC_URL}}img/sin_imagen.png">
                                     {% endif %}
+                                {% empty %}
+                                    <img src="{{STATIC_URL}}img/sin_imagen.png">
                                 {% endfor %}
                             </figure>
                             <div class="contenido-lateral-precio ">

@@ -1,6 +1,6 @@
 from web.models import *
 from django.conf.urls import patterns, include, url
-from django.contrib.auth.views import login, logout
+from django.contrib.auth.views import login, logout, password_reset, password_reset_done, password_reset_confirm, password_reset_complete
 from django.contrib import admin
 from django.conf import settings
 admin.autodiscover()
@@ -16,6 +16,7 @@ urlpatterns = patterns('',
     url(r'^buscar/$', 'web.views.buscar', name='buscar'),
     url(r'^agregar-carrito/$', 'web.views.agregar_carrito', name='agregar_carrito'),
     url(r'^catalogo-productos/$', 'web.views.catalogo_productos', name='catalogo_productos'),
+    url(r'^cargar-imagen/$', 'web.views.cargar_imagen', name='cargar_imagen'),
     url(r'^carrito/$', 'web.views.carrito', name='carrito'),
     url(r'^contactanos/$', 'web.views.contactanos', name='contactanos'),
     url(r'^datos-carrito/$', 'web.views.datos_carrito', name='datos_carrito'),
@@ -29,6 +30,7 @@ urlpatterns = patterns('',
     url(r'^enviar-direccion/$', 'web.views.envio_direccion', name='envio_direccion'),
     url(r'^enviar-pago/$', 'web.views.envio_pago', name='envio_pago'),
     url(r'^enviar-pago-carrito/$', 'web.views.envio_pago_directo', name='envio_pago_directo'),
+    url(r'^faq/$', 'web.views.faq', name='faq'),
     url(r'^resultado-transaccion/$', 'web.views.procesar_pago', name='procesar_pago'),
     url(r'^form-editar-cantidad/$', 'web.views.form_editar_cantidad', name='form_editar_cantidad'),
     url(r'^guardar-direccion/$', 'web.views.guardar_direccion', name='guardar_direccion'),
@@ -39,8 +41,10 @@ urlpatterns = patterns('',
     url(r'^ingresar/$', login, {'template_name': 'inicio-sesion.html',}, name='login'),
     url(r'^marcas/$', 'web.views.marcas', name='marcas'),
     url(r'^marcas/(?P<id_marca>\d+)/$', 'web.views.marca_producto', name='marca_producto'),
+    url(r'^mision_vision/$', 'web.views.mision_vision', name='mision_vision'),
     url(r'^ofertas/$', 'web.views.productos_ofertas', name='productos_ofertas'),
     url(r'^perfil-usuario/$', 'web.views.perfil_usuario', name='perfil_usuario'),
+    url(r'^politica/$', 'web.views.politica', name='politica'),
     url(r'^productos-en-oferta/$', 'web.views.ofertas', name='ofertas'),
     url(r'^productos-destacados/$', 'web.views.destacados', name='destacados'),
     url(r'^productos-en-novedades/$', 'web.views.novedades', name='novedades'),
@@ -51,6 +55,14 @@ urlpatterns = patterns('',
     url(r'^registrado/$', 'web.views.registrado', name='registrado'),
     url(r'^salir/$', logout,{'template_name': 'index.html',}, name='logout'),
     url(r'^servicio-flete/$', 'web.views.servicio_flete', name='servicio_flete'),
+
+
+    #prueba
+    url(r'^user/password/reset$', password_reset,{'template_name': 'password_reset_form.html','post_reset_redirect': '/user/password/reset/done/'}, name='password_reset'),
+    url(r'^user/password/reset/done/$', password_reset_done,{'template_name': 'password_reset_done.html'},name='password_reset_done'),
+    url(r'^user/password/reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', password_reset_confirm,{'template_name': 'password_reset_email.html', 'post_reset_redirect': '/user/password/done/'}, name='password_reset_confirm'),
+    url(r'^user/password/done/$', password_reset_complete,{'template_name': 'password_reset_complete.html'},name='password_reset_complete'),
+    #
 
     #URL'S AJAX---
     url(r'^cargar-ciudad/$', 'web.views.cargar_ciudad', name='cargar_ciudad'),

@@ -176,7 +176,18 @@ EMAIL_HOST = 'mail.pm.hn'
 EMAIL_HOST_USER = 'no_reply+pm.hn'
 EMAIL_HOST_PASSWORD = 'cast@1978'
 EMAIL_PORT = 26
+
+#DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+#SERVER_EMAIL = EMAIL_HOST_USER
 # EMAIL_HOST = 'smtp.gmail.com'
 # EMAIL_HOST_USER = 'mjbc007@gmail.com'
 # EMAIL_HOST_PASSWORD = 'ConfidenciaL'
 # EMAIL_PORT = 587
+
+# if DEBUG:
+#     EMAIL_USE_TLS = False
+#     EMAIL_HOST = 'localhost'
+#     EMAIL_HOST_USER = ''
+#     EMAIL_HOST_PASSWORD = ''
+#     EMAIL_PORT = 1025
+#     DEFAULT_FROM_EMAIL = 'webmaster@localhost'

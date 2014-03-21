@@ -25,6 +25,8 @@ class SubCategoria(models.Model):
 	def __unicode__(self):
 		return self.Subcategoria
 
+
+
 class Producto(models.Model):
 	Codigo = models.BigIntegerField(primary_key=True, help_text='Código del producto', verbose_name=u'Código')
 	Descripcion = models.CharField(max_length=200, help_text='Descripción del producto', verbose_name=u'Descripción')
@@ -36,7 +38,6 @@ class Producto(models.Model):
 	Fecha = models.DateField(auto_now_add=True, blank=True, null=True)
 	Comentarios=models.TextField(help_text='Ingrese especificaciones del producto', verbose_name=u'Comentarios')
 	Notas=models.CharField(max_length=200, help_text='Ingrese la marca del producto', verbose_name=u'Notas')
-	
 	def __unicode__(self):
 		return str(self.Descripcion)
 
@@ -47,7 +48,7 @@ class Detalle_Imagen(models.Model):
 		verbose_name=u'Detalle Imagen'
 		verbose_name_plural=u'Detalle Imagen'
 	def __unicode__(self):
-		return self.Producto.Descripcion +' - '+ str(self.Imagen)
+		return str(self.Imagen)
 
 class Estado(models.Model):
 	Estado = models.CharField(max_length=45, help_text='Describe el estado del carrito', verbose_name=u'Estado de Carrito')
@@ -165,3 +166,19 @@ class Pagos(models.Model):
 	def __unicode__(self):
 		return str(self.Cuota)
 
+
+class Contactos(models.Model):
+	nombre = models.CharField(max_length=150)
+	cargo = models.CharField(max_length=150, blank=True, null=True, help_text='Opcional')
+	email = models.EmailField()
+	email2 = models.EmailField(blank=True, null=True, help_text='Opcional')
+	telefono = models.CharField(max_length=10)
+	telefono2 = models.CharField(max_length=10, blank=True, null=True, help_text='Opcional')
+	def __unicode__(self):
+		return self.nombre
+
+class FAQ(models.Model):
+	pregunta=models.CharField(max_length=200)
+	respuesta=models.TextField()
+	def __unicode__(self):
+		return self.pregunta

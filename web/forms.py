@@ -34,3 +34,10 @@ class Direccion_OrdenForm(ModelForm):
 
 class EditarContrasenaForm(forms.Form):
 	cNueva=forms.CharField(label='Nueva contraseña')
+
+class CargarImagenForm(ModelForm):
+	class Meta:
+		model = Detalle_Imagen
+		widgets = {
+			'Producto': forms.HiddenInput()
+		}

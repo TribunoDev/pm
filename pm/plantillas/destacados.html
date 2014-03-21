@@ -13,12 +13,16 @@
 						   <div class="producto-elemento col-xs-6 col-sm-6 col-md-4">
 						    <div class="thumbnail">
 					    		{% for imagen in detalle_img%}
-							    	{% if imagen.Producto == elemento %}
-							    		{% if forloop.first %}
-						    			<a href="/detalle-producto/{{elemento.pk}}"><img src="{{MEDIA_URL}}{{imagen.Imagen}}" class="img-thumbnail"></a>
-							    		{% endif %}
-						    		{% endif %}
-						    	{% endfor %}
+					                {% if imagen.Producto == elemento %}
+					                    {% if forloop.first %}
+					                        <a href="/detalle-producto/{{elemento.pk}}"><img src="{{MEDIA_URL}}{{imagen.Imagen}}" class="img-thumbnail"></a>
+					                    {% endif %}
+					                {% else %}
+					                    <a href="/detalle-producto/{{elemento.pk}}"><img src="{{STATIC_URL}}img/sin_imagen.png" class="img-thumbnail"></a>
+					                {% endif %}
+					            {% empty %}
+					                <a href="/detalle-producto/{{elemento.pk}}"><img src="{{STATIC_URL}}img/sin_imagen.png" class="img-thumbnail"></a>
+					            {% endfor %}
 					      		<div class="caption">
 					      			{% load humanize %}
 					        		<h3 class="nombre-producto">{{elemento.Descripcion|truncatewords:4|safe}}</h3>
@@ -34,6 +38,28 @@
 						  </div>
 						{% endfor %}
 					</article>
+					<article class="cuerpo-contenido row paginacion">
+						<div class="pagination">
+							<span class="paginacion-enlaces">
+							<ul class="pager">
+								{% if ofertas.has_previous %}
+									<li><a href="?page={{ contacts.previous_page_number }}{{ getvars }}{{ hashtag }}">Anterior</a></li>
+								{% else %}
+									<li class="disabled"><a>Anterior</a></li>
+								{% endif %}
+								<span class="actual">
+									{{ ofertas.number }} de {{ ofertas.paginator.num_pages }}
+								</span>
+								{% if ofertas.has_next %}
+									<li><a href="?page={{ ofertas.next_page_number }}">Siguiente</a></li>
+								{% else %}
+								<li class="disabled"><a>Siguiente</a></li>
+								{% endif %}
+							</ul>	
+							</span>
+							</ul>
+						</div>
+					</article>
 				</div>
 			</article>
 			<article id="contenido-lateral" class="hidden-xs col-sm-4 col-md-3 contenido-lateral" >
@@ -47,13 +73,16 @@
 						<div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
 						<div class="row">
 							<figure id="s2" class="s2 demo">
-								<img src="{{MEDIA_URL}}{{item.Imagen}}">
-								{% for img in detalle_img %}
-									{% if img.Producto == item %}
-										<img src="{{MEDIA_URL}}{{img.Imagen}}">
-									{% endif %}
-								{% endfor %}
-							</figure>
+                                {% for img in detalle_img %}
+                                    {% if img.Producto == item %}
+                                        <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+                                    {% else %}
+                                    	<img src="{{STATIC_URL}}img/sin_imagen.png">
+                                    {% endif %}
+                                {% empty %}
+                                	<img src="{{STATIC_URL}}img/sin_imagen.png">
+                                {% endfor %}
+                            </figure>
 							<div class="contenido-lateral-precio">
 								<div class="row">
 									{% load humanize %}
@@ -83,13 +112,16 @@
 	                    <div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
 	                    <div class="row">
 	                        <figure id="s2" class="s2 demo">
-	                            <img src="{{MEDIA_URL}}{{item.Imagen}}">
-	                            {% for img in detalle_img %}
-	                                {% if img.Producto == item %}
-	                                    <img src="{{MEDIA_URL}}{{img.Imagen}}" >
-	                                {% endif %}
-	                            {% endfor %}
-	                        </figure>
+                                {% for img in detalle_img %}
+                                    {% if img.Producto == item %}
+                                        <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+                                    {% else %}
+                                    	<img src="{{STATIC_URL}}img/sin_imagen.png">
+                                    {% endif %}
+                                {% empty %}
+                                	<img src="{{STATIC_URL}}img/sin_imagen.png">
+                                {% endfor %}
+                            </figure>
 	                        <div class="contenido-lateral-precio ">
 	                            <div class="row">
 	                                {% load humanize %}

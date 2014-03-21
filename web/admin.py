@@ -8,10 +8,11 @@ class Editor(admin.ModelAdmin):
 
 class ImageArchive(admin.TabularInline):
 	model = Detalle_Imagen
-	extra = 5
 
 class ImageAdmin(admin.ModelAdmin):
-	inlines = [ImageArchive, ]
+	inlines = [
+	ImageArchive, 
+	]
 
 admin.site.register(Producto, Editor)
 admin.site.register(Categoria)
@@ -32,3 +33,5 @@ admin.site.register(Orden_Estado)
 admin.site.register(Credito)
 admin.site.register(Pagos)
 admin.site.register(Ciudad)
+admin.site.register(Contactos)
+admin.site.register(FAQ, Editor)

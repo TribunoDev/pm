@@ -5,10 +5,17 @@
     	<div class="thumbnail">
             {% for imagen in detalle_img%}
                 {% if imagen.Producto == elemento %}
-                    {% if forloop.first %}
-                    <a href="/detalle-producto/{{elemento.pk}}"><img src="{{MEDIA_URL}}{{imagen.Imagen}}" class="img-thumbnail"></a>
+                    {% if elemento.Oferta %}
+                        <img src="{{STATIC_URL}}img/img_oferta.png" class="img_oferta">
                     {% endif %}
+                    {% if forloop.first %}
+                        <a href="/detalle-producto/{{elemento.pk}}"><img src="{{MEDIA_URL}}{{imagen.Imagen}}" class="img-thumbnail"></a>
+                    {% endif %}  
+                {% else %}
+                    <a href="/detalle-producto/{{elemento.pk}}"><img src="{{STATIC_URL}}img/sin_imagen.png" class="img-thumbnail"></a>
                 {% endif %}
+            {% empty %}
+                <a href="/detalle-producto/{{elemento.pk}}"><img src="{{STATIC_URL}}img/sin_imagen.png" class="img-thumbnail"></a>
             {% endfor %}
       		<div class="caption">
         		<h3 class="nombre-producto">{{elemento.Descripcion|truncatewords:4|safe}}</h3>
@@ -18,7 +25,7 @@
         			<input type="hidden" value="1" name="Cantidad">
         			<p class="producto-caja-btn">
         			<button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button>
-        			<!--a href="#" class="btn btn-primary" role="button"><span class='icon-carrito icon-carritocart'></a--> <a href="/detalle-producto/{{elemento.pk}}" class="btn btn-default" role="button">Detalles</a></p>
+        			<a href="/detalle-producto/{{elemento.pk}}" class="btn btn-default" role="button">Detalles</a></p>
         			
         		</form>
       		</div>

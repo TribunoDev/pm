@@ -41,12 +41,16 @@
 	                    <div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
 	                    <div class="row">
 	                        <figure id="s2" class="s2 demo">
-	                            {% for img in detalle_img %}
-	                                {% if img.Producto == item %}
-	                                    <img src="{{MEDIA_URL}}{{img.Imagen}}" >
-	                                {% endif %}
-	                            {% endfor %}
-	                        </figure>
+                                {% for img in detalle_img %}
+                                    {% if img.Producto == item %}
+                                        <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+                                    {% else %}
+                                    	<img src="{{STATIC_URL}}img/sin_imagen.png">
+                                    {% endif %}
+                                {% empty %}
+                                	<img src="{{STATIC_URL}}img/sin_imagen.png">
+                                {% endfor %}
+                            </figure>
 	                        <div class="contenido-lateral-precio ">
 	                            <div class="row">
 	                                {% load humanize %}
@@ -78,12 +82,16 @@
 						<div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
 						<div class="row">
 							<figure id="s2" class="s2 demo">
-								{% for img in detalle_img %}
-									{% if img.Producto == item %}
-										<img src="{{MEDIA_URL}}{{img.Imagen}}">
-									{% endif %}
-								{% endfor %}
-							</figure>
+                                {% for img in detalle_img %}
+                                    {% if img.Producto == item %}
+                                        <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+                                    {% else %}
+                                    	<img src="{{STATIC_URL}}img/sin_imagen.png">
+                                    {% endif %}
+                                {% empty %}
+                                	<img src="{{STATIC_URL}}img/sin_imagen.png">
+                                {% endfor %}
+                            </figure>
 							<div class="contenido-lateral-precio">
 								<div class="row">
 									{% load humanize %}
@@ -114,12 +122,16 @@
 						<div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
 						<div class="row">
 							<figure id="s2" class="s2 demo">
-								{% for img in detalle_img %}
-									{% if img.Producto == item %}
-										<img src="{{MEDIA_URL}}{{img.Imagen}}">
-									{% endif %}
-								{% endfor %}
-							</figure>
+                                {% for img in detalle_img %}
+                                    {% if img.Producto == item %}
+                                        <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+                                    {% else %}
+                                    	<img src="{{STATIC_URL}}img/sin_imagen.png">
+                                    {% endif %}
+                                {% empty %}
+                                	<img src="{{STATIC_URL}}img/sin_imagen.png">
+                                {% endfor %}
+                            </figure>
 							<div class="contenido-lateral-precio">
 								<div class="row">
 									{% load humanize %}

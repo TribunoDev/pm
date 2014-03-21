@@ -210,6 +210,30 @@ label{
 	font-weight: bold;
 }
 
+.img_oferta{
+	position: absolute;
+	margin: 0;
+	margin-top: 10px;
+
+	width: 40%;
+	z-index: 1;
+
+	/*background-color: #ffd600;
+	color: black;
+	font-weight: bold;
+	font-size: 11px;
+	text-align: center;
+	padding: 3px;*/
+}
+
+.media-body p, .media-body ul{
+	text-align: justify;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.paginacion{
+	text-align: center;
+}
+
 #panel-opciones{
 	border-radius: 4px;
 	border: 1px solid #dddddd;
@@ -268,9 +292,26 @@ label{
 }
 
 @media screen and (max-width: 1024px){
+	.img_oferta{
+		width: 40%;
+	}
+
 	.thumbnail h3{
 		font-size: 18px;
 		line-height: 25px;
+	}
+
+	.media-body p, .media-body ul{
+		font-size: 12px;
+		text-align: justify;
+	}
+
+	.media-body h3{
+		font-size: 16px;
+	}
+
+	.media-body h4{
+		font-size: 14px;
 	}
 
 }
@@ -298,6 +339,9 @@ label{
 		font-size: 14px;
 		padding: 3px 8px;
 	}
+
+	
+
 
 	.item-cantidad p{
 		margin-top: 1%;
