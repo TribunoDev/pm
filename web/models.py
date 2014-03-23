@@ -12,6 +12,7 @@ class Detalle_Perfil(models.Model):
 		return self.Usuario.username
 
 class Categoria(models.Model):
+	CodigoCategoria = models.CharField(max_length=25)
 	Categoria = models.CharField(max_length=50, unique=True, help_text='Nombre de la categoría', verbose_name=u'Categoría')
 	Descripcion = models.TextField(help_text='Descripción de la categoría', verbose_name=u'Descripción')
 
@@ -19,6 +20,7 @@ class Categoria(models.Model):
 		return self.Categoria
 
 class SubCategoria(models.Model):
+	CodigoSubcategoria = models.CharField(max_length=25)
 	Subcategoria = models.CharField(max_length=50, help_text='Nombre de la subcategoría', verbose_name=u'Sub-categoría')
 	Descripcion = models.TextField(help_text='Descripción de la Sub-categoría', verbose_name=u'Descripción')
 	Categoria = models.ForeignKey(Categoria, help_text='Define la categoría para una subcategoría', verbose_name=u'Categoría')
