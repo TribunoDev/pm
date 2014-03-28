@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Paper & More - Inicio{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+    <article id="caja-contenido" class="col-xs-12 col-sm-8 col-md-9">
+      <div class="row">
+        <ul id="myTab" class="nav nav-tabs">
+          <li class="active"><a id="ofertas"  href="#">Ofertas</a></li>
+          <li><a id="destacados" href="#">Destacados</a></li>
+          <li><a id="novedades" href="#">Novedades</a></li>
+        </ul>
+        <article id="resultado-productos" class="cuerpo-contenido row"></article>
+      </div>
+    </article>
+    <aside id="contenido-lateral" class="hidden-xs col-sm-4 col-md-3 contenido-lateral">
+      <div class="row">
+        <a href="#">
+          <img src="http://www.ingvillamizar.com/wp-content/uploads/2013/01/logo-facebook-300x200.jpg" class="img-rounded">
+        </a>
+      </div>
+      <div class="row">
+        <a href="#">
+          <img class="img-rounded" src="http://www.ingvillamizar.com/wp-content/uploads/2013/01/logo-facebook-300x200.jpg" alt="dell_inspiron_640m.jpg">
+        </a>
+      </div>
+      <div class="row">
+        <a href="#">
+          <img class="img-rounded" src="http://www.ingvillamizar.com/wp-content/uploads/2013/01/logo-facebook-300x200.jpg" alt="dell_inspiron_640m.jpg">
+        </a>
+      </div>
+    </aside> 
+  </div>
+{% endblock %}

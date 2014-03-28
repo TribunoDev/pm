@@ -1,0 +1,372 @@
+aside div{
+	margin-top: 5px;
+}
+
+label{
+	margin: 0;
+}
+
+#btnPagar{
+	float: right;
+}
+
+#caja-contenido .producto-elemento h3{
+	height: 70px;
+	margin-bottom: 5px;
+}
+
+#direccionPago{
+	border-right: 1px solid #dddddd;
+}
+
+#InicioSesion{
+	padding: 10%;
+}
+
+#IniciosSesion article{
+	border: 1px solid #bdc3c7;
+
+}
+
+#InicioSesion .cuerpo-contenido, #frmRegistro .cuerpo-contenido{
+	border: none;
+}
+
+#itemDireccion{
+	border: 1px solid #dddddd;
+	background-color: rgb(242, 242, 242);
+	color: black;
+	margin: 2%;
+	padding: 10px;
+	width: 46%;
+	
+}
+
+#itemDireccion address{
+	text-align: left;
+	padding: 1%;
+}
+
+#myCarousel{
+	display: none;
+}
+
+#myModalHorarioServicio figure{
+	display: inline-block;
+	position: relative;
+	width: 20%;
+}
+
+#myModalHorarioServicio .horarios{
+	display: inline-block;
+	margin-top: 20px;
+	position: relative;
+	width: 70%;
+	vertical-align: top;
+}
+
+#myModalHorarioServicio .horarios table{
+	
+}
+
+#logos-marcas{
+	padding: 4% 1%;
+}
+
+#logos-marcas div{
+	margin-bottom: 4% ;
+}
+
+#panel-direccion{
+	padding: 0px;
+}
+
+#panel-direccion #datos-carrito h4{
+	text-align: center;
+	font-size: 25px;
+}
+
+#producto-detalle{
+	padding: 3% 3.3%;
+}
+
+#producto-detalle #producto-detalle-descripcion{
+	padding: 5px 2%;
+	padding-right: 0;
+}
+
+#Registro{
+	padding: 5%;
+}
+
+#resultado-productos{
+	border:none;
+	height: 100%;
+	padding: 5px 2%;
+	position: relative;
+}
+
+.btnEmailProducto, .btnImprimirProducto{
+	padding-top: 1px;
+	padding-bottom: 1px;
+	font-size: 20px;
+}
+
+.btnDir{
+	padding: 0;
+}
+
+.datos-carrito .badge{
+	background-color: #E6E8EA;
+	font-size: 16px;
+	color: #2E2C42;
+}
+
+.caption-precio{
+	color:#e46764;
+	font-family: Helvetica, Arial, Sans-Serif;
+	font-size: 25px;
+	font-weight: bolder;
+}
+
+.col{
+	padding: 0;
+}
+
+.contenedor #caja-contenido{
+	margin-bottom: 15px;
+	padding: 0;
+}
+
+.cuerpo-contenido{
+	border: 1px solid #ecf0f1;
+	border-radius: 5px;
+	margin-top: 10px;
+	padding: 0.7% 1%;
+}
+
+.datos-carrito li{
+	background-color: #E6E6E6;
+	color: #2E2C42;
+	font-family: Helvetica;
+	font-size: 18px;
+	padding: 4px 7px;
+	border-radius: 4px;
+}
+
+.detalle-nombre, .detalle-cantidad{
+	margin-bottom: 5px;
+}
+
+.detalle-codigo p, .detalle-precio p, .detalle-existencia p{
+	background-color: #E6E6E6;
+	font-family:  Helvetica, Arial;
+	font-size: 16px;
+	margin: 0.5% 0;
+	padding: 2%;
+	border-radius: 3px;
+	font-weight: bold;
+}
+
+.espacio{
+	height: 10px;
+}
+
+.frmCant{
+	padding: 5px 15px;
+}
+.frmCant input{
+	text-align: center;
+}
+
+.item-carrito .item-precio-cantidad{
+	border-radius: 4px;
+	background: #ecf0f1;
+	display: inline-block;
+	float: left;
+	padding: 0.3em;
+	position: relative;
+	text-align: center;
+}
+
+.item-cantidad{
+	font-size: 18px;
+	text-align: center;
+}
+
+.item-cantidad p{
+	padding-top: 5px;
+}
+
+.item-precio {
+	font-size: 18px;
+	padding: 0;
+}
+
+.item-precio p{
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 18px;
+	padding-top: 5px;
+	font-weight: bold;
+}
+
+.img_oferta{
+	position: absolute;
+	margin: 0;
+	margin-top: 10px;
+
+	width: 40%;
+	z-index: 1;
+
+	/*background-color: #ffd600;
+	color: black;
+	font-weight: bold;
+	font-size: 11px;
+	text-align: center;
+	padding: 3px;*/
+}
+
+.media-body p, .media-body ul{
+	text-align: justify;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.paginacion{
+	text-align: center;
+}
+
+#panel-opciones{
+	border-radius: 4px;
+	border: 1px solid #dddddd;
+	padding: 5px;
+}
+
+.social{
+	padding: 0.5% 0 ;
+}
+
+.social div{
+	margin-right: 2px;
+	margin-left: 2px;
+}
+
+#producto-detalle-descripcion .input{
+	height: 35px;
+	font-size: 20px;
+	text-align: center;
+}
+
+#producto-detalle-descripcion .btn{
+	margin-left: 10px;
+	padding: 2px 12px;
+	font-size: 20px;
+}
+
+.tarjetas img{
+	display: inline-block;
+}
+
+.titulo-items{
+	padding: 5px 0.5em;
+}
+
+.titulo-items div{
+	padding: 0;
+}
+
+.titulo-precio-cantidad{
+	text-align: center;
+}
+
+
+.list_carousel ul{
+	width: 200px;
+}
+
+.list_carousel img{
+	height: 150px;
+
+}
+
+.producto-filtro-lateral{
+	margin-top: 20px;
+}
+
+@media screen and (max-width: 1024px){
+	.img_oferta{
+		width: 40%;
+	}
+
+	.thumbnail h3{
+		font-size: 18px;
+		line-height: 25px;
+	}
+
+	.media-body p, .media-body ul{
+		font-size: 12px;
+		text-align: justify;
+	}
+
+	.media-body h3{
+		font-size: 16px;
+	}
+
+	.media-body h4{
+		font-size: 14px;
+	}
+
+}
+
+@media screen and (max-width: 480px){
+
+	section.container{
+		margin: 0;
+	}
+
+	#myTab{
+		font-size: 12px;
+	}
+
+	.thumbnail h3{
+		font-size: 16px;
+		line-height: 16px;
+	}
+
+	.thumbnail .caption{
+		padding: 5px;
+	}
+
+	.btn{
+		font-size: 14px;
+		padding: 3px 8px;
+	}
+
+	
+
+
+	.item-cantidad p{
+		margin-top: 1%;
+	}
+
+	.item-descripcion h3{
+		font-size: 16px;
+	}
+
+	.item-precio p{
+		margin-top: 5%;
+	}
+
+	.titulo-precio-cantidad{
+		margin-top: 5px;
+	}
+
+	.titulo-precio-cantidad div{
+		background-color: #E6E6E6;
+		border-radius: 4px;
+		margin: 0 4%;
+	}
+
+	#producto-detalle #producto-detalle-descripcion{
+		padding: 15px 0;
+	}
+} 
+

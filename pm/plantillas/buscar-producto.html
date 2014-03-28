@@ -1,0 +1,7 @@
+{% for producto in productos %}
+	<tr id="{{producto.Codigo}}" class="filaProd" data-nombre="{{producto.Descripcion}}">
+		<input type="hidden" name="codProducto" value="{{Producto.Codigo}}" >
+		<td>{{producto.Codigo}}</td>
+		<td id="colNombreProd">{{producto.Descripcion}}</td>
+	</tr>
+{% endfor %}

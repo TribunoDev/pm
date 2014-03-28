@@ -1,0 +1,65 @@
+.list_carousel {
+	border: 1px solid #dddddd;
+	border-radius: 4px;
+	margin: 0;
+	margin-top: 20px;
+	padding: 1% 1% 0 1%;
+	width: 100%;
+}
+
+.list_carousel div{
+	margin: 0;
+	padding: 5px;
+}
+
+.list_carousel li {
+	width: 215px;
+	height: 115px;
+	padding: 0;
+	position: relative;
+	margin: 6px;
+	display: block;
+	float: left;
+}
+
+.list_carousel li img{
+	float: left;
+	position: relative;
+	width: 100%;
+	height: 115px;
+}
+
+.list_carousel .col-sm-1{
+	width: 4%;
+}
+.list_carousel.responsive {
+	width: auto;
+	margin-left: 0;
+}
+.clearfix {
+	float: none;
+	clear: both;
+}
+
+.prev, .next{
+	margin-top: 60px;
+}
+.prev {
+	float: left;
+	
+}
+.next {
+	float: right;
+}
+.pager {
+	float: left;
+	width: 300px;
+	text-align: center;
+}
+.pager a {
+	margin: 0 5px;
+	text-decoration: none;
+}
+.pager a.selected {
+	text-decoration: underline;
+}

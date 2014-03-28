@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block titulo %}Nuevo Usuario{% endblock %}
+{% block contenido %}
+<div id="Registro" class="row">
+	<article class="col-sm-offset-2 col-sm-8">
+		<div class="contenido-titulo row">
+			<h2 class="titulo">Registro de un nuevo usuario</h2>
+		</div>
+		<div id="frmRegistro" class="row">
+			<article class="cuerpo-contenido row">
+				<form role="form" id="frmRegUsuario" name="frmRegUsuario" method="post" action="/registro/">{% csrf_token %}
+					<div class="form-group">
+					    <label for="first_name" class="control-label">No. de Identidad</label>
+					    <input type="text" class="form-control" id="RNP" name="RNP" placeholder="Ingrese su RNP" required>
+					    <span id="verificaRNP"></span>
+					</div>
+					<div class="form-group">
+					    <label for="first_name" class="control-label">Nombre</label>
+					    <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Ingrese su nombre" required>
+					 </div>
+					 <div class="form-group">
+				    	<label for="last_name" class="control-label">Apellidos</label>
+				      	<input type="text" class="form-control" id="last_name" name="last_name" placeholder="Ingrese sus apellidos" required>
+				  	</div>
+				  	<div class="form-group">
+				    	<label for="username" class="control-label">Usuario</label>
+				      	<input type="text" class="form-control" id="username" name="username" placeholder="Nombre de usuario" required>
+				      	<span id="verificaUser"></span>
+				  	</div>
+				  	<div class="form-group">
+				    	<label for="email" class="control-label">Correo</label>
+				      	<input type="email" class="form-control" id="email" name="email" placeholder="correo@ejemplo.com" required>
+				      	<span id="verificarEmail"></span>
+				  	</div>
+				  	<div class="form-group">
+				    	<label for="password" class="control-label">Contraseña</label>
+				      	<input type="password" class="form-control" id="password" name="password" placeholder="Ingrese una contraseña" required>
+				  	</div>
+				  	<div class="form-group">
+				    	<label for="txtPassword2" class="control-label">Repetir Contraseña</label>
+			      		<input type="password" class="form-control" id="txtPassword2" name="txtPassword2" placeholder="Repita la contraseña" required>
+				  	</div>
+				  	<div class="form-group">
+				    	<label for="Telefono" class="control-label">Teléfono</label>
+				      		<input type="tel" class="form-control" id="Telefono" name="Telefono" placeholder="Teléfono del usuario" required>
+				  	</div>
+				  	<div class="form-group">
+				    	<label for="Direccion" class="control-label">Dirección</label>
+				      	<input type="text" class="form-control" id="Direccion" name="Direccion" placeholder="Direccion" required>
+			      	</div>
+			      	<div class="form-group">
+					 	<button type="submit" class="btn btn-default">Registrar</button>    
+				 	</div>
+			  	</div>
+				</form>
+			</article>
+		</div>
+	</article>
+</div>
+
+{% endblock %}

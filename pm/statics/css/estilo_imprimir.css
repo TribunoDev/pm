@@ -1,0 +1,34 @@
+footer{
+	display: none;
+}
+
+#contenido-lateral{
+	visibility: hidden;
+	display: none;
+}
+
+#list_carousel{
+	display: none;
+}
+
+#producto-detalle-descripcion{
+	display: inline-block;
+	position: relative;
+	width: 45%;
+}
+
+.container{
+	margin-right: 1%;
+	margin-left: 1%;
+}
+
+.cycle-slideshow{
+	display: inline-block;
+	position: relative;
+	width: 30%;
+}
+
+.no-print{
+	display: none;
+	visibility: hidden;
+}

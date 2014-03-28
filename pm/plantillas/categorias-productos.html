@@ -1,0 +1,13 @@
+{% for categoria in categorias %}
+	<li class="dropdown-submenu"><a href="#">{{categoria.Descripcion}}</a>
+		<ul class="dropdown-menu" id="subcategorias-productos">
+			{% for dato in total %}
+					{% if dato.Categoria == categoria %}
+						<li "dropdown-submenu" id="subcat-item">
+						<a href="/productos/categoria/subcategoria/{{dato.id}}" data-id="{{dato.id}}" tabindex="-1">{{dato.Subcategoria}} <span id="tag-existencia" class="badge">{{dato.existencia}}</span></a>
+						</li>
+	        		{% endif %}
+			{% endfor %}
+		</ul>
+	</li>
+{% endfor %}
