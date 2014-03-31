@@ -277,6 +277,11 @@ label{
 	text-align: center;
 }
 
+.thumbnail h3{
+	font-size: 20px;
+	line-height: auto;
+}
+
 
 .list_carousel ul{
 	width: 200px;

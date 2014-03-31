@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from django.db.models import Q, Sum
+from django.db.models import Q, Sum, Count
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from web.models import *
@@ -178,7 +178,8 @@ def catalogo_productos(request):
 	diccionario['categorias']=Categoria.objects.all()
 	diccionario['subcategorias']=SubCategoria.objects.all()
 	producto = Producto.objects.all()
-	diccionario['total']=SubCategoria.objects.annotate(existencia=Sum('producto__Existencia'))
+	diccionario['total']=SubCategoria.objects.annotate(existencia=Count('producto'))
+	#diccionario['total']=Producto.objects.all().count()
 	return render_to_response('categorias-productos.html', diccionario, context_instance=RequestContext(request))
 
 #Vista que retorna los productos filtrando por subcategorias
@@ -209,7 +210,8 @@ def ver_subcategoria(request, id_subcat):
 #Vista que retorna el detalle de cada producto
 def detalle_producto(request, id_producto):
 	diccionario={}
-	detalle = get_object_or_404(Producto, pk=id_producto)
+	codProd = request.GET.get('id_producto')
+	detalle = get_object_or_404(Producto, Codigo=id_producto)
 	diccionario['detalle_img'] = Detalle_Imagen.objects.filter(Producto = detalle)
 	diccionario['detalle']=detalle
 	diccionario['marcas']=Marca.objects.all()

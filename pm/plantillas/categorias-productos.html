@@ -1,5 +1,5 @@
 {% for categoria in categorias %}
-	<li class="dropdown-submenu"><a href="#">{{categoria.Descripcion}}</a>
+	<li class="dropdown-submenu"><a href="#">{{categoria.Categoria}}</a>
 		<ul class="dropdown-menu" id="subcategorias-productos">
 			{% for dato in total %}
 					{% if dato.Categoria == categoria %}
