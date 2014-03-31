@@ -39,7 +39,7 @@ class Producto(models.Model):
 	Comentarios=models.TextField(help_text='Ingrese especificaciones del producto', verbose_name=u'Comentarios')
 	Notas=models.CharField(max_length=200, help_text='Ingrese la marca del producto', verbose_name=u'Notas')
 	def __unicode__(self):
-		return str(self.Descripcion)
+		return self.Descripcion
 
 class Detalle_Imagen(models.Model):
 	Imagen = models.ImageField(upload_to='img_detalle',verbose_name=u'Imágen')
