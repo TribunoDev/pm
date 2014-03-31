@@ -253,7 +253,7 @@ $(document).on("ready", function(){
 
 
 	//Script para capturar el url de la pagina actual
-	var home = 'http://127.0.0.1:8000/';
+	var home = 'django.pm.hn';
 	var href = $(location).attr('href');
 	if (home == href) {
 		$('#myCarousel').css('display', 'block');
@@ -441,16 +441,5 @@ $(document).on("ready", function(){
 			dataType: 'html'
 		});
 	});
-
-
-	//Script para cargar imagenes a un producto
-	/*$('#agregar_campo').on('click', function(){
-		var contar_campos = $('input[type="file"]').length;
-		var siguiente_campo = contar_campos + 1;
-		$('#carga_archivo').prepend('<div class="form-group"><label for="exampleInputFile">Imágen</label><input type="file" id="image" name="imagen_'+ siguiente_campo +'" /></div>');
-
-	});*/
-	
-	
 
 });
