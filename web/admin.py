@@ -14,6 +14,7 @@ class DetalleImgAdmin(admin.ModelAdmin):
 
 
 class ProductoAdmin(admin.ModelAdmin):
+	search_fields = ['Descripcion']
 	ordering = ['Descripcion']
 
 class Editor(admin.ModelAdmin):
