@@ -13,17 +13,20 @@
 					    <div class="thumbnail">
 				    		{% for imagen in detalle_img%}
 				                {% if imagen.Producto == elemento %}
-				                    {% if elemento.Oferta %}
-				                        <img src="{{STATIC_URL}}img/img_oferta.png" class="img_oferta">
-				                    {% endif %}
-				                    {% if forloop.first %}
+				                	{% if forloop.first %}
+					                    {% if elemento.Oferta %}
+					                        <img src="{{STATIC_URL}}img/img_oferta.png" class="img_oferta">
+					                    {% endif %}
+				                    
 				                        <a href="/detalle-producto/{{elemento.pk}}"><img src="{{MEDIA_URL}}{{imagen.Imagen}}" class="img-thumbnail"></a>
 				                    {% endif %}  
 				                {% else %}
-				                    <a href="/detalle-producto/{{elemento.pk}}"><img src="{{STATIC_URL}}img/sin_imagen.png" class="img-thumbnail"></a>
+				                	{% if forloop.first %}
+				                    	<a href="/detalle-producto/{{elemento.pk}}"><img src="{{STATIC_URL}}img/sin_imagen.png" class="img-thumbnail"></a>
+				                    {% endif %}
 				                {% endif %}
 				            {% empty %}
-				                <a href="/detalle-producto/{{elemento.pk}}"><img src="{{STATIC_URL}}img/sin_imagen.png" class="img-thumbnail"></a>
+				                	<a href="/detalle-producto/{{elemento.pk}}"><img src="{{STATIC_URL}}img/sin_imagen.png" class="img-thumbnail"></a>
 				            {% endfor %}
 				      		<div class="caption">
 				      			{% load humanize %}
