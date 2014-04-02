@@ -282,13 +282,13 @@ def detalle_producto(request, id_producto):
 	codProd = request.GET.get('id_producto')
 	detalle = get_object_or_404(Producto, Codigo=id_producto)
 	diccionario['cantidad'] = Detalle_Imagen.objects.filter(Producto=detalle).count()
-	diccionario['imagenes'] = Detalle_Imagen.objects.filter(Producto=detalle)
+	diccionario['imagenes'] = Detalle_Imagen.objects.filter(Producto=detalle).order_by('Imagen')
 	diccionario['detalle']=detalle
 	diccionario['marcas']=Marca.objects.all()
 	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
 	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
 	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
-	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	diccionario['detalle_img']= Detalle_Imagen.objects.all().order_by('Imagen')
 	diccionario['formulario']=ContactoForm()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
