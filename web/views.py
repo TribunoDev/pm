@@ -218,8 +218,8 @@ def ver_subcategoria(request, id_subcat):
 	pOfertas = Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')
 	contar = 0
 	for pO in pOfertas:
-		cImg = Detalle_Imagen.objects.filter(Producto=pO.Codigo).count()
-		if cImg > 0:
+		cImgO = Detalle_Imagen.objects.filter(Producto=pO).count()
+		if cImgO > 0:
 			listaOfertas.append(pO)
 			contar =+ 1
 			if contar == 2:
@@ -228,8 +228,8 @@ def ver_subcategoria(request, id_subcat):
 	pDestacados = Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')
 	contar = 0
 	for pD in pDestacados:
-		cImg = Detalle_Imagen.objects.filter(Producto=pD.Codigo).count()
-		if cImg > 0:
+		cImgD = Detalle_Imagen.objects.filter(Producto=pD).count()
+		if cImgD > 0:
 			listaDestacados.append(pD)
 			contar =+ 1
 			if contar == 2:
@@ -238,8 +238,8 @@ def ver_subcategoria(request, id_subcat):
 	pNovedades = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')
 	contar = 0
 	for pN in pNovedades:
-		cImg = Detalle_Imagen.objects.filter(Producto=pN.Codigo).count()
-		if cImg > 0:
+		cImgN = Detalle_Imagen.objects.filter(Producto=pN).count()
+		if cImgN > 0:
 			listaNovedades.append(pN)
 			contar =+ 1
 			if contar == 2:
