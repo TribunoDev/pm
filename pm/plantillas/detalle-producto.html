@@ -22,26 +22,40 @@
                             <div id="print-imagen-producto">
                             <div class="col col-sm-5">
                                 <figure class="cycle-slideshow img-thumbnail" data-cycle-fx=scrollHorz data-cycle-timeout=0 data-cycle-pager="#no-template-pager" data-cycle-pager-template="">
-                                    {% for imagen in detalle_img %}
-                                        {% if imagen.Producto == detalle%}
+                                {% if cantidad > 0 %}
+                                    {% for imagen in imagenes %}
+                                    <img src="{{MEDIA_URL}}{{imagen.Imagen}}"/>
+                                    {% endfor %}
+                                {% else %}
+                                <img src="{{STATIC_URL}}img/sin_imagen.png">
+                                {% endif %}
+                                <!--{% for imagen in detalle_img %}
+                                        {% if imagen.Producto.Codigo == detalle.Codigo %}
                                             <img src="{{MEDIA_URL}}{{imagen.Imagen}}"/>
                                         {% else %}
                                             <img src="{{STATIC_URL}}img/sin_imagen.png">
                                         {% endif %}
                                     {% empty %}
                                         <img src="{{STATIC_URL}}img/sin_imagen.png">
-                                    {% endfor %}
+                                    {% endfor %}-->
                                 </figure>
                                 <figure id="no-template-pager" class="cycle-pager external no-print">
-                                    {% for imagen in detalle_img %}
-                                        {% if imagen.Producto == detalle%}
+                                {% if cantidad > 0 %}
+                                    {% for imagen in imagenes %}
+                                    <img src="{{MEDIA_URL}}{{imagen.Imagen}}" width="20" height="auto" class="img-thumbnail">
+                                    {% endfor %}
+                                {% else %}
+                                    <img src="{{STATIC_URL}}img/sin_imagen.png" width="20" height="auto" class="img-thumbnail">
+                                    <!--{% for imagen in detalle_img %}
+                                         {% if imagen.Producto.Codigo == detalle.Codigo %}
                                             <img src="{{MEDIA_URL}}{{imagen.Imagen}}" width="20" height="auto" class="img-thumbnail">
                                         {% else %}
                                             <img src="{{STATIC_URL}}img/sin_imagen.png" width="20" height="auto" class="img-thumbnail">
                                         {% endif %}
                                     {% empty %}
                                         <img src="{{STATIC_URL}}img/sin_imagen.png" width="20" height="auto" class="img-thumbnail">
-                                    {% endfor %}
+                                    {% endfor %}-->
+                                {% endif %}
                                 </figure>
                                 <div id="panel-opciones" class="row no-print">
                                     <!-- Button trigger modal -->

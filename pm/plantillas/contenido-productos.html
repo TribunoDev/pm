@@ -3,18 +3,15 @@
 	{% load humanize %}
     <div class="producto-elemento col-xs-6 col-sm-6 col-md-4">
     	<div class="thumbnail">
-            {% for imagen in detalle_img%}
-                {% if imagen.Producto == elemento %}
-                    {% if forloop.first %}
-                        {% if elemento.Oferta %}
-                            <img src="{{STATIC_URL}}img/img_oferta.png" class="img_oferta">
-                        {% endif %}
-                    
-                        <a href="/detalle-producto/{{elemento.pk}}"><img src="{{MEDIA_URL}}{{imagen.Imagen}}" class="img-thumbnail"></a>
-                    {% endif %}  
-                {% else %}
-                    {% if forloop.first %}
-                        <a href="/detalle-producto/{{elemento.pk}}"><img src="{{STATIC_URL}}img/sin_imagen.png" class="img-thumbnail"></a>
+            {% if elemento.Oferta %}
+                <img src="{{STATIC_URL}}img/img_oferta.png" class="img_oferta">
+            {% endif %}
+            {% for imagen in detalle_img %}
+                {% if forloop.first %}
+                    {% if imagen.Producto.Codigo == elemento.Codigo %}                         
+                            <a href="/detalle-producto/{{elemento.pk}}"><img src="{{MEDIA_URL}}{{imagen.Imagen}}" class="img-thumbnail"></a>
+                    {% else %}
+                            <a href="/detalle-producto/{{elemento.pk}}"><img src="{{STATIC_URL}}img/sin_imagen.png" class="img-thumbnail"></a>
                     {% endif %}
                 {% endif %}
             {% empty %}
