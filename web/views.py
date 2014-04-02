@@ -192,7 +192,7 @@ def ver_subcategoria(request, id_subcat):
 	subcat = get_object_or_404(SubCategoria, pk=id_subcat)
 	diccionario['datos']=subcat
 	productos = Producto.objects.filter(Subcategoria=subcat)
-	allImages = Detalle_Imagen.objects.all()
+	allImages = Detalle_Imagen.objects.all().order_by('Imagen')
 	for producto in productos:
 		contar = 0
 		for item in allImages:
