@@ -194,7 +194,7 @@ def ver_subcategoria(request, id_subcat):
 	
 	productos = Producto.objects.filter(Subcategoria=subcat)
 	for producto in productos:
-		cImg = Detalle_Imagen.objects.filter(Producto__contains=str(producto.Codigo)).count()
+		cImg = Detalle_Imagen.objects.filter(Producto=str(producto.Codigo)).count()
 		if cImg > 0:
 			archivo = Detalle_Imagen.objects.filter(Producto=producto.Codigo)[:1]
 			archImg = archivo[0].Imagen
