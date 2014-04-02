@@ -298,6 +298,7 @@ def detalle_producto(request, id_producto):
 #Vista que devuelve los resultados de una busqueda
 def buscar(request):
 	diccionario={}
+	listaProducto = []
 	diccionario['marcas']=Marca.objects.all()
 	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
 	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
@@ -307,8 +308,33 @@ def buscar(request):
 	if request.method=='POST':
 		buscar = request.POST["txtBuscar"]
 		resultado =Producto.objects.filter(Descripcion__icontains=buscar)
+		allImages = Detalle_Imagen.objects.all().order_by('Imagen')
+		for producto in resultado:
+			contar = 0
+			for item in allImages:
+				if item.Producto == producto:
+					archImg = item.Imagen
+					contar += 1
+				else:
+					archImg = "img_detalle/sin_imagen.png"
+
+				if contar > 0:
+					break
+
+			infoProducto = {
+				'Codigo': producto.Codigo,
+				'Descripcion': producto.Descripcion,
+				'Precio': producto.Precio,
+				'Destacado': producto.Destacado,
+				'Oferta':producto.Oferta,
+				'Imagen': archImg
+			}
+			listaProducto.append(infoProducto)
+
+
+
 		diccionario['dato']=buscar
-		paginador = Paginator(resultado, 18)
+		paginador = Paginator(listaProducto, 18)
 		pagina = request.GET.get('page','1')
 		try:
 			resultado = paginador.page(pagina)
