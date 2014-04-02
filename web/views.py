@@ -189,14 +189,15 @@ def ver_subcategoria(request, id_subcat):
 	listaOfertas = []
 	listaDestacados = []
 	listaNovedades = []
+	cImg = 0
 	subcat = get_object_or_404(SubCategoria, pk=id_subcat)
 	diccionario['datos']=subcat
 	
 	productos = Producto.objects.filter(Subcategoria=subcat)
 	for producto in productos:
-		cImg = Detalle_Imagen.objects.filter(Producto=producto).count()
+		cImg = Detalle_Imagen.objects.filter(Producto=producto.Codigo).count()
 		if cImg > 0:
-			archivo = Detalle_Imagen.objects.filter(Producto=producto)[:1]
+			archivo = Detalle_Imagen.objects.filter(Producto=producto.Codigo)[:1]
 			archImg = archivo[0].Imagen
 		else:
 			archImg = "img_detalle/sin_imagen.png"
