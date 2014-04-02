@@ -191,15 +191,27 @@ def ver_subcategoria(request, id_subcat):
 	listaNovedades = []
 	subcat = get_object_or_404(SubCategoria, pk=id_subcat)
 	diccionario['datos']=subcat
-	
 	productos = Producto.objects.filter(Subcategoria=subcat)
+	allImages = Detalle_Imagen.objects.all()
 	for producto in productos:
-		cImg = Detalle_Imagen.objects.filter(Producto=str(producto.Codigo)).count()
-		if cImg > 0:
-			archivo = Detalle_Imagen.objects.filter(Producto=producto.Codigo)[:1]
-			archImg = archivo[0].Imagen
-		else:
-			archImg = "img_detalle/sin_imagen.png"
+		contar = 0
+		for item in allImages:
+			if item.Producto == producto:
+				archImg = item.Imagen
+				contar += 1
+			else:
+				archImg = "img_detalle/sin_imagen.png"
+
+			if contar > 0:
+				break
+
+
+		#cImg = Detalle_Imagen.objects.filter(Producto=str(producto.Codigo)).count()
+		#if cImg > 0:
+		#	archivo = Detalle_Imagen.objects.filter(Producto=producto.Codigo)[:1]
+		#	archImg = archivo[0].Imagen
+		#else:
+		#	archImg = "img_detalle/sin_imagen.png"
 		infoProducto = {
 			'Codigo': producto.Codigo,
 			'Descripcion': producto.Descripcion,
