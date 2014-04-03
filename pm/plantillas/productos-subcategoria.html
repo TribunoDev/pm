@@ -23,7 +23,7 @@
 									</a>
 							      	<div class="caption">
 							        	<h3 class="nombre-producto">{{elemento.Descripcion|truncatewords:4|safe}}</h3>
-							        	<p class="caption-precio">L.{{elemento.Precio|intcomma}}</p>
+							        	<p class="caption-precio">L.{{elemento.Precio}}</p>
 							        	<form method="post" action="/agregar-carrito/">{% csrf_token %}
 							        		<input type="hidden" value="{{elemento.Codigo}}" name="Producto">
 							        		<input type="hidden" value="1" name="Cantidad">

@@ -182,6 +182,22 @@ def catalogo_productos(request):
 	#diccionario['total']=Producto.objects.all().count()
 	return render_to_response('categorias-productos.html', diccionario, context_instance=RequestContext(request))
 
+def intcomma(n):
+	sign = '-' if n < 0 else ''
+	n = str(abs(n)).split('.')
+	dec = '.00' if len(n) == 1 else '.' + n[1]
+  	# A)
+  	# n = ' '*(3-len(n[0])%3) + n[0]
+  	# return sign + (','.join([n[i*3:(i+1)*3] for i in range(len(n)/3)])).lstrip(' ,') + dec
+  	# B)
+  	n = n[0]
+  	m = len(n)
+  	# B-1)
+  	# return sign + ','.join(filter(None, [n[0:m%3]] + [n[i:i+3] for i in range(m%3, m, 3)])) + dec
+  	# B-2)
+  	return sign + (','.join([n[0:m%3]] + [n[i:i+3] for i in range(m%3, m, 3)])).lstrip(',') + dec
+
+
 #Vista que retorna los productos filtrando por subcategorias
 def ver_subcategoria(request, id_subcat):
 	diccionario={}
@@ -216,7 +232,7 @@ def ver_subcategoria(request, id_subcat):
 			'Codigo': producto.Codigo,
 			'Descripcion': producto.Descripcion,
 			'Existencia': producto.Existencia,
-			'Precio': producto.Precio,
+			'Precio': intcomma(producto.Precio),
 			'Subcategoria': producto.Subcategoria,
 			'Destacado': producto.Destacado,
 			'Oferta':producto.Oferta,
@@ -275,6 +291,7 @@ def ver_subcategoria(request, id_subcat):
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
 	return render_to_response('productos-subcategoria.html', diccionario, context_instance=RequestContext(request))
+
 
 #Vista que retorna el detalle de cada producto
 def detalle_producto(request, id_producto):
