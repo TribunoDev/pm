@@ -20,6 +20,73 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 centinela = False
 
+def intcomma(n):
+	sign = '-' if n < 0 else ''
+	n = str(abs(n)).split('.')
+	dec = '.00' if len(n) == 1 else '.' + n[1]
+  	# A)
+  	# n = ' '*(3-len(n[0])%3) + n[0]
+  	# return sign + (','.join([n[i*3:(i+1)*3] for i in range(len(n)/3)])).lstrip(' ,') + dec
+  	# B)
+  	n = n[0]
+  	m = len(n)
+  
+  	return sign + (','.join([n[0:m%3]] + [n[i:i+3] for i in range(m%3, m, 3)])).lstrip(',') + dec
+
+def images_destacados():
+	listaDestacados = []
+	pDestacados = Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')
+	contar = 0
+	for pD in pDestacados:
+		cImgD = Detalle_Imagen.objects.filter(Producto=pD).count()
+		if cImgD > 0:
+			destacados = {
+				'Codigo':pD.pk,
+				'Descripcion':pD.Descripcion,
+				'Precio': intcomma(pD.Precio)
+			}
+			listaDestacados.append(destacados)
+			contar =+ 1
+			if contar == 2:
+				break
+	return listaDestacados
+
+def images_ofertas():
+	listaOfertas=[]
+	pOfertas = Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')
+	contar = 0
+	for pO in pOfertas:
+		cImgO = Detalle_Imagen.objects.filter(Producto=pO).count()
+		if cImgO > 0:
+			ofertas = {
+				'Codigo':pO.pk,
+				'Descripcion':pO.Descripcion,
+				'Precio': intcomma(pO.Precio)
+			}
+			listaOfertas.append(ofertas)
+			contar =+ 1
+			if contar == 2:
+				break
+	return listaOfertas
+
+def images_novedades():
+	listaNovedades=[]
+	pNovedades = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')
+	contar = 0
+	for pN in pNovedades:
+		cImgN = Detalle_Imagen.objects.filter(Producto=pN).count()
+		if cImgN > 0:
+			novedades = {
+				'Codigo':pN.pk,
+				'Descripcion':pN.Descripcion,
+				'Precio': intcomma(pN.Precio)
+			}
+			listaNovedades.append(novedades)
+			contar =+ 1
+			if contar == 2:
+				break
+	return listaNovedades
+
 #Vista que retorna la pagina de inicio
 def inicio(request):
 	diccionario={}
@@ -115,9 +182,9 @@ def registrado(request):
 def marcas(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
-	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas']= images_ofertas()
+	diccionario['novedades'] = images_novedades()
 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
@@ -128,11 +195,46 @@ def marcas(request):
 #Vista que retorna los productos por cada marca
 def marca_producto(request, id_marca):
 	diccionario={}
+	listaSubCat=[]
+	pMarcas=[]
 	marca=get_object_or_404(Marca, pk=id_marca)
 	diccionario['marcas']=Marca.objects.all()
 	productos = Producto.objects.filter(Descripcion__icontains=marca)
+	allImages = Detalle_Imagen.objects.all().order_by('Imagen')
+	for producto in productos:
+		contar = 0
+		for item in allImages:
+			if item.Producto == producto:
+				archImg = item.Imagen
+				contar += 1
+			else:
+				archImg = "img_detalle/sin_imagen.png"
+
+			if contar > 0:
+				break
+		infoProducto = {
+			'Codigo': producto.Codigo,
+			'Descripcion': producto.Descripcion,
+			'Precio': intcomma(producto.Precio),
+			'Oferta': producto.Oferta,
+			'Imagen': archImg
+		}
+		pMarcas.append(infoProducto)
+
+	subCat = SubCategoria.objects.all()
+	for sC in subCat:
+		contarProdSub = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sC.pk).count()
+		if contarProdSub > 0:
+			subcategorias = {
+				'CodigoSubcategoria': sC.CodigoSubcategoria,
+				'Subcategoria': sC.Subcategoria,
+				'Categoria': sC.Categoria
+			}
+			listaSubCat.append(subcategorias)
+
+	diccionario['subcategorias'] = listaSubCat
 	diccionario['marca']=marca
-	paginador = Paginator(productos, 18)
+	paginador = Paginator(pMarcas, 18)
 	pagina = request.GET.get('page','1')
 	try:
 		productos = paginador.page(pagina)
@@ -141,34 +243,143 @@ def marca_producto(request, id_marca):
 	except EmptyPage:
 		productos = paginador.page(paginador.num_pages)
 	diccionario['productos'] = productos
-	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
-	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
-	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas']= images_ofertas()
+	diccionario['novedades'] = images_novedades
+	diccionario['detalle_img']= allImages
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
 	return render_to_response('productos-marcas.html', diccionario, context_instance=RequestContext(request))
 
+def filtro_marca_subcategoria(request):
+	diccionario={}
+	pSM=[]
+	if request.is_ajax() and request.method == 'POST':
+		if request.POST['subcategoria'] == 'all':
+			productos = Producto.objects.filter(Descripcion__icontains=request.POST['marca'])
+		else:
+			productos = Producto.objects.filter(Descripcion__icontains=request.POST['marca'], Subcategoria=SubCategoria.objects.get(CodigoSubcategoria=request.POST['subcategoria']))
+		allImages = Detalle_Imagen.objects.all().order_by('Imagen')
+		for producto in productos:
+			contar = 0
+			for item in allImages:
+				if item.Producto == producto:
+					archImg = item.Imagen
+					contar += 1
+				else:
+					archImg = "img_detalle/sin_imagen.png"
+
+				if contar > 0:
+					break
+			infoProducto = {
+				'Codigo': producto.Codigo,
+				'Descripcion': producto.Descripcion,
+				'Precio': intcomma(producto.Precio),
+				'Oferta': producto.Oferta,
+				'Imagen': archImg
+			}
+			pSM.append(infoProducto)
+
+			paginador = Paginator(pSM, 18)
+			pagina = request.GET.get('page','1')
+			try:
+				productos = paginador.page(pagina)
+			except PageNotAnInteger:
+				productos = paginador.page(1)
+			except EmptyPage:
+				productos = paginador.page(paginador.num_pages)
+
+		diccionario['productos']=productos
+		return render_to_response('filtro-marca-subcategoria.html', diccionario, context_instance=RequestContext(request))
+	else:
+		raise Http404
+
 #Vista para devolver los productos con categoria "Novedades"
 def destacados(request):
 	diccionario={}
-	diccionario['datos'] = Producto.objects.filter(Destacado__exact=True)[:12]
-	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	destacados=[]
+	allImages = Detalle_Imagen.objects.all().order_by('Imagen')
+	productos = Producto.objects.filter(Destacado__exact=True)[:12]
+	for producto in productos:
+		contar = 0
+		for item in allImages:
+			if item.Producto == producto:
+				archImg = item.Imagen
+				contar += 1
+			else:
+				archImg = "img_detalle/sin_imagen.png"
+
+			if contar > 0:
+				break
+		infoProducto = {
+			'Codigo': producto.Codigo,
+			'Descripcion': producto.Descripcion,
+			'Precio': intcomma(producto.Precio),
+			'Oferta': producto.Oferta,
+			'Imagen': archImg
+		}
+		destacados.append(infoProducto)
+
+	diccionario['datos']=destacados
 	return render_to_response('contenido-productos.html', diccionario, context_instance= RequestContext(request))
 
 #Vista que devuelve los productos que estan en la categoria de Ofertas
 def ofertas(request):
 	diccionario={}
-	diccionario['datos'] = Producto.objects.filter(Oferta__exact=True)[:12]
-	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	ofertas=[]
+	allImages = Detalle_Imagen.objects.all().order_by('Imagen')
+	productos = Producto.objects.filter(Oferta__exact=True)[:12]
+	for producto in productos:
+		contar = 0
+		for item in allImages:
+			if item.Producto == producto:
+				archImg = item.Imagen
+				contar += 1
+			else:
+				archImg = "img_detalle/sin_imagen.png"
+
+			if contar > 0:
+				break
+		infoProducto = {
+			'Codigo': producto.Codigo,
+			'Descripcion': producto.Descripcion,
+			'Precio': intcomma(producto.Precio),
+			'Oferta': producto.Oferta,
+			'Imagen': archImg
+		}
+		ofertas.append(infoProducto)
+
+	diccionario['datos']=ofertas
 	return render_to_response('contenido-productos.html', diccionario, context_instance=RequestContext(request))
 
 def novedades(request):
 	diccionario={}
+	novedades=[]
 	mes=datetime.now().month
-	diccionario['datos'] = Producto.objects.filter(Fecha__month=mes)[:12]
-	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	allImages = Detalle_Imagen.objects.all().order_by('Imagen')
+	productos = Producto.objects.filter(Fecha__month=mes)[:12]
+	for producto in productos:
+		contar = 0
+		for item in allImages:
+			if item.Producto == producto:
+				archImg = item.Imagen
+				contar += 1
+			else:
+				archImg = "img_detalle/sin_imagen.png"
+
+			if contar > 0:
+				break
+		infoProducto = {
+			'Codigo': producto.Codigo,
+			'Descripcion': producto.Descripcion,
+			'Precio': intcomma(producto.Precio),
+			'Oferta': producto.Oferta,
+			'Imagen': archImg
+		}
+		novedades.append(infoProducto)
+
+	diccionario['datos']=novedades
 	return render_to_response('contenido-productos.html', diccionario, context_instance=RequestContext(request))
 
 
@@ -179,23 +390,8 @@ def catalogo_productos(request):
 	diccionario['subcategorias']=SubCategoria.objects.all()
 	producto = Producto.objects.all()
 	diccionario['total']=SubCategoria.objects.annotate(existencia=Count('producto'))
-	#diccionario['total']=Producto.objects.all().count()
 	return render_to_response('categorias-productos.html', diccionario, context_instance=RequestContext(request))
 
-def intcomma(n):
-	sign = '-' if n < 0 else ''
-	n = str(abs(n)).split('.')
-	dec = '.00' if len(n) == 1 else '.' + n[1]
-  	# A)
-  	# n = ' '*(3-len(n[0])%3) + n[0]
-  	# return sign + (','.join([n[i*3:(i+1)*3] for i in range(len(n)/3)])).lstrip(' ,') + dec
-  	# B)
-  	n = n[0]
-  	m = len(n)
-  	# B-1)
-  	# return sign + ','.join(filter(None, [n[0:m%3]] + [n[i:i+3] for i in range(m%3, m, 3)])) + dec
-  	# B-2)
-  	return sign + (','.join([n[0:m%3]] + [n[i:i+3] for i in range(m%3, m, 3)])).lstrip(',') + dec
 
 
 #Vista que retorna los productos filtrando por subcategorias
@@ -212,7 +408,7 @@ def ver_subcategoria(request, id_subcat):
 	for producto in productos:
 		contar = 0
 		for item in allImages:
-			if item.Producto == producto:
+			if item.Producto.Codigo == producto.Codigo:
 				archImg = item.Imagen
 				contar += 1
 			else:
@@ -220,58 +416,14 @@ def ver_subcategoria(request, id_subcat):
 
 			if contar > 0:
 				break
-
-
-		#cImg = Detalle_Imagen.objects.filter(Producto=str(producto.Codigo)).count()
-		#if cImg > 0:
-		#	archivo = Detalle_Imagen.objects.filter(Producto=producto.Codigo)[:1]
-		#	archImg = archivo[0].Imagen
-		#else:
-		#	archImg = "img_detalle/sin_imagen.png"
 		infoProducto = {
 			'Codigo': producto.Codigo,
 			'Descripcion': producto.Descripcion,
-			'Existencia': producto.Existencia,
 			'Precio': intcomma(producto.Precio),
-			'Subcategoria': producto.Subcategoria,
-			'Destacado': producto.Destacado,
 			'Oferta':producto.Oferta,
-			'Fecha': producto.Fecha,
-			'Comentarios': producto.Comentarios,
-			'Notas': producto.Notas,
 			'Imagen': archImg
 		}
 		listaProducto.append(infoProducto)
-
-	pOfertas = Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')
-	contar = 0
-	for pO in pOfertas:
-		cImgO = Detalle_Imagen.objects.filter(Producto=pO).count()
-		if cImgO > 0:
-			listaOfertas.append(pO)
-			contar =+ 1
-			if contar == 2:
-				break
-
-	pDestacados = Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')
-	contar = 0
-	for pD in pDestacados:
-		cImgD = Detalle_Imagen.objects.filter(Producto=pD).count()
-		if cImgD > 0:
-			listaDestacados.append(pD)
-			contar =+ 1
-			if contar == 2:
-				break
-
-	pNovedades = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')
-	contar = 0
-	for pN in pNovedades:
-		cImgN = Detalle_Imagen.objects.filter(Producto=pN).count()
-		if cImgN > 0:
-			listaNovedades.append(pN)
-			contar =+ 1
-			if contar == 2:
-				break
 
 	paginador = Paginator(listaProducto, 18)
 	pagina = request.GET.get('page','1')
@@ -281,16 +433,69 @@ def ver_subcategoria(request, id_subcat):
 		productos = paginador.page(1)
 	except EmptyPage:
 		productos = paginador.page(paginador.num_pages)
+
+	allMarcas = Marca.objects.all()
+	listaMarcas = []
+	for marca in allMarcas:
+		cP = Producto.objects.filter(Subcategoria=subcat, Descripcion__icontains=marca.Marca).count()
+		if cP > 0:
+			listaMarcas.append(marca)
+
+	diccionario['listaMarcas']=listaMarcas
 	diccionario['productos'] = productos
-	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= listaDestacados
-	diccionario['ofertas'] = listaOfertas
-	diccionario['novedades'] = listaNovedades
+	diccionario['marcas']=allMarcas
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas'] = images_ofertas()
+	diccionario['novedades'] = images_novedades()
 	diccionario['detalle_img'] = Detalle_Imagen.objects.all()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
 	return render_to_response('productos-subcategoria.html', diccionario, context_instance=RequestContext(request))
+
+def filtro_subcategoria_marca(request):
+	diccionario={}
+	pMS=[]
+	if request.is_ajax() and request.method == 'POST':
+		if request.POST['marca'] == 'all':
+			productos = Producto.objects.filter(Subcategoria=SubCategoria.objects.get(pk=request.POST['subcategoria']))
+		else:
+			marca = Marca.objects.get(id=request.POST['marca'])
+			productos = Producto.objects.filter(Descripcion__icontains=marca.Marca, Subcategoria=SubCategoria.objects.get(pk=request.POST['subcategoria']))
+			allImages = Detalle_Imagen.objects.all().order_by('Imagen')
+			for producto in productos:
+				contar = 0
+				for item in allImages:
+					if item.Producto == producto:
+						archImg = item.Imagen
+						contar += 1
+					else:
+						archImg = "img_detalle/sin_imagen.png"
+
+					if contar > 0:
+						break
+				infoProducto = {
+					'Codigo': producto.Codigo,
+					'Descripcion': producto.Descripcion,
+					'Precio': intcomma(producto.Precio),
+					'Oferta': producto.Oferta,
+					'Imagen': archImg
+					}
+				pMS.append(infoProducto)
+
+		paginador = Paginator(pMS, 18)
+		pagina = request.GET.get('page','1')
+		try:
+			productos = paginador.page(pagina)
+		except PageNotAnInteger:
+			productos = paginador.page(1)
+		except EmptyPage:
+			productos = paginador.page(paginador.num_pages)
+
+		diccionario['productos']=productos
+		return render_to_response('filtro-subcategoria-marca.html', diccionario, context_instance=RequestContext(request))
+	else:
+		raise Http404
 
 
 #Vista que retorna el detalle de cada producto
@@ -301,10 +506,11 @@ def detalle_producto(request, id_producto):
 	diccionario['cantidad'] = Detalle_Imagen.objects.filter(Producto=detalle).count()
 	diccionario['imagenes'] = Detalle_Imagen.objects.filter(Producto=detalle).order_by('Imagen')
 	diccionario['detalle']=detalle
+	diccionario['precio']=intcomma(detalle.Precio)
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
-	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
+	diccionario['destacados']=images_destacados()
+	diccionario['ofertas']=images_ofertas()
+	diccionario['novedades'] = images_novedades()
 	diccionario['detalle_img']= Detalle_Imagen.objects.all().order_by('Imagen')
 	diccionario['formulario']=ContactoForm()
 	if not request.user.is_anonymous():
@@ -317,9 +523,9 @@ def buscar(request):
 	diccionario={}
 	listaProducto = []
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
-	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas']= images_ofertas()
+	diccionario['novedades'] = images_novedades()
 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	
 	if request.method=='POST':
@@ -341,7 +547,7 @@ def buscar(request):
 			infoProducto = {
 				'Codigo': producto.Codigo,
 				'Descripcion': producto.Descripcion,
-				'Precio': producto.Precio,
+				'Precio': intcomma(producto.Precio),
 				'Destacado': producto.Destacado,
 				'Oferta':producto.Oferta,
 				'Imagen': archImg

@@ -29,6 +29,7 @@ class SubCategoria(models.Model):
 
 class Producto(models.Model):
 	Codigo = models.CharField(max_length=100, primary_key=True, help_text='Código del producto', verbose_name=u'Código')
+	#idProductoMonica = models.IntegerField(null=True, blank=True)
 	Descripcion = models.CharField(max_length=200, help_text='Descripción del producto', verbose_name=u'Descripción')
 	Existencia = models.IntegerField(help_text='Cantidad de unidades en existencia del producto', verbose_name=u'Existencia')
 	Precio = models.DecimalField(max_digits=10, decimal_places=2, help_text='Precio unitario del producto', verbose_name=u'Precio')

@@ -58,7 +58,7 @@ urlpatterns = patterns('',
 
 
     #prueba
-    url(r'^user/password/reset$', password_reset,{'template_name': 'password_reset_form.html','post_reset_redirect': '/user/password/reset/done/'}, name='password_reset'),
+    url(r'^user/password/reset/$', password_reset,{'template_name': 'password_reset_form.html','post_reset_redirect': '/user/password/reset/done/'}, name='password_reset'),
     url(r'^user/password/reset/done/$', password_reset_done,{'template_name': 'password_reset_done.html'},name='password_reset_done'),
     url(r'^user/password/reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', password_reset_confirm,{'template_name': 'password_reset_email.html', 'post_reset_redirect': '/user/password/done/'}, name='password_reset_confirm'),
     url(r'^user/password/done/$', password_reset_complete,{'template_name': 'password_reset_complete.html'},name='password_reset_complete'),
@@ -69,6 +69,8 @@ urlpatterns = patterns('',
     url(r'^cargar-region/$', 'web.views.cargar_region', name='cargar_region'),
     url(r'^eliminar-item/$', 'web.views.eliminar_item_detalle', name='eliminar_item_detalle'),
     url(r'^item-carrito/$', 'web.views.item_carrito', name='item_carrito'),
+    url(r'^filtro-marca-subcategoria/$', 'web.views.filtro_marca_subcategoria', name='filtro_marca_subcategoria'),
+    url(r'^filtro-subcategoria-marca/$', 'web.views.filtro_subcategoria_marca', name='filtro_subcategoria_marca'),
     url(r'^obtener-datos-carrito/$', 'web.views.items_en_carrito', name='items_en_carrito'),
     url(r'^obtener-info-usuario/$', 'web.views.info_usuario', name='info_usuario'),
     url(r'^verificar-usuario/$', 'web.views.verificar_usuario', name='verificar_usuario'),

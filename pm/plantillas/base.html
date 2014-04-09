@@ -17,9 +17,10 @@
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/pm_estilo.css">
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/tabs.css">
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/carouFredSel.css">
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/lightview.css">
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/estilo_imprimir.css" media="print">
 	<link rel="shortcut icon" href="{{STATIC_URL}}img/icono.png">
-		
+	{% block style %}{% endblock %}
 </head>
 <body>
 	<header>
@@ -299,6 +300,7 @@
 		</div>
 	</footer>
 	<script type="text/javascript" src="{{STATIC_URL}}js/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/jquery.PrintArea.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/carousel.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/jquery.cycle2.js"></script>
@@ -311,7 +313,10 @@
 	<script type="text/javascript" src="{{STATIC_URL}}js/jquery.carouFredSel.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/jquery.mousewheel.min.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/jquery.touchSwipe.min.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/lightview.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/spinners.min.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/script.js"></script>
+	{% block js %}{% endblock js %}
 	<script type="text/javascript">
 	function imprSelec(muestra)
 	{var ficha=document.getElementById(muestra);var ventimp=window.open(' ','popimpr');ventimp.document.write(ficha.innerHTML);ventimp.document.close();ventimp.print();ventimp.close();}
@@ -325,6 +330,6 @@
 	  fjs.parentNode.insertBefore(js, fjs);
 	}(document, 'script', 'facebook-jssdk'));
 	</script>
-	{% block js %}{% endblock js %}
+	
 </body>
 </html>

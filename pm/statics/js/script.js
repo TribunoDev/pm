@@ -289,6 +289,8 @@ $(document).on("ready", function(){
 		width: '100%',
 	});
 
+	
+
 	//Script para el boton imprimir
 	$('#frmDireccion input, #frmDireccion select, #frmDireccion textarea').attr('required', 'True');
 

@@ -11,7 +11,7 @@ label{
 }
 
 #caja-contenido .producto-elemento h3{
-	height: 70px;
+	height: 60px;
 	margin-bottom: 5px;
 }
 
@@ -138,6 +138,12 @@ label{
 	padding: 0;
 }
 
+.controles-visor span{
+	position: absolute;
+	margin-top: 20px;
+	z-index: 101;
+}
+
 .cuerpo-contenido{
 	border: 1px solid #ecf0f1;
 	border-radius: 5px;
@@ -154,6 +160,11 @@ label{
 	border-radius: 4px;
 }
 
+.detalle-nombre h3{
+	color: rgb(27, 27, 167);
+	font-size: 16px;
+}
+
 .detalle-nombre, .detalle-cantidad{
 	margin-bottom: 5px;
 }
@@ -165,11 +176,25 @@ label{
 	margin: 0.5% 0;
 	padding: 2%;
 	border-radius: 3px;
+}
+
+.detalle-precio span{
+	color: #e46764;
+	font-size: 18px;
+}
+
+.detalle-existencia .negativo{
+	color: #e46764;
+	font-size: 18px;
 	font-weight: bold;
 }
 
 .espacio{
 	height: 10px;
+}
+
+.filtro-marcas{
+	margin-bottom: 5px;
 }
 
 .frmCant{
@@ -188,6 +213,7 @@ label{
 	position: relative;
 	text-align: center;
 }
+
 
 .item-cantidad{
 	font-size: 18px;
@@ -237,6 +263,7 @@ label{
 #panel-opciones{
 	border-radius: 4px;
 	border: 1px solid #dddddd;
+	margin-bottom: 5px;
 	padding: 5px;
 }
 
@@ -277,7 +304,12 @@ label{
 	text-align: center;
 }
 
+.thumbnail{
+	border: 1px solid #EFEFEF;
+}
+
 .thumbnail h3{
+	color: #7F7F7F;
 	font-size: 13px;
 	line-height: 13px;
 }
@@ -293,7 +325,12 @@ label{
 }
 
 .producto-filtro-lateral{
-	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.producto-filtro-lateral .detalle-descripcion{
+	font-size: 14px;
+	font-weight: bold;
 }
 
 @media screen and (max-width: 1024px){
@@ -332,8 +369,8 @@ label{
 	}
 
 	.thumbnail h3{
-		font-size: 16px;
-		line-height: 16px;
+		font-size: 12px;
+		line-height: 11px;
 	}
 
 	.thumbnail .caption{
@@ -345,7 +382,10 @@ label{
 		padding: 3px 8px;
 	}
 
-	
+	.caption-precio{
+		font-size: 16px;
+		text-align: right;
+	}
 
 
 	.item-cantidad p{
@@ -358,6 +398,10 @@ label{
 
 	.item-precio p{
 		margin-top: 5%;
+	}
+
+	.titulo{
+		font-size: 14px;
 	}
 
 	.titulo-precio-cantidad{

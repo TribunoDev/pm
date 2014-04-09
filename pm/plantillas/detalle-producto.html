@@ -1,5 +1,47 @@
 {% extends 'base.html' %}
 {% block titulo %}Detalle de Producto{% endblock %}
+{% block style %}
+    <style type="text/css" media="screen">
+    
+    .cycle-controles a{font-size: 30px;}
+    .cycle-controles{
+        text-align: center;
+        padding: 5px;
+    }
+    .cycle-pager {
+        text-align: right;
+        padding-right: 5px;  
+        position: relative; 
+        overflow: hidden;
+        }
+    .cycle-pager span {
+        font-family: arial; 
+        font-size: 50px; 
+        width: 16px;  
+        display: inline-block; 
+        color: #ddd; 
+        cursor: pointer;
+        }
+    .cycle-pager span.cycle-pager-active { color: #D69746;}
+    .cycle-pager > * { cursor: pointer;}
+
+    .cycle-caption { position: absolute; color: white; bottom: 15px; right: 15px; z-index: 700; font-weight: bold;}
+
+    </style>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript" src="{{STATIC_URL}}js/jquery.slides.min.js"></script>
+    <script>
+        $('#slides').slidesjs({
+            pagination: {
+                active: true,
+            },
+            navigation: false,
+            width: 940,
+            height: 528
+        });
+    </script>
+{% endblock %}
 {% block contenido %}
     <div class="row">
         <article id="caja-contenido" class="col-xs-12 col-sm-8 col-md-9">
@@ -21,42 +63,47 @@
                             </div>
                             <div id="print-imagen-producto">
                             <div class="col col-sm-5">
-                                <figure class="cycle-slideshow img-thumbnail" data-cycle-fx=scrollHorz data-cycle-timeout=0 data-cycle-pager="#no-template-pager" data-cycle-pager-template="">
-                                {% if cantidad > 0 %}
-                                    {% for imagen in imagenes %}
-                                    <img src="{{MEDIA_URL}}{{imagen.Imagen}}"/>
-                                    {% endfor %}
-                                {% else %}
-                                <img src="{{STATIC_URL}}img/sin_imagen.png">
-                                {% endif %}
-                                <!--{% for imagen in detalle_img %}
-                                        {% if imagen.Producto.Codigo == detalle.Codigo %}
-                                            <img src="{{MEDIA_URL}}{{imagen.Imagen}}"/>
+                                <!--Imagen Desktop -->
+                                <div class="row hidden-xs">
+                                    <figure class="img-thumbnail">
+                                        {% if cantidad > 0 %}
+                                            {% for imagen in imagenes %}
+                                                {% if forloop.first %}
+                                                   <img src="{{MEDIA_URL}}{{imagen.Imagen}}"/> 
+                                                {% endif %}
+                                            {% endfor %}
                                         {% else %}
                                             <img src="{{STATIC_URL}}img/sin_imagen.png">
                                         {% endif %}
-                                    {% empty %}
-                                        <img src="{{STATIC_URL}}img/sin_imagen.png">
-                                    {% endfor %}-->
-                                </figure>
-                                <figure id="no-template-pager" class="cycle-pager external no-print">
-                                {% if cantidad > 0 %}
-                                    {% for imagen in imagenes %}
-                                    <img src="{{MEDIA_URL}}{{imagen.Imagen}}" width="20" height="auto" class="img-thumbnail">
-                                    {% endfor %}
-                                {% else %}
-                                    <img src="{{STATIC_URL}}img/sin_imagen.png" width="20" height="auto" class="img-thumbnail">
-                                    <!--{% for imagen in detalle_img %}
-                                         {% if imagen.Producto.Codigo == detalle.Codigo %}
-                                            <img src="{{MEDIA_URL}}{{imagen.Imagen}}" width="20" height="auto" class="img-thumbnail">
+                                    </figure>
+                                    <figure class="galeria no-print">
+                                        {% if cantidad > 0 %}
+                                            {% for imagen in imagenes %}
+                                                <a href="{{MEDIA_URL}}{{imagen.Imagen}}" class="lightview" data-lightview-group="thumbnail-demo" data-lightview-group-options="controls: 'thumbnails'">
+                                                    <img src="{{MEDIA_URL}}{{imagen.Imagen}}" width="20" height="auto" class="img-thumbnail">
+                                                </a>
+                                            {% endfor %}
                                         {% else %}
                                             <img src="{{STATIC_URL}}img/sin_imagen.png" width="20" height="auto" class="img-thumbnail">
                                         {% endif %}
-                                    {% empty %}
-                                        <img src="{{STATIC_URL}}img/sin_imagen.png" width="20" height="auto" class="img-thumbnail">
-                                    {% endfor %}-->
-                                {% endif %}
-                                </figure>
+                                    </figure>
+                                </div>
+                                <!--Imagen Movil -->
+                                <div class="row visible-xs">
+                                    <figure class="cycle-slideshow img-thumbnail" data-cycle-swipe=true data-cycle-fx=scrollHorz data-cycle-timeout=0 data-cycle-pager=".cycle-pager" data-cycle-prev=".cycle-prev" data-cycle-next=".cycle-next">
+                                        {% if cantidad > 0 %}
+                                            {% for imagen in imagenes %}
+                                                    <img src="{{MEDIA_URL}}{{imagen.Imagen}}" class="img-rounded"/>
+                                            {% endfor %}
+                                        {% else %}
+                                            <img src="{{STATIC_URL}}img/sin_imagen.png">
+                                        {% endif %}
+                                        <div class="cycle-caption"></div>
+                                    </figure>
+                                    <div class="cycle-controles">
+                                        <a href="#" class="cycle-prev"><span class="glyphicon glyphicon-chevron-left"></span></a><a href="#" class="cycle-next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+                                    </div>
+                                </div>
                                 <div id="panel-opciones" class="row no-print">
                                     <!-- Button trigger modal -->
                                     <button class="btn btn-primary btn-default btnEmailProducto" data-toggle="modal" data-target="#myModal"><span class="icon-mail icon-mail3"></span></button>
@@ -67,7 +114,7 @@
                             </div><!--Fin #print-imagen-producto -->
                             <div id="producto-detalle-descripcion" class="col col-xs-12 col-sm-7">
                                 <div class="detalle-nombre row">
-                                    <h3>{{detalle.Descripcion|safe}}</h3>
+                                    <h3>{{detalle.Descripcion}}</h3>
                                 </div>
                                 <form method="post" action="/agregar-carrito/" class="detalle-cantidad row no-print">{% csrf_token %}
                                     <div class="col col-xs-3">
@@ -78,13 +125,13 @@
                             
                                 </form>
                                 <div class="detalle-codigo row">
-                                    <p>Código del producto: <strong>{{detalle.pk}}</strong></p>
+                                    <p><strong>Código del producto:</strong> {{detalle.Codigo}}</p>
                                 </div>
                                 <div class="row detalle-precio">
-                                {% load humanize %}<p>Precio: L. {{detalle.Precio|intcomma}}</p>
+                                {% load humanize %}<p><strong>Precio: <span>L. {{precio}}</span></strong></p>
                                 </div>
                                 <div class="row detalle-existencia">
-                                    <p>En exitencia: {{detalle.Existencia}} unidades</p>
+                                    <p><strong>En exitencia:</strong>{% if detalle.Existencia < 0 %} <span class="negativo">{{detalle.Existencia}}</span>{% else %} {{detalle.Existencia}}{% endif %}</p>
                                 </div>
                                 
                                 <div class="row">
@@ -138,37 +185,33 @@
                 <div class="row">
                     <h2 class="titulo">Novedades</h2>
                 </div>
-                <div  class="cuerpo-contenido row">
+                <div class="cuerpo-contenido row">
                     {% for item in novedades %}
                     <article class="producto-elemento row">
-                        <div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
+                        <div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
                         <div class="row">
                             <figure id="s2" class="s2 demo">
                                 {% for img in detalle_img %}
-                                    {% if img.Producto == item %}
+                                    {% if img.Producto.Codigo == item.Codigo %}
                                         <img src="{{MEDIA_URL}}{{img.Imagen}}" >
-                                    {% else %}
-                                        <img src="{{STATIC_URL}}img/sin_imagen.png">
                                     {% endif %}
-                                {% empty %}
-                                    <img src="{{STATIC_URL}}img/sin_imagen.png">
                                 {% endfor %}
                             </figure>
                             <div class="contenido-lateral-precio">
                                 <div class="row">
                                     {% load humanize %}
-                                    <h3 ><span class="label label-success">L.{{item.Precio|intcomma}}</span></h3>
+                                    <h3 ><span class="label label-success">L. {{item.Precio|intcomma}}</span></h3>
                                 </div>
-                                <div class="row producto-caja-btn">
-                                    <form method="post" action="/agregar-carrito/">{% csrf_token %}
-                                        <input type="hidden" value="{{item.pk}}" name="Producto">
-                                        <input type="hidden" value="1" name="Cantidad">
-                                        <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.pk}}" class="btn btn-default" role="button">Ver</a></p>
-                                    </form>
+                                    <div class="row producto-caja-btn">
+                                        <form method="post" action="/agregar-carrito/">{% csrf_token %}
+                                            <input type="hidden" value="{{item.Codigo}}" name="Producto">
+                                            <input type="hidden" value="1" name="Cantidad">
+                                            <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a></p>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row"><p>{{item.Descripcion|truncatewords:4|safe}}</p></div>
+                            <div class="row detalle-descripcion"><p>{{item.Descripcion|truncatewords:8}}</p></div>
                     </article>
                     {% endfor %}
                 </div>
@@ -177,37 +220,33 @@
                 <div class="row">
                     <h2 class="titulo">Ofertas</h2>
                 </div>
-                <div  class="cuerpo-contenido row">
+                <div class="cuerpo-contenido row">
                     {% for item in ofertas %}
                     <article class="producto-elemento row">
-                        <div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
+                        <div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
                         <div class="row">
                             <figure id="s2" class="s2 demo">
                                 {% for img in detalle_img %}
-                                    {% if img.Producto == item %}
+                                    {% if img.Producto.Codigo == item.Codigo %}
                                         <img src="{{MEDIA_URL}}{{img.Imagen}}" >
-                                    {% else %}
-                                        <img src="{{STATIC_URL}}img/sin_imagen.png">
                                     {% endif %}
-                                {% empty %}
-                                    <img src="{{STATIC_URL}}img/sin_imagen.png">
                                 {% endfor %}
                             </figure>
                             <div class="contenido-lateral-precio ">
                                 <div class="row">
                                     {% load humanize %}
-                                    <h3 ><span class="label label-danger">L.{{item.Precio|intcomma}}</span></h3>
+                                    <h3 ><span class="label label-danger">L. {{item.Precio|intcomma}}</span></h3>
                                 </div>
-                                <div class="row producto-caja-btn">
-                                    <form method="post" action="/agregar-carrito/">{% csrf_token %}
-                                        <input type="hidden" value="{{item.pk}}" name="Producto">
-                                        <input type="hidden" value="1" name="Cantidad">
-                                        <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.pk}}" class="btn btn-default" role="button">Ver</a></p>
-                                    </form>
+                                    <div class="row producto-caja-btn">
+                                        <form method="post" action="/agregar-carrito/">{% csrf_token %}
+                                            <input type="hidden" value="{{item.Codigo}}" name="Producto">
+                                            <input type="hidden" value="1" name="Cantidad">
+                                            <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a></p>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row"><p>{{item.Descripcion|truncatewords:4|safe}}</p></div>
+                            <div class="row detalle-descripcion"><p>{{item.Descripcion|truncatewords:8}}</p></div>
                     </article>
                     {% endfor %}
                 </div>
@@ -216,37 +255,33 @@
                 <div class="row">
                     <h2 class="titulo">Destacados</h2>
                 </div>
-                <div  class="cuerpo-contenido row">
+                <div class="cuerpo-contenido row">
                     {% for item in destacados %}
                     <article class="producto-elemento row">
-                        <div class="detalle-codigo row"><p>Código: {{item.pk}}</p></div>
+                        <div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
                         <div class="row">
                             <figure id="s2" class="s2 demo">
                                 {% for img in detalle_img %}
-                                    {% if img.Producto == item %}
-                                        <img src="{{MEDIA_URL}}{{img.Imagen}}" >
-                                    {% else %}
-                                        <img src="{{STATIC_URL}}img/sin_imagen.png">
-                                    {% endif %}
-                                {% empty %}
-                                    <img src="{{STATIC_URL}}img/sin_imagen.png">
-                                {% endfor %}
+                                        {% if img.Producto.Codigo == item.Codigo %}
+                                            <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+                                        {% endif %}
+                                    {% endfor %}
                             </figure>
                             <div class="contenido-lateral-precio ">
                                 <div class="row">
                                     {% load humanize %}
-                                    <h3 ><span class="label label-success">L.{{item.Precio|intcomma}}</span></h3>
+                                    <h3 ><span class="label label-success">L. {{item.Precio|intcomma}}</span></h3>
                                 </div>
-                                <div class="row producto-caja-btn">
-                                    <form method="post" action="/agregar-carrito/">{% csrf_token %}
-                                        <input type="hidden" value="{{item.pk}}" name="Producto">
-                                        <input type="hidden" value="1" name="Cantidad">
-                                        <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.pk}}" class="btn btn-default" role="button">Ver</a></p>
-                                    </form>
+                                    <div class="row producto-caja-btn">
+                                        <form method="post" action="/agregar-carrito/">{% csrf_token %}
+                                            <input type="hidden" value="{{item.Codigo}}" name="Producto">
+                                            <input type="hidden" value="1" name="Cantidad">
+                                            <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a></p>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row"><p>{{item.Descripcion|truncatewords:4|safe}}</p></div>
+                            <div class="row detalle-descripcion"><p>{{item.Descripcion|truncatewords:8}}</p></div>
                     </article>
                     {% endfor %}
                 </div>
