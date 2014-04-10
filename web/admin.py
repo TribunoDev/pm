@@ -22,7 +22,7 @@ class Editor(admin.ModelAdmin):
 	class Media:
 		js = ('../static/js/tiny_mce/tiny_mce.js', '../static/js/editores/textareas.js')
 
-admin.site.register(Producto, ProductoAdmin)
+admin.site.register(Producto, Editor)
 admin.site.register(Categoria)
 admin.site.register(SubCategoria)
 admin.site.register(Orden)
