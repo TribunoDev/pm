@@ -382,7 +382,7 @@ def ver_subcategoria(request, id_subcat):
 	diccionario['datos']=subcat
 	productos = Producto.objects.filter(Subcategoria=subcat)
 	for producto in productos:
-		if Detalle_Imagen.objects.filter(Producto=producto).count() > 0:
+		if Detalle_Imagen.objects.filter(Producto=producto.Codigo).count() > 0:
 			allImages = Detalle_Imagen.objects.filter(Producto=producto)[:1]
 			archImg = allImages[0]
 			archImg = archImg.Imagen

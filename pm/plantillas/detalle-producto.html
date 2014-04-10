@@ -27,6 +27,7 @@
 
     .cycle-caption { position: absolute; color: white; bottom: 15px; right: 15px; z-index: 700; font-weight: bold;}
 
+
     </style>
 {% endblock %}
 {% block js %}
@@ -76,12 +77,13 @@
                                             <img src="{{STATIC_URL}}img/sin_imagen.png">
                                         {% endif %}
                                     </figure>
-                                    <figure class="galeria no-print">
+                                    <figure class="row galeria no-print">
                                         {% if cantidad > 0 %}
                                             {% for imagen in imagenes %}
                                                 <a href="{{MEDIA_URL}}{{imagen.Imagen}}" class="lightview" data-lightview-group="thumbnail-demo" data-lightview-group-options="controls: 'thumbnails'">
                                                     <img src="{{MEDIA_URL}}{{imagen.Imagen}}" width="20" height="auto" class="img-thumbnail">
                                                 </a>
+                                          
                                             {% endfor %}
                                         {% else %}
                                             <img src="{{STATIC_URL}}img/sin_imagen.png" width="20" height="auto" class="img-thumbnail">
