@@ -16,13 +16,13 @@ class DetalleImgAdmin(admin.ModelAdmin):
 class ProductoAdmin(admin.ModelAdmin):
 	search_fields = ['Descripcion', 'Codigo']
 	ordering = ['Descripcion']
-	list_display = ('Descripcion','Comentarios', 'Codigo')
+	list_display = ('Descripcion', 'Codigo')
 
 class Editor(admin.ModelAdmin):
 	class Media:
-		js = ('/home3/bufeteg1/public_html/pm.hn/pm/web/static/js/tiny_mce/tiny_mce.js', '/home3/bufeteg1/public_html/pm.hn/pm/web/static/js/editores/textareas.js')
+		js = ('../static/js/tiny_mce/tiny_mce.js', '../static/js/editores/textareas.js')
 
-admin.site.register(Producto, Editor)
+admin.site.register(Producto, ProductoAdmin)
 admin.site.register(Categoria)
 admin.site.register(SubCategoria)
 admin.site.register(Orden)
