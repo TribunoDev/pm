@@ -257,7 +257,6 @@ def filtro_marca_subcategoria(request):
 			productos = Producto.objects.filter(Descripcion__icontains=request.POST['marca'])
 		else:
 			productos = Producto.objects.filter(Descripcion__icontains=request.POST['marca'], Subcategoria=SubCategoria.objects.get(CodigoSubcategoria=request.POST['subcategoria']))
-		allImages = Detalle_Imagen.objects.all().order_by('Imagen')
 
 		for producto in productos:
 			if Detalle_Imagen.objects.filter(Producto=producto).count() > 0:
@@ -583,8 +582,8 @@ def agregar_carrito(request):
 		diccionario['usuario']=usuario
 		diccionario['centinela']=True
 		diccionario['marcas']=Marca.objects.all()
-		diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-		diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+		diccionario['destacados']= images_destacados()
+		diccionario['ofertas']= images_ofertas()
 		diccionario['detalle_img']= Detalle_Imagen.objects.all()
 
 	return HttpResponseRedirect('/carrito/')
@@ -597,9 +596,9 @@ def datos_carrito(request):
 	estado = 0
 	carrito = 0
 	usuario = 0
+	productoImagen =[]
 	
 	if request.is_ajax():
-		#if Carrito.objects.filter(Usuario=usuario, Estado=estado).count() != 0:
 			estado = Estado.objects.get(id=1)
 			if not request.user.is_anonymous():
 				usuario = request.user
@@ -634,9 +633,9 @@ def item_carrito(request):
 def carrito(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
-	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas']= images_ofertas()
+	diccionario['novedades'] = images_novedades()
 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
@@ -706,12 +705,27 @@ def info_usuario(request):
 def items_en_carrito(request):
 	diccionario={}
 	carrito = 0
+	detalleCarrito = []
 	if not request.user.is_anonymous():
 		usuario = request.user
 		carrito = Carrito.objects.get(Usuario=usuario, Estado=1)
-	if Detalle_Carrito.objects.filter(Carrito=carrito).count() != 0:
-		diccionario['detalle']=Detalle_Carrito.objects.filter(Carrito=carrito)
-		diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	if Detalle_Carrito.objects.filter(Carrito=carrito).count() > 0:
+		for item in Detalle_Carrito.objects.filter(Carrito=carrito):
+			if Detalle_Imagen.objects.filter(Producto=item.Producto).count() > 0:
+				allImages = Detalle_Imagen.objects.filter(Producto=item.Producto.Codigo)[:1]
+				archImg = allImages[0]
+				archImg = archImg.Imagen
+			else:
+				archImg = "img_detalle/sin_imagen.png"
+			detalle = {
+				'id': item.pk,
+				'Carrito': carrito,
+				'Imagen': archImg,
+				'Producto': Producto.objects.get(Codigo=item.Producto.Codigo),
+				'Cantidad': item.Cantidad
+				}
+			detalleCarrito.append(detalle)
+		diccionario['detalle']=detalleCarrito
 		template = 'items-en-carrito.html'
 	else:
 		template = 'no-hay-items-carrito.html'
