@@ -34,17 +34,19 @@ def images_destacados():
 	pDestacados = Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')
 	contar = 0
 	for pD in pDestacados:
-		cImgD = Detalle_Imagen.objects.filter(Producto=pD).count()
-		if cImgD > 0:
-			destacados = {
-				'Codigo':pD.pk,
-				'Descripcion':pD.Descripcion,
-				'Precio': intcomma(pD.Precio)
-			}
-			listaDestacados.append(destacados)
-			contar =+ 1
 		if contar == 2:
 			break
+		else:
+			cImgD = Detalle_Imagen.objects.filter(Producto=pD).count()
+			if cImgD > 0:
+				contar = contar + 1
+				destacados = {
+					'Codigo':pD.pk,
+					'Descripcion':pD.Descripcion,
+					'Precio': intcomma(pD.Precio)
+				}
+				listaDestacados.append(destacados)
+				
 	return listaDestacados
 
 def images_ofertas():
@@ -52,17 +54,18 @@ def images_ofertas():
 	pOfertas = Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')
 	contar = 0
 	for pO in pOfertas:
-		cImgO = Detalle_Imagen.objects.filter(Producto=pO).count()
-		if cImgO > 0:
-			ofertas = {
-				'Codigo':pO.pk,
-				'Descripcion':pO.Descripcion,
-				'Precio': intcomma(pO.Precio)
-			}
-			listaOfertas.append(ofertas)
-			contar =+ 1
 		if contar == 2:
 			break
+		else:
+			cImgO = Detalle_Imagen.objects.filter(Producto=pO).count()
+			if cImgO > 0:
+				contar = contar + 1
+				ofertas = {
+					'Codigo':pO.pk,
+					'Descripcion':pO.Descripcion,
+					'Precio': intcomma(pO.Precio)
+				}
+				listaOfertas.append(ofertas)
 	return listaOfertas
 
 def images_novedades():
@@ -70,17 +73,18 @@ def images_novedades():
 	pNovedades = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')
 	contar = 0
 	for pN in pNovedades:
-		cImgN = Detalle_Imagen.objects.filter(Producto=pN).count()
-		if cImgN > 0:
-			novedades = {
-				'Codigo':pN.pk,
-				'Descripcion':pN.Descripcion,
-				'Precio': intcomma(pN.Precio)
-			}
-			listaNovedades.append(novedades)
-			contar =+ 1
 		if contar == 2:
 			break
+		else:
+			cImgN = Detalle_Imagen.objects.filter(Producto=pN).count()
+			if cImgN > 0:
+				contar = contar + 1
+				novedades = {
+					'Codigo':pN.pk,
+					'Descripcion':pN.Descripcion,
+					'Precio': intcomma(pN.Precio)
+				}
+				listaNovedades.append(novedades)
 	return listaNovedades
 
 #Vista que retorna la pagina de inicio
