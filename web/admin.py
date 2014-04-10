@@ -20,7 +20,7 @@ class ProductoAdmin(admin.ModelAdmin):
 
 class Editor(admin.ModelAdmin):
 	class Media:
-		js = ('public_html/pm.hn/pm/web/static/js/tiny_mce/tiny_mce.js', 'public_html/pm.hn/pm/web/static/js/editores/textareas.js')
+		js = ('/home3/bufeteg1/public_html/pm.hn/pm/web/static/js/tiny_mce/tiny_mce.js', '/home3/bufeteg1/public_html/pm.hn/pm/web/static/js/editores/textareas.js')
 
 admin.site.register(Producto, Editor)
 admin.site.register(Categoria)
