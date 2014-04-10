@@ -43,8 +43,8 @@ def images_destacados():
 			}
 			listaDestacados.append(destacados)
 			contar =+ 1
-			if contar == 2:
-				break
+		if contar == 2:
+			break
 	return listaDestacados
 
 def images_ofertas():
@@ -61,8 +61,8 @@ def images_ofertas():
 			}
 			listaOfertas.append(ofertas)
 			contar =+ 1
-			if contar == 2:
-				break
+		if contar == 2:
+			break
 	return listaOfertas
 
 def images_novedades():
@@ -79,8 +79,8 @@ def images_novedades():
 			}
 			listaNovedades.append(novedades)
 			contar =+ 1
-			if contar == 2:
-				break
+		if contar == 2:
+			break
 	return listaNovedades
 
 #Vista que retorna la pagina de inicio
