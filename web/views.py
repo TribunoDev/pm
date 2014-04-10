@@ -711,7 +711,7 @@ def items_en_carrito(request):
 		carrito = Carrito.objects.get(Usuario=usuario, Estado=1)
 	if Detalle_Carrito.objects.filter(Carrito=carrito).count() > 0:
 		for item in Detalle_Carrito.objects.filter(Carrito=carrito):
-			if Detalle_Imagen.objects.filter(Producto=item.Producto).count() > 0:
+			if Detalle_Imagen.objects.filter(Producto=item.Producto.Codigo).count() > 0:
 				allImages = Detalle_Imagen.objects.filter(Producto=item.Producto.Codigo)[:1]
 				archImg = allImages[0]
 				archImg = archImg.Imagen
