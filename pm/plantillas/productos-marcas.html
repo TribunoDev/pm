@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 
 {% block titulo %}Paper & More{% endblock %}
+{% block style %}
+	<style>
+		
+	</style>
+{% endblock %}
 {% block js %}
 	<script>
 		$('#btnFiltroSubcat').on('click', function(){
@@ -34,8 +39,8 @@
 				<div class="form-group col col-xs-9 col-sm-6 ">
 					<input type="hidden" name="marca" value="{{marca.Marca}}">
 					<div class="">
-					<select name="subcategoria" id="meses" class="form-control" required>
-						<option value="all">Todos</option>
+					<select name="subcategoria" id="selectSubcategoria" class="form-control filtroSelect" required>
+						<option value="all">Todos los productos</option>
 				  		{% for subcategoria in subcategorias %}
 			    			<option value="{{subcategoria.CodigoSubcategoria}}">{{subcategoria.Subcategoria}}</option>
 				  		{% endfor %}
@@ -43,7 +48,7 @@
 			    	</div>
 		    	</div>
 		    	<div>
-		    		<button id="btnFiltroSubcat" type="button" class="btn btn-default btn-sm">Mostrar</button>	
+		    		<button id="btnFiltroSubcat" type="button" class="btn btn-default btn-sm btnFiltro">Mostrar</button>	
 			    </div>
 			</form>
     	</div>

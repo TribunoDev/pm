@@ -193,6 +193,15 @@ label{
 	height: 10px;
 }
 
+.btnFiltro{
+			margin-left: 5px;
+		}
+
+		.filtroSelect{
+			height: 30px;
+			font-weight: bold;
+		}
+
 .filtro-marcas{
 	margin-bottom: 5px;
 }

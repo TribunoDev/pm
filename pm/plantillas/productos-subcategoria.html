@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 
 {% block titulo %}Paper & More{% endblock %}
+{% block style %}
+	<style>
+		
+	</style>
+{% endblock %}
 {% block js %}
 	<script>
 		$('#btnFiltroMarca').on('click', function(){
@@ -28,9 +33,9 @@
 				<form class="form-inline" role="form" action="">
 					{% csrf_token %}
 					<div class="form-group col col-xs-9 col-sm-6 ">
-						<input type="hidden" name="subcategoria" value="{{datos.pk}}">
+						<input type="hidden" name="subcategoria" value="{{datos.CodigoSubcategoria}}">
 						<div class="">
-						<select name="marca" id="meses" class="form-control" required>
+						<select name="marca" id="selectMarcas" class="filtroSelect form-control" required>
 							<option value="all">Todas las marcas...</option>
 					  		{% for marca in listaMarcas %}
 				    			<option value="{{marca.pk}}">{{marca.Marca}}</option>
@@ -39,7 +44,7 @@
 				    	</div>
 			    	</div>
 			    	<div class="form-group">
-			    		<button id="btnFiltroMarca" type="button" class="btn btn-default btn-sm">Mostrar</button>	
+			    		<button id="btnFiltroMarca" type="button" class="btn btn-default btn-sm btnFiltro">Mostrar</button>	
 				    </div>
 				</form>
 	    	</div>
