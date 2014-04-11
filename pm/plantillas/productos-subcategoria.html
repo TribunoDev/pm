@@ -104,7 +104,7 @@
 								{% for page in page_number %}
 									{% if page == productos.number %}
 										<span class="active">
-											{{page}}
+											<li class="disabled"><a>{{page}}</a></li>
 										</span>
 									{% else %}
 										<li><a href="?page={{ page }}">{{ page }}</a></li>

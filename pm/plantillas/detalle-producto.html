@@ -150,11 +150,10 @@
                                 </div>
                                 <div class="row detalle-existencia">
                                     <p><strong>En exitencia:</strong>{% if detalle.Existencia < 0 %} <span class="negativo">{{detalle.Existencia}}</span>{% else %} {{detalle.Existencia}}{% endif %}</p>
-                                </div>
-                                
-                                <div class="row">
+                                </div>  
+                                <div class="row detalle-comentario">
                                     <div class="espacio"></div>
-                                    <p>{{detalle.Comentarios|safe}}</p>
+                                    <p>{{detalle.Comentarios|linebreaks}}</p>
                                 </div>
                             </div>
                        

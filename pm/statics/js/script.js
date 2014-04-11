@@ -151,11 +151,31 @@ $(document).on("ready", function(){
 
 	});
 
-	//Script para actualizar la cantidad de cada producto
-	$('.items-carrito, #item-carrito').on('click', '.btnItem-Actualizar', function(e){
-		e.preventDefault();
-		var form = $(this).closest('form').attr('id');
-		var frmCantidad = $(this).closest('.item-cantidad').attr('data-id');
+	//Script para validar cuando se da enter en el formulario de editar cantidad de producto en carrito
+	$('.cuerpo-contenido').on('keypress', 'input[name="Cantidad"]', function(e){
+		var cantida = $(this).val();
+		var idDetalle = $(this).attr('data-id');
+		if(e.which==13){
+			e.preventDefault();
+			if (cantida >= 1){
+				var form = $(this).closest('form').attr('id');
+				var frmCantidad = $(this).closest('.item-cantidad').attr('data-id');
+
+				actualizarCantidadCarrito(form, frmCantidad);
+			}else{
+				var resp = confirm("¿Está seguro de eliminar el producto de su carrito?");
+				if (resp) {
+					$(this).closest('.item-carrito').slideUp('slow');
+					eliminarItemCarrito(idDetalle);
+				}
+			};
+		}
+
+	});
+
+	function actualizarCantidadCarrito (formulario, formularioCantidad) {
+		var form = formulario;
+		var frmCantidad = formularioCantidad;
 
 		$.ajax({
 			type: 	'POST',
@@ -173,14 +193,19 @@ $(document).on("ready", function(){
 			dataType: 'html'
 
 		});
+
+	}
+
+	//Script para actualizar la cantidad de cada producto
+	$('.items-carrito, #item-carrito').on('click', '.btnItem-Actualizar', function(e){
+		e.preventDefault();
+		var form = $(this).closest('form').attr('id');
+		var frmCantidad = $(this).closest('.item-cantidad').attr('data-id');
+		actualizarCantidadCarrito(form, frmCantidad);
 	});
 
-	//Script para el boton de eliminar item
-	$('.items-carrito').on('click', '.btnItem-Eliminar', function(e){
-		e.preventDefault();
-		var idDetalle = $(this).attr('data-id');
-		$(this).closest('.item-carrito').slideUp('slow');
-
+	function eliminarItemCarrito(idDetalle){
+		var idDetalle = idDetalle;
 		$.ajax({
 			type: 	'POST',
 			url: 	'/eliminar-item/',
@@ -194,6 +219,15 @@ $(document).on("ready", function(){
 			},
 			dataType: 'json'
 		});
+
+	};
+
+	//Script para el boton de eliminar item
+	$('.items-carrito').on('click', '.btnItem-Eliminar', function(e){
+		e.preventDefault();
+		var idDetalle = $(this).attr('data-id');
+		$(this).closest('.item-carrito').slideUp('slow');
+		eliminarItemCarrito(idDetalle);
 
 	});
 

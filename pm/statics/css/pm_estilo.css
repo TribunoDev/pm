@@ -160,6 +160,11 @@ label{
 	border-radius: 4px;
 }
 
+.detalle-comentario{
+	font-size: 12px;
+	color: #515151;
+}
+
 .detalle-nombre h3{
 	color: rgb(27, 27, 167);
 	font-size: 16px;
