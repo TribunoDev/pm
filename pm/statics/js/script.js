@@ -1,6 +1,5 @@
 $(document).on("ready", function(){
 
-	Ofertas();
 	LlenarCatalogo();
 
 	if (screen.width < 641) {
@@ -38,10 +37,6 @@ $(document).on("ready", function(){
 		Ofertas();
 	});
 
-	$("#novedades").on("click", function(){
-		Novedades();
-	});
-
 	function Destacados(){
 		$.get("/productos-destacados/", function(data){
 			$("#resultado-productos").html(data);
@@ -55,11 +50,7 @@ $(document).on("ready", function(){
 		}, "html")
 	};
 
-	function Novedades(){
-		$.get("/productos-en-novedades/", function(data){
-			$("#resultado-productos").html(data);
-		}, "html")
-	};
+	
 
 	//Script para llenar la catalogo "Producto" en el menu principal.
 	function LlenarCatalogo(){
@@ -98,21 +89,6 @@ $(document).on("ready", function(){
 	$('#repetir_password').on('focus', function(){
 		$('#repetir_password').removeClass('alert-danger');
 	});
-	
-	//Script para los datos del carrito
-	function datos_carrito () {
-		$.ajax({
-			type: 	'GET',
-			url: 	'/datos-carrito/',
-			data: 	{},
-			success: function(data){
-				$('.total-item-carrito').html(data);
-			},
-			dataType: 	'html'
-		});
-	};
-
-	datos_carrito();
 
 	//Script que retorna los item del carrito a la pestaña del menu
 	function item_carrito () {
@@ -147,17 +123,6 @@ $(document).on("ready", function(){
 			dataType: 'html'
 		});
 
-	});
-
-	//Script para obtener datos de un carrito
-	$.ajax({
-		type: 	'GET',
-		url: 	'/obtener-datos-carrito/',
-		data: 	{},
-		success: function(data){
-			$('.items-en-carrito').html(data);
-		},
-		dataType: 'html'
 	});
 
 	//Script para actualizar la cantidad de cada producto
@@ -222,17 +187,6 @@ $(document).on("ready", function(){
 		};
 	});
 
-	//Script para obtener la informacion del usuario
-	$.ajax({
-		type: 	'GET',
-		url: 	'/obtener-info-usuario/',
-		data: 	{},
-		success: function(data){
-			$('.info-usuario .panel').html(data);
-		},
-		dataType: 'html'
-	});
-
 	//Script para agregar elementos css a controles de inicio de sesión
 	$('#frmRegUsuario label, #formularioEmail label').addClass('control-label');
 	$('#id_username').addClass('form-control input-lg');
@@ -248,12 +202,12 @@ $(document).on("ready", function(){
 	});
 
 	$('.s2').cycle({
-		fx: 'fade'
-	});
+        fx: 'fade'
+    });
 
 
 	//Script para capturar el url de la pagina actual
-	var home = 'django.pm.hn';
+	var home = 'http://127.0.0.1:8000/';
 	var href = $(location).attr('href');
 	if (home == href) {
 		$('#myCarousel').css('display', 'block');
@@ -389,7 +343,7 @@ $(document).on("ready", function(){
 	$('#id_correo').attr('required', 'required');
 	$('#id_mensaje').attr('required', 'required')
 
-	$('#myModalRecomendacion #id_url').val("www.pm.hn");
+	$('#myModalRecomendacion #id_url').val("www.django.pm.hn");
 
 
 	//Script para cargar combo Región desde el combo País

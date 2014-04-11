@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 
 {% block titulo %}Inicio{% endblock %}
+{% block js %}
+  
+  <script>
+  </script>
+{% endblock %}
 
 {% block contenido %}
      <!-- Carousel
@@ -55,10 +60,9 @@
     		<div id="tipo-productos">
     			<article id="etiquetas">
 	    			<ul id="tab-productos" class="nav nav-tabs">
-	    				<li class="active"><a id="novedades" href="#">Novedades</a></li>
-						<li><a id="destacados" href="#">Destacados</a></li>
-						<li><a href="#">Ofertas</a></li>
-						<li><a href="#">Comentarios</a></li>
+						  <li><a href="#">Ofertas</a></li>
+              <li><a id="destacados" href="#">Destacados</a></li>
+              <li class="active"><a id="novedades" href="#">Novedades</a></li>
 					</ul>
 	    		</article>
     		</div>

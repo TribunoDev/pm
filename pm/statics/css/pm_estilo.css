@@ -223,6 +223,16 @@ label{
 	text-align: center;
 }
 
+.item-carrito .item-descripcion h3{
+	font-size: 16px;
+	color: rgb(27, 27, 167);
+}
+
+.item-carrito .item-descripcion a{
+	text-decoration: none;
+	
+}
+
 
 .item-cantidad{
 	font-size: 18px;

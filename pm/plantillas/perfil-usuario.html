@@ -2,6 +2,21 @@
 
 {% block titulo %}Paper & More - Perfil de Usuario{% endblock %}
 
+{% block js %}
+	<script>
+		//Script para obtener la informacion del usuario
+		$.ajax({
+			type: 	'GET',
+			url: 	'/obtener-info-usuario/',
+			data: 	{},
+			success: function(data){
+				$('.info-usuario .panel').html(data);
+			},
+			dataType: 'html'
+		});
+	</script>
+{% endblock %}
+
 {% block contenido %}
 	<div class="row">
 		<article id="caja-contenido" class="col-xs-12 col-sm-8 col-md-9">

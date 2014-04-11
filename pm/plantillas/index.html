@@ -1,15 +1,33 @@
 {% extends 'base.html' %}
 
 {% block titulo %}Paper & More - Inicio{% endblock %}
+{% block js %}
+  
+  <script>
+    $(document).on('ready', function(){
+      Novedades();
+
+      $("#novedades").on("click", function(){
+        Novedades();
+      });
+
+      function Novedades(){
+        $.get("/productos-en-novedades/", function(data){
+          $("#resultado-productos").html(data);
+        }, "html")
+      };
+    });
+  </script>
+{% endblock %}
 
 {% block contenido %}
   <div class="row">
     <article id="caja-contenido" class="col-xs-12 col-sm-8 col-md-9">
       <div class="row">
         <ul id="myTab" class="nav nav-tabs">
-          <li class="active"><a id="ofertas"  href="#">Ofertas</a></li>
+          <li class="active"><a id="novedades" href="#">Novedades</a></li>
           <li><a id="destacados" href="#">Destacados</a></li>
-          <li><a id="novedades" href="#">Novedades</a></li>
+          <li><a id="ofertas"  href="#">Ofertas</a></li>
         </ul>
         <article id="resultado-productos" class="cuerpo-contenido row"></article>
       </div>

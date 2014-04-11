@@ -400,14 +400,31 @@ def ver_subcategoria(request, id_subcat):
 		}
 		listaProducto.append(infoProducto)
 
-	paginador = Paginator(listaProducto, 18)
-	pagina = request.GET.get('page','1')
+	paginador = Paginator(listaProducto, 2)
+	
 	try:
+		pagina = int(request.GET.get('page','1'))
 		productos = paginador.page(pagina)
 	except PageNotAnInteger:
-		productos = paginador.page(1)
+		pagina = 1
 	except EmptyPage:
 		productos = paginador.page(paginador.num_pages)
+
+	startPage = max(pagina - 2, 1)
+	if startPage <= 3:
+		startPage = 1
+
+	endPage = pagina + 2 + 1
+	if endPage >= paginador.num_pages - 1:
+		endPage = paginador.num_pages + 1
+
+	page_number = []
+
+	for n in range(startPage, endPage):
+		if n > 0 and n <= paginador.num_pages:
+			page_number.append(n)
+
+	diccionario['page_number']=page_number
 
 	listaMarcas = []
 	if Marca.objects.all().count() > 0:
@@ -608,7 +625,7 @@ def datos_carrito(request):
 					cantidad += item.Cantidad
 					precio += item.Producto.Precio * item.Cantidad
 	diccionario['cantidad']=cantidad
-	diccionario['subtotal']=precio
+	diccionario['subtotal']=intcomma(precio)
 	diccionario['carrito']=carrito
 
 	return render_to_response('datos-carrito.html',diccionario, context_instance=RequestContext(request))
@@ -723,7 +740,8 @@ def items_en_carrito(request):
 				'Carrito': carrito,
 				'Imagen': archImg,
 				'Producto': Producto.objects.get(Codigo=item.Producto.Codigo),
-				'Cantidad': item.Cantidad
+				'Cantidad': item.Cantidad,
+				'Precio': intcomma(item.Producto.Precio)
 				}
 			detalleCarrito.append(detalle)
 		diccionario['detalle']=detalleCarrito

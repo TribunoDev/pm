@@ -14,7 +14,7 @@
                 <a href="/detalle-producto/{{item.Producto.pk}}"><img src="{{MEDIA_URL}}{{item.Imagen}}" class="img-thumbnail"></a>
 			</figure>
 			<div class="item-descripcion col col-xs-9 col-sm-9">
-				<h3>{{item.Producto.Descripcion|safe}}</h3>
+				<a href="/detalle-producto/{{item.Producto.pk}}"><h3>{{item.Producto.Descripcion|safe}}</h3></a>
 				<div class="item-eliminar">
 					<a class="btnItem-Eliminar" href="#" data-id="{{item.id}}">Eliminar</a>
 				</div>
@@ -31,7 +31,7 @@
 			</div>
 			<div class="row item-precio-cantidad">
 				<div class="col item-precio col-xs-6 col-sm-6">
-					<p>L.{{item.Producto.Precio}}</p>
+					<p>L. {{item.Precio}}</p>
 				</div>
 				<div class="col item-cantidad col-xs-6 col-sm-6" data-id="form_{{item.id}}">
 					<div>
