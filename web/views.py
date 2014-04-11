@@ -400,7 +400,7 @@ def ver_subcategoria(request, id_subcat):
 		}
 		listaProducto.append(infoProducto)
 
-	paginador = Paginator(listaProducto, 2)
+	paginador = Paginator(listaProducto, 18)
 	
 	try:
 		pagina = int(request.GET.get('page','1'))
