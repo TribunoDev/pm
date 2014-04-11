@@ -90,6 +90,32 @@ $(document).on("ready", function(){
 		$('#repetir_password').removeClass('alert-danger');
 	});
 
+	//Script para obtener datos de un carrito
+	$.ajax({
+		type: 	'GET',
+		url: 	'/obtener-datos-carrito/',
+		data: 	{},
+		success: function(data){
+			$('.items-en-carrito').html(data);
+		},
+		dataType: 'html'
+	});
+
+	//Script para los datos del carrito
+	function datos_carrito () {
+		$.ajax({
+			type: 	'GET',
+			url: 	'/datos-carrito/',
+			data: 	{},
+			success: function(data){
+				$('.total-item-carrito').html(data);
+			},
+			dataType: 	'html'
+		});
+	};
+
+	datos_carrito();
+
 	//Script que retorna los item del carrito a la pestaña del menu
 	function item_carrito () {
 		$.ajax({
