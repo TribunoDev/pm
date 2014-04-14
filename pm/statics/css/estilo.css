@@ -547,6 +547,7 @@ html, body{
 .contenido-lateral .producto-elemento figure{
 	vertical-align: top;
 	width: 39%;
+	top: 7px
 }
 
 .contenido-lateral .producto-elemento figure, .contenido-lateral .contenido-lateral-precio{
@@ -563,6 +564,7 @@ html, body{
 
 .contenido-lateral .contenido-lateral-precio h3{
 	margin-bottom: 5px;
+	font-size: 20px;
 }
 .contenido-lateral .producto-caja-btn{
 	padding-top: 3px;

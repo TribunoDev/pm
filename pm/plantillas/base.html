@@ -35,9 +35,10 @@
 			</article>
 			<article id="buscar" class="no-print">
 				<label>Llámenos (+504) 2780-5200</label>
-				<form class="form-inline" role="form" method="post" action="/buscar/">{% csrf_token %}
+				<form class="form-inline" role="form" method="GET" action="/buscar/">
 				  <div class="form-group">
 				    <input type="text" class="form-control" id="txtBuscar" name="txtBuscar" placeholder="Buscar...">
+				  	<input type="hidden" name="pagina" value="1">
 				  </div>
 				  <button type="submit" id="btnBuscar" class="btn btn-primary">Buscar</button>
 				</form>

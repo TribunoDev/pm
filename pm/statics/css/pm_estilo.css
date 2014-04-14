@@ -177,7 +177,7 @@ label{
 .detalle-codigo p, .detalle-precio p, .detalle-existencia p{
 	background-color: #E6E6E6;
 	font-family:  Helvetica, Arial;
-	font-size: 16px;
+	font-size: 14px;
 	margin: 0.5% 0;
 	padding: 2%;
 	border-radius: 3px;
@@ -361,12 +361,6 @@ label{
 	.img_oferta{
 		width: 40%;
 	}
-
-	.thumbnail h3{
-		font-size: 18px;
-		line-height: 25px;
-	}
-
 	.media-body p, .media-body ul{
 		font-size: 12px;
 		text-align: justify;

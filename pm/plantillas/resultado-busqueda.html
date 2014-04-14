@@ -32,32 +32,60 @@
 					  </div>
 					{% endfor %}
 				</article>
+				{% if totalProductos > 18 %}
 				<article class="cuerpo-contenido row paginacion">
 					<div class="pagination">
 						<span class="paginacion-enlaces">
 						<ul class="pager">
-							{% if resultado.has_previous %}
-								<li><a href="?page={{ resultado.previous_page_number }}{{ getvars }}{{ hashtag }}">Anterior</a></li>
-							{% else %}
-								<li class="disabled"><a>Anterior</a></li>
-							{% endif %}
-							<span class="actual">
-								{{ resultado.number }} de {{ resultado.paginator.num_pages }}
-							</span>
-							{% if resultado.has_next %}
-								<li><a href="?page={{ resultado.next_page_number }}">Siguiente</a></li>
-							{% else %}
-							<li class="disabled"><a>Siguiente</a></li>
-							{% endif %}
+							<li class="{% if not resultado.has_previous %}disabled{% endif %}">
+								{% if not resultado.has_previous %}
+									<span class="glyphicon glyphicon-step-backward"></span>
+								{% else %}
+									<a href="?txtBuscar={{dato}}&page=1" ><span class="glyphicon glyphicon-step-backward"></span></a>
+								{% endif %}
+							</li>
+							<li class="{% if not resultado.has_previous %}disabled{% endif %}">
+								{% if not resultado.has_previous %}
+									<span class="glyphicon glyphicon-backward"></span>
+								{% else %}
+									<a href="?txtBuscar={{dato}}&pagina={{resultado.previous_page_number}}" ><span class="glyphicon glyphicon-backward"></span></a>
+								{% endif %}
+							</li>
+
+							{% for page in page_number %}
+								{% if page == resultado.number %}
+									<span class="active">
+										<li class="disabled"><a>{{page}}</a></li>
+									</span>
+								{% else %}
+									<li><a href="?txtBuscar={{dato}}&pagina={{ page }}">{{ page }}</a></li>
+								{% endif %}
+							{% endfor %}
+
+							<li class="{% if not resultado.has_next %}disabled{% endif %}">
+								{% if not resultado.has_next %}
+									<span class="glyphicon glyphicon-forward"></span>
+								{% else %}
+									<a href="?txtBuscar={{dato}}&pagina={{resultado.next_page_number}}" ><span class="glyphicon glyphicon-forward"></span></a>
+								{% endif %}
+							</li>
+							<li class="{% if not resultado.has_next %}disabled{% endif %}">
+								{% if not resultado.has_next %}
+									<span class="glyphicon glyphicon-step-forward"></span>
+								{% else %}
+									<a href="?txtBuscar={{dato}}&pagina={{resultado.paginator.num_pages}}" ><span class="glyphicon glyphicon-step-forward"></span></a>
+								{% endif %}
+							</li>
 						</ul>	
 						</span>
 						</ul>
 					</div>
 				</article>
+				{% endif %}
 			</div>
 		</article>
 		<article id="contenido-lateral" class="hidden-xs col-sm-4 col-md-3 contenido-lateral" >
-			<div class="row">
+			<div class="row producto-filtro-lateral">
 				<div class="row">
 					<h2 class="titulo">Novedades</h2>
 				</div>
@@ -93,7 +121,7 @@
 				</div>
 			</div>
 			<div class="row espacio"></div>
-			<div class="row">
+			<div class="row producto-filtro-lateral">
 				<div class="row">
 					<h2 class="titulo">Ofertas</h2>
 				</div>

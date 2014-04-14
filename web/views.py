@@ -16,7 +16,7 @@ from django.core.mail import EmailMessage
 import suds
 from suds.client import Client
 from datetime import datetime, timedelta, date
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger, InvalidPage
 
 centinela = False
 
@@ -232,12 +232,31 @@ def marca_producto(request, id_marca):
 	diccionario['marca']=marca
 	paginador = Paginator(pMarcas, 18)
 	pagina = request.GET.get('page','1')
+	
 	try:
+		pagina = int(request.GET.get('page','1'))
 		productos = paginador.page(pagina)
 	except PageNotAnInteger:
-		productos = paginador.page(1)
+		pagina = 1
 	except EmptyPage:
 		productos = paginador.page(paginador.num_pages)
+
+	startPage = max(pagina - 2, 1)
+	if startPage <= 3:
+		startPage = 1
+
+	endPage = pagina + 2 + 1
+	if endPage >= paginador.num_pages - 1:
+		endPage = paginador.num_pages + 1
+
+	page_number = []
+
+	for n in range(startPage, endPage):
+		if n > 0 and n <= paginador.num_pages:
+			page_number.append(n)
+
+	diccionario['page_number']=page_number
+
 	diccionario['productos'] = productos
 	diccionario['destacados']= images_destacados()
 	diccionario['ofertas']= images_ofertas()
@@ -383,6 +402,7 @@ def ver_subcategoria(request, id_subcat):
 	listaNovedades = []
 	subcat = get_object_or_404(SubCategoria, pk=id_subcat)
 	diccionario['datos']=subcat
+	diccionario['totalProductos']=Producto.objects.filter(Subcategoria=subcat).count()
 	productos = Producto.objects.filter(Subcategoria=subcat)
 	for producto in productos:
 		if Detalle_Imagen.objects.filter(Producto=producto.Codigo).count() > 0:
@@ -400,7 +420,7 @@ def ver_subcategoria(request, id_subcat):
 		}
 		listaProducto.append(infoProducto)
 
-	paginador = Paginator(listaProducto, 18)
+	paginador = Paginator(listaProducto, 2)
 	
 	try:
 		pagina = int(request.GET.get('page','1'))
@@ -514,37 +534,55 @@ def buscar(request):
 	diccionario['ofertas']= images_ofertas()
 	diccionario['novedades'] = images_novedades()
 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
-	
-	if request.method=='POST':
-		buscar = request.POST["txtBuscar"]
-		resultado =Producto.objects.filter(Descripcion__icontains=buscar)
-		for producto in resultado:
-			if Detalle_Imagen.objects.filter(Producto=producto).count() > 0:
-				allImages=Detalle_Imagen.objects.filter(Producto=producto)[:1]
-				archImg=allImages[0]
-				archImg=archImg.Imagen
-			else:
-				archImg = "img_detalle/sin_imagen.png"
-			infoProducto = {
-				'Codigo': producto.Codigo,
-				'Descripcion': producto.Descripcion,
-				'Precio': intcomma(producto.Precio),
-				'Destacado': producto.Destacado,
-				'Oferta':producto.Oferta,
-				'Imagen': archImg
-			}
-			listaProducto.append(infoProducto)
 
-		diccionario['dato']=buscar
-		paginador = Paginator(listaProducto, 18)
-		pagina = request.GET.get('page','1')
-		try:
-			resultado = paginador.page(pagina)
-		except PageNotAnInteger:
-			resultado = paginador.page(1)
-		except EmptyPage:
-			resultado = paginador.page(paginador.num_pages)
-		diccionario['resultado'] = resultado
+	buscar = request.GET.get("txtBuscar")
+	pagina = request.GET.get("pagina")
+	diccionario['totalProductos'] = Producto.objects.filter(Descripcion__icontains=buscar).count()
+	resultado = Producto.objects.filter(Descripcion__icontains=buscar)
+	for producto in resultado:
+		if Detalle_Imagen.objects.filter(Producto=producto).count() > 0:
+			allImages=Detalle_Imagen.objects.filter(Producto=producto)[:1]
+			archImg=allImages[0]
+			archImg=archImg.Imagen
+		else:
+			archImg = "img_detalle/sin_imagen.png"
+		infoProducto = {
+			'Codigo': producto.Codigo,
+			'Descripcion': producto.Descripcion,
+			'Precio': intcomma(producto.Precio),
+			'Destacado': producto.Destacado,
+			'Oferta':producto.Oferta,
+			'Imagen': archImg
+		}
+		listaProducto.append(infoProducto)
+
+	diccionario['dato']=buscar
+	paginador = Paginator(listaProducto, 18)
+	#pagina = request.GET.get('page','1')
+	try:
+		pagina = int(request.GET.get('pagina','1'))
+		resultado = paginador.page(pagina)
+	except PageNotAnInteger:
+		pagina = 1
+	except EmptyPage:
+		resultado = paginador.page(paginador.num_pages)
+
+	startPage = max(pagina - 2, 1)
+	if startPage <= 3:
+		startPage = 1
+
+	endPage = pagina + 2 + 1
+	if endPage >= paginador.num_pages - 1:
+		endPage = paginador.num_pages + 1
+
+	page_number = []
+
+	for n in range(startPage, endPage):
+		if n > 0 and n <= paginador.num_pages:
+			page_number.append(n)
+
+	diccionario['page_number']=page_number
+	diccionario['resultado'] = resultado
 
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
