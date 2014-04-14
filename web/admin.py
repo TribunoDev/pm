@@ -5,12 +5,14 @@ from django import forms
 admin.autodiscover()
 
 class DetalleImgForm(forms.ModelForm):
+
 	Producto = forms.ModelChoiceField(queryset=Producto.objects.order_by('Descripcion'))
 	class Meta:
 		model = Detalle_Imagen
 
 class DetalleImgAdmin(admin.ModelAdmin):
 	form = DetalleImgForm
+	ordering = ['Imagen']
 
 
 class ProductoAdmin(admin.ModelAdmin):

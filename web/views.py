@@ -260,8 +260,8 @@ def marca_producto(request, id_marca):
 	diccionario['productos'] = productos
 	diccionario['destacados']= images_destacados()
 	diccionario['ofertas']= images_ofertas()
-	diccionario['novedades'] = images_novedades
-	diccionario['detalle_img']= allImages
+	diccionario['novedades'] = images_novedades()
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
@@ -273,8 +273,10 @@ def filtro_marca_subcategoria(request):
 	if request.is_ajax() and request.method == 'POST':
 
 		if request.POST['subcategoria'] == 'all':
+			diccionario['totalProductos'] = Producto.objects.filter(Descripcion__icontains=request.POST['marca']).count()
 			productos = Producto.objects.filter(Descripcion__icontains=request.POST['marca'])
 		else:
+			diccionario['totalProductos'] = Producto.objects.filter(Descripcion__icontains=request.POST['marca'], Subcategoria=SubCategoria.objects.get(CodigoSubcategoria=request.POST['subcategoria'])).count()
 			productos = Producto.objects.filter(Descripcion__icontains=request.POST['marca'], Subcategoria=SubCategoria.objects.get(CodigoSubcategoria=request.POST['subcategoria']))
 
 		for producto in productos:
@@ -293,14 +295,30 @@ def filtro_marca_subcategoria(request):
 			}
 			pSM.append(infoProducto)
 
-			paginador = Paginator(pSM, 18)
-			pagina = request.GET.get('page','1')
-			try:
-				productos = paginador.page(pagina)
-			except PageNotAnInteger:
-				productos = paginador.page(1)
-			except EmptyPage:
-				productos = paginador.page(paginador.num_pages)
+		paginador = Paginator(pSM, 18)
+		try:
+			pagina = int(request.GET.get('page','1'))
+			productos = paginador.page(pagina)
+		except PageNotAnInteger:
+			productos = 1
+		except EmptyPage:
+			productos = paginador.page(paginador.num_pages)
+
+		startPage = max(pagina - 2, 1)
+		if startPage <= 3:
+			startPage = 1
+
+		endPage = pagina + 2 + 1
+		if endPage >= paginador.num_pages - 1:
+			endPage = paginador.num_pages + 1
+
+		page_number = []
+
+		for n in range(startPage, endPage):
+			if n > 0 and n <= paginador.num_pages:
+				page_number.append(n)
+
+		diccionario['page_number']=page_number
 
 		diccionario['productos']=productos
 		return render_to_response('filtro-marca-subcategoria.html', diccionario, context_instance=RequestContext(request))
@@ -420,7 +438,7 @@ def ver_subcategoria(request, id_subcat):
 		}
 		listaProducto.append(infoProducto)
 
-	paginador = Paginator(listaProducto, 2)
+	paginador = Paginator(listaProducto, 18)
 	
 	try:
 		pagina = int(request.GET.get('page','1'))
@@ -470,9 +488,11 @@ def filtro_subcategoria_marca(request):
 	pMS=[]
 	if request.is_ajax() and request.method == 'POST':
 		if request.POST['marca'] == 'all':
+			diccionario['totalProductos']= Producto.objects.filter(Subcategoria=SubCategoria.objects.get(CodigoSubcategoria=request.POST['subcategoria'])).count()
 			productos = Producto.objects.filter(Subcategoria=SubCategoria.objects.get(CodigoSubcategoria=request.POST['subcategoria']))
 		else:
 			marca = Marca.objects.get(id=request.POST['marca'])
+			diccionario['totalProductos'] = Producto.objects.filter(Descripcion__icontains=marca.Marca, Subcategoria=SubCategoria.objects.get(CodigoSubcategoria=request.POST['subcategoria'])).count()
 			productos = Producto.objects.filter(Descripcion__icontains=marca.Marca, Subcategoria=SubCategoria.objects.get(CodigoSubcategoria=request.POST['subcategoria']))
 		for producto in productos:
 			if Detalle_Imagen.objects.filter(Producto=producto).count() > 0:
@@ -491,13 +511,29 @@ def filtro_subcategoria_marca(request):
 			pMS.append(infoProducto)
 
 		paginador = Paginator(pMS, 18)
-		pagina = request.GET.get('page','1')
 		try:
+			pagina = int(request.GET.get('page','1'))
 			productos = paginador.page(pagina)
 		except PageNotAnInteger:
-			productos = paginador.page(1)
+			pagina = 1
 		except EmptyPage:
 			productos = paginador.page(paginador.num_pages)
+
+		startPage = max(pagina - 2, 1)
+		if startPage <= 3:
+			startPage = 1
+
+		endPage = pagina + 2 + 1
+		if endPage >= paginador.num_pages - 1:
+			endPage = paginador.num_pages + 1
+
+		page_number = []
+
+		for n in range(startPage, endPage):
+			if n > 0 and n <= paginador.num_pages:
+				page_number.append(n)
+
+		diccionario['page_number']=page_number
 
 		diccionario['productos']=productos
 		return render_to_response('filtro-subcategoria-marca.html', diccionario, context_instance=RequestContext(request))
@@ -558,7 +594,6 @@ def buscar(request):
 
 	diccionario['dato']=buscar
 	paginador = Paginator(listaProducto, 18)
-	#pagina = request.GET.get('page','1')
 	try:
 		pagina = int(request.GET.get('pagina','1'))
 		resultado = paginador.page(pagina)
@@ -738,11 +773,12 @@ def perfil_usuario(request):
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
 		diccionario['uPerfil']=User.objects.get(id=request.user.id)
-		diccionario['dPerfil']=Detalle_Perfil.objects.get(Usuario=request.user)
+		if Detalle_Perfil.objects.filter(Usuario=request.user).count() > 0:
+			diccionario['dPerfil']=Detalle_Perfil.objects.get(Usuario=request.user)
 		diccionario['marcas']=Marca.objects.all()
-		diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-		diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
-		diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+		diccionario['destacados']= images_destacados()
+		diccionario['novedades'] = images_novedades()
+		diccionario['ofertas']= images_ofertas()
 		diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	return render_to_response('perfil-usuario.html',diccionario, context_instance=RequestContext(request))
 
@@ -753,7 +789,8 @@ def info_usuario(request):
 	if not request.user.is_anonymous():
 		usuario = request.user
 		usuario = User.objects.get(id=usuario.id)
-		perfil = Detalle_Perfil.objects.get(Usuario=usuario)
+		if Detalle_Perfil.objects.filter(Usuario=usuario).count() > 0:
+			perfil = Detalle_Perfil.objects.get(Usuario=usuario)
 	return render_to_response('info-usuario.html',{'usuario':usuario, 'perfil':perfil}, context_instance=RequestContext(request))
 
 #Vista que retorna en ajax los datos de los productos que ya estan en el carrito 
@@ -791,6 +828,7 @@ def items_en_carrito(request):
 #Vista que devuelve a la pagina ofertas
 def productos_ofertas(request):
 	diccionario={}
+	ofertas = []
 	centinela = False
 	usuario = ""
 	if not request.user.is_anonymous():
@@ -798,43 +836,117 @@ def productos_ofertas(request):
 		diccionario['centinela']=True
 	diccionario['marcas']=Marca.objects.all()
 	pOfertas = Producto.objects.filter(Oferta__exact=True)
-	paginador = Paginator(pOfertas, 18)
-	pagina = request.GET.get('page','1')
+	diccionario['totalProductos'] = Producto.objects.filter(Oferta__exact=True).count()
+	for producto in Producto.objects.filter(Oferta__exact=True):
+		if Detalle_Imagen.objects.filter(Producto=producto).count() > 0:
+			allImages=Detalle_Imagen.objects.filter(Producto=producto)[:1]
+			archImg=allImages[0]
+			archImg=archImg.Imagen
+		else:
+			archImg = "img_detalle/sin_imagen.png"
+
+		infoProducto = {
+		'Codigo': producto.Codigo,
+		'Descripcion': producto.Descripcion,
+		'Precio': intcomma(producto.Precio),
+		'Destacado': producto.Destacado,
+		'Oferta':producto.Oferta,
+		'Imagen': archImg
+		}
+		ofertas.append(infoProducto)
+
+	paginador = Paginator(ofertas, 18)
 	try:
+		pagina = int(request.GET.get('page','1'))
 		ofertas = paginador.page(pagina)
 	except PageNotAnInteger:
-		ofertas = paginador.page(1)
+		pagina = 1
 	except EmptyPage:
 		ofertas = paginador.page(paginador.num_pages)
 
-	diccionario['destacados'] = Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:3]
-	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:3]
+	startPage = max(pagina - 2, 1)
+	if startPage <= 3:
+		startPage = 1
+
+	endPage = pagina + 2 + 1
+	if endPage >= paginador.num_pages - 1:
+		endPage = paginador.num_pages + 1
+
+	page_number = []
+
+	for n in range(startPage, endPage):
+		if n > 0 and n <= paginador.num_pages:
+			page_number.append(n)
+
+	diccionario['page_number']=page_number
+
+	diccionario['destacados'] = images_destacados()
+	diccionario['novedades'] = images_novedades()
 	diccionario['detalle_img'] = Detalle_Imagen.objects.all()
-	diccionario['ofertas'] = ofertas
+	diccionario['productos'] = ofertas
 	return render_to_response('ofertas.html', diccionario, context_instance=RequestContext(request))
 
 
 def productos_destacados(request):
 	diccionario={}
+	destacados=[]
 	centinela = False
 	usuario = ""
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['ofertas'] = Producto.objects.filter(Oferta__exact=True)[:3]
-	pDestacados = Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')
-	paginador = Paginator(pDestacados, 18)
-	pagina = request.GET.get('page','1')
+	diccionario['totalProductos'] = Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).count()
+
+	for producto in Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?'):
+		if Detalle_Imagen.objects.filter(Producto=producto).count() > 0:
+			allImages=Detalle_Imagen.objects.filter(Producto=producto)[:1]
+			archImg=allImages[0]
+			archImg=archImg.Imagen
+		else:
+			archImg = "img_detalle/sin_imagen.png"
+
+		infoProducto = {
+		'Codigo': producto.Codigo,
+		'Descripcion': producto.Descripcion,
+		'Precio': intcomma(producto.Precio),
+		'Destacado': producto.Destacado,
+		'Oferta':producto.Oferta,
+		'Imagen': archImg
+		}
+		destacados.append(infoProducto)
+
+
+	paginador = Paginator(destacados, 18)
 	try:
+		pagina = int(request.GET.get('page','1'))
 		destacados = paginador.page(pagina)
 	except PageNotAnInteger:
-		destacados = paginador.page(1)
+		pagina = 1
 	except EmptyPage:
 		destacados = paginador.page(paginador.num_pages)
-	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:3]
+
+	startPage = max(pagina - 2, 1)
+	if startPage <= 3:
+		startPage = 1
+
+	endPage = pagina + 2 + 1
+	if endPage >= paginador.num_pages - 1:
+		endPage = paginador.num_pages + 1
+
+	page_number = []
+
+	for n in range(startPage, endPage):
+		if n > 0 and n <= paginador.num_pages:
+			page_number.append(n)
+
+	diccionario['page_number']=page_number
+
+
+	diccionario['ofertas'] = images_ofertas()
+	diccionario['novedades'] = images_novedades()
 	diccionario['detalle_img'] = Detalle_Imagen.objects.all()
-	diccionario['destacados'] = destacados
+	diccionario['productos'] = destacados
 	return render_to_response('destacados.html', diccionario, context_instance=RequestContext(request))
 
 
@@ -896,9 +1008,9 @@ def envio_direccion(request):
 	estado=Estado.objects.get(pk=1)
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
-	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas']= images_ofertas()
+	diccionario['novedades'] = images_novedades()
 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
@@ -917,9 +1029,9 @@ def envio_pago(request):
 	diccionario={}
 	diccionario['frmDireccion']=Direccion_OrdenForm()
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
-	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas']= images_ofertas()
+	diccionario['novedades'] = images_novedades()
 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
@@ -931,7 +1043,7 @@ def envio_pago(request):
 			cantidad += item.Cantidad
 			precio += item.Producto.Precio * item.Cantidad
 		diccionario['cantidad']=cantidad
-		diccionario['subtotal']=precio
+		diccionario['subtotal']=intcomma(precio)
 		diccionario['carrito']=carrito
 
 		anos=[]
@@ -960,9 +1072,9 @@ def envio_pago_directo(request):
 	diccionario['centinela']=True
 	carrito=Carrito.objects.get(Usuario=request.user, Estado=Estado.objects.get(pk=1))
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
-	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas']= images_ofertas()
+	diccionario['novedades'] = images_novedades()
 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
 	anos=[]
@@ -977,7 +1089,7 @@ def envio_pago_directo(request):
 		cantidad += item.Cantidad
 		precio += item.Producto.Precio * item.Cantidad
 	diccionario['cantidad']=cantidad
-	diccionario['subtotal']=precio
+	diccionario['subtotal']=intcomma(precio)
 	diccionario['carrito']=carrito
 	return render_to_response('enviar-pago2.html', diccionario, context_instance=RequestContext(request))
 
@@ -985,11 +1097,6 @@ def envio_pago_directo(request):
 
 def procesar_pago(request):
 	diccionario={}
-	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
-	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
-	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	if not request.user.is_anonymous():
 		usuario = request.user
 		diccionario['usuario']=request.user
@@ -998,9 +1105,9 @@ def procesar_pago(request):
 		HttpResponseRedirect('/ingresar/')
 	precio=0
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
-	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas']= images_ofertas()
+	diccionario['novedades'] = images_novedades()
 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 
 	if request.method=='POST':
@@ -1038,13 +1145,11 @@ def procesar_pago(request):
 		pet.totalAmount = Tot
 
 		diccionario['carrito']=carrito
-		#diccionario['cDir']=cDir
 
 		try:
 			template=0
 			res = cli.service.executeTransaction(aut, pet)
-			res.responseCode='05'
-			if res.responseCode=='05':
+			if res.responseCode=='00':
 				car=Carrito.objects.get(Usuario=usuario, Estado=Estado.objects.get(pk=1))
 				car.Estado=Estado.objects.get(pk=2)
 				car.save()
@@ -1070,7 +1175,6 @@ def procesar_pago(request):
 
 				diccionario['resp']=res
 				template='transaccion-exitosa.html'
-				#template='transaccion-denegada.html'
 				o = Orden.objects.get(Carrito=car)
 				d=Detalle_Carrito.objects.filter(Carrito=car)
 				u=User.objects.get(pk=request.user.id)
@@ -1079,7 +1183,6 @@ def procesar_pago(request):
 				amigo='mjbc007@gmail.com'
 				html='<h2>Detalle de Orden</h2>'
 				html+='<p>Numero de Orden: '+ str(o.id) +'</p>'
-				#html+='<p>Nombre del Cliente: '+ str(o.Carrito.Usuario.username) +'</p>'
 				html+='<p>Nombre del Cliente: '+ str(u.first_name) + ' ' + str(u.last_name)+ '</p>'
 				if len(idDir) > 0:
 					html+='<p>Direccion de envio: '+ str(o.Direccion.Direccion)+ ', '+ str(o.Direccion.Ciudad)+ ', '+ str(o.Direccion.Region)+ ', '+ str(o.Direccion.Pais) + '</p>'
@@ -1107,7 +1210,7 @@ def procesar_pago(request):
 				msg.content_subtype='html'
 				msg.send()
 
-			if res.responseCode=='00':
+			if res.responseCode=='05':
 				template='transaccion-denegada.html'
 			if res.responseCode=='NA':
 				template='sin-sistema.html'
@@ -1154,9 +1257,9 @@ def guardar_direccion(request):
 			diccionario['centinela']=True
 			carrito=Carrito.objects.get(Usuario=request.user, Estado=Estado.objects.get(pk=1))
 			diccionario['marcas']=Marca.objects.all()
-			diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-			diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
-			diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
+			diccionario['destacados']= images_destacados()
+			diccionario['ofertas']= images_ofertas()
+			diccionario['novedades'] = images_novedades()
 			diccionario['detalle_img']= Detalle_Imagen.objects.all()
 			detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
 			#ciudad=Ciudad.objects.get(pk=idCiudad)
@@ -1181,13 +1284,14 @@ def editar_perfil(request):
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
 		diccionario['uPerfil']=User.objects.get(id=request.user.id)
-		diccionario['dPerfil']=Detalle_Perfil.objects.get(Usuario=request.user)
+		if Detalle_Perfil.objects.filter(Usuario=request.user).count() > 0:
+			diccionario['dPerfil']=Detalle_Perfil.objects.get(Usuario=request.user)
 		diccionario['marcas']=Marca.objects.all()
-		diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-		diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
-		diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
+		diccionario['destacados']= images_destacados()
+		diccionario['ofertas']= images_ofertas()
+		diccionario['novedades'] = images_novedades()
 		diccionario['detalle_img']= Detalle_Imagen.objects.all()
-	return render_to_response('editar-perfil.html', diccionario, context_instance=RequestContext(request))
+		return render_to_response('editar-perfil.html', diccionario, context_instance=RequestContext(request))
 
 def actualizar_perfil(request):
 	if not request.user.is_anonymous():

@@ -267,7 +267,7 @@ $(document).on("ready", function(){
 
 
 	//Script para capturar el url de la pagina actual
-	var home = 'http://127.0.0.1:8000/';
+	var home = 'http://django.pm.hn/';
 	var href = $(location).attr('href');
 	if (home == href) {
 		$('#myCarousel').css('display', 'block');
