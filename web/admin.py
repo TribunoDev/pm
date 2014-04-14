@@ -12,7 +12,7 @@ class DetalleImgForm(forms.ModelForm):
 
 class DetalleImgAdmin(admin.ModelAdmin):
 	form = DetalleImgForm
-	ordering = ['Imagen']
+	ordering = ['-Imagen']
 
 
 class ProductoAdmin(admin.ModelAdmin):
