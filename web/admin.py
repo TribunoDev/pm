@@ -20,13 +20,18 @@ class ProductoAdmin(admin.ModelAdmin):
 	ordering = ['Descripcion']
 	list_display = ('Descripcion', 'Codigo')
 
+class SubcategoriaAdmin(admin.ModelAdmin):
+	search_fields = ['CodigoSubcategoria']
+	ordering = ['Subcategoria']
+	list_display = ('Subcategoria','CodigoSubcategoria')
+
 class Editor(admin.ModelAdmin):
 	class Media:
 		js = ('../static/js/tiny_mce/tiny_mce.js', '../static/js/editores/textareas.js')
 
 admin.site.register(Producto)
 admin.site.register(Categoria)
-admin.site.register(SubCategoria)
+admin.site.register(SubCategoria, SubcategoriaAdmin)
 admin.site.register(Orden)
 admin.site.register(Estado)
 admin.site.register(Carrito)
