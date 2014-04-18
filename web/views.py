@@ -274,10 +274,12 @@ def filtro_marca_subcategoria(request):
 
 		if request.POST['subcategoria'] == 'all':
 			diccionario['totalProductos'] = Producto.objects.filter(Descripcion__icontains=" "+request.POST['marca']+" ").count()
+
 			productos = Producto.objects.filter(Descripcion__icontains=" "+request.POST['marca']+" ")
+
 		else:
-			diccionario['totalProductos'] = Producto.objects.filter(Descripcion__icontains=" "+request.POST['marca']+" ", Subcategoria=SubCategoria.objects.get(CodigoSubcategoria=request.POST['subcategoria'])).count()
-			productos = Producto.objects.filter(Descripcion__icontains=" "+request.POST['marca']+" ", Subcategoria=SubCategoria.objects.get(CodigoSubcategoria=request.POST['subcategoria']))
+			diccionario['totalProductos'] = Producto.objects.filter(Descripcion__icontains=" "+request.POST['marca']+" ", Subcategoria=SubCategoria.objects.get(Subcategoria=request.POST['subcategoria'])).count()
+			productos = Producto.objects.filter(Descripcion__icontains=" "+request.POST['marca']+" ", Subcategoria=SubCategoria.objects.get(Subcategoria=request.POST['subcategoria']))
 
 		for producto in productos:
 			if Detalle_Imagen.objects.filter(Producto=producto).count() > 0:
@@ -488,13 +490,13 @@ def filtro_subcategoria_marca(request):
 	pMS=[]
 	if request.is_ajax() and request.method == 'POST':
 		if request.POST['marca'] == 'all':
-			diccionario['totalProductos']= Producto.objects.filter(Subcategoria=SubCategoria.objects.get(CodigoSubcategoria=request.POST['subcategoria'])).count()
-			productos = Producto.objects.filter(Subcategoria=SubCategoria.objects.get(CodigoSubcategoria=request.POST['subcategoria']))
+			diccionario['totalProductos']= Producto.objects.filter(Subcategoria=SubCategoria.objects.get(Subcategoria=request.POST['subcategoria'])).count()
+			productos = Producto.objects.filter(Subcategoria=SubCategoria.objects.get(Subcategoria=request.POST['subcategoria']))
 		else:
 			marca = Marca.objects.get(id=request.POST['marca'])
 			marca = " "+marca.Marca+" "
-			diccionario['totalProductos'] = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=SubCategoria.objects.get(CodigoSubcategoria=request.POST['subcategoria'])).count()
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=SubCategoria.objects.get(CodigoSubcategoria=request.POST['subcategoria']))
+			diccionario['totalProductos'] = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=SubCategoria.objects.get(Subcategoria=request.POST['subcategoria'])).count()
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=SubCategoria.objects.get(Subcategoria=request.POST['subcategoria']))
 		for producto in productos:
 			if Detalle_Imagen.objects.filter(Producto=producto).count() > 0:
 				allImages = Detalle_Imagen.objects.filter(Producto=producto)[:1]
