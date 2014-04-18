@@ -199,7 +199,7 @@ def marca_producto(request, id_marca):
 	pMarcas=[]
 	marca=get_object_or_404(Marca, pk=id_marca)
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['totalProductos'] = Producto.objects.filter(Descripcion__icontains=" "+request.POST['marca']+" ").count()
+	diccionario['totalProductos'] = Producto.objects.filter(Descripcion__icontains=" "+marca.Marca+" ").count()
 	productos = Producto.objects.filter(Descripcion__icontains=" "+marca.Marca+" ")
 	allImages = Detalle_Imagen.objects.all().order_by('Imagen')
 	for producto in productos:
