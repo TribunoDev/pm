@@ -562,8 +562,10 @@ def detalle_producto(request, id_producto):
 	diccionario={}
 	codProd = request.GET.get('id_producto')
 	detalle = get_object_or_404(Producto, Codigo=id_producto)
-	diccionario['cantidad'] = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=detalle)).count()
-	diccionario['imagenes'] = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=detalle)).order_by('Imagen')
+	diccionario['cantidad'] = Imagen.objects.filter(Producto=detalle).count()
+	if Imagen.objects.filter(Producto=detalle).count() > 0:
+		diccionario['imagenes'] = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=detalle)).order_by('Imagen')
+	 
 	diccionario['detalle']=detalle
 	diccionario['precio']=intcomma(detalle.Precio)
 	diccionario['marcas']=Marca.objects.all()
