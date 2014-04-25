@@ -42,14 +42,23 @@ class Producto(models.Model):
 	def __unicode__(self):
 		return self.Descripcion
 
-class Detalle_Imagen(models.Model):
-	Imagen = models.ImageField(upload_to='img_detalle',verbose_name=u'Imágen')
-	Producto = models.ForeignKey(Producto, help_text='Producto asociado a la imagen', verbose_name=u'Producto')
-	class Meta:
-		verbose_name=u'Detalle Imagen'
-		verbose_name_plural=u'Detalle Imagen'
+class Imagen(models.Model):
+	Producto = models.ForeignKey(Producto)
 	def __unicode__(self):
-		return str(self.Imagen)
+		return self.Producto.Descripcion
+
+class Detalle_Imagen(models.Model):
+	Producto = models.ForeignKey(Imagen)
+	Imagen = models.ImageField(upload_to='img_detalle')
+
+#class Detalle_Imagen(models.Model):
+#	Imagen = models.ImageField(upload_to='img_detalle',verbose_name=u'Imágen')
+#	Producto, help_text='Producto asociado a la imagen', verbose_name=u'Producto')
+#	class Meta:
+#		verbose_name=u'Detalle Imagen'
+#		verbose_name_plural=u'Detalle Imagen'
+#	def __unicode__(self):
+#		return str(self.Imagen)
 
 class Estado(models.Model):
 	Estado = models.CharField(max_length=45, help_text='Describe el estado del carrito', verbose_name=u'Estado de Carrito')

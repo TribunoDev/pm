@@ -60,7 +60,7 @@
 						<div class="row">
 							<figure id="s2" class="s2 demo">
                                 {% for img in detalle_img %}
-	                                {% if img.Producto.Codigo == item.Codigo %}
+	                                {% if img.Producto.Producto.Codigo == item.Codigo %}
 	                                    <img src="{{MEDIA_URL}}{{img.Imagen}}" >
 	                                {% endif %}
 	                            {% endfor %}
@@ -96,7 +96,7 @@
 						<div class="row">
 							<figure id="s2" class="s2 demo">
                                 {% for img in detalle_img %}
-	                                {% if img.Producto.Codigo == item.Codigo %}
+	                                {% if img.Producto.Producto.Codigo == item.Codigo %}
 	                                    <img src="{{MEDIA_URL}}{{img.Imagen}}" >
 	                                {% endif %}
 	                            {% endfor %}
@@ -132,7 +132,7 @@
 						<div class="row">
 							<figure id="s2" class="s2 demo">
                                 {% for img in detalle_img %}
-	                                {% if img.Producto.Codigo == item.Codigo %}
+	                                {% if img.Producto.Producto.Codigo == item.Codigo %}
 	                                    <img src="{{MEDIA_URL}}{{img.Imagen}}" >
 	                                {% endif %}
 	                            {% endfor %}

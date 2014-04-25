@@ -4,15 +4,21 @@ from django.contrib import admin
 from django import forms
 admin.autodiscover()
 
-class DetalleImgForm(forms.ModelForm):
+#class DetalleImgForm(forms.ModelForm):
+#	Producto = forms.ModelChoiceField(queryset=Producto.objects.order_by('Descripcion'))
+#	class Meta:
+#		model = Detalle_Imagen
 
-	Producto = forms.ModelChoiceField(queryset=Producto.objects.order_by('Descripcion'))
-	class Meta:
-		model = Detalle_Imagen
+#class DetalleImgAdmin(admin.ModelAdmin):
+#	form = DetalleImgForm
+#	ordering = ['-Imagen']
 
-class DetalleImgAdmin(admin.ModelAdmin):
-	form = DetalleImgForm
-	ordering = ['-Imagen']
+class ImageArchive(admin.TabularInline):
+	model = Detalle_Imagen
+	extra = 1
+
+class ImageAdmin(admin.ModelAdmin):
+	inlines = [ImageArchive,]
 
 
 class ProductoAdmin(admin.ModelAdmin):
@@ -41,7 +47,7 @@ admin.site.register(Pais)
 admin.site.register(Region)
 admin.site.register(Marca)
 admin.site.register(Detalle_Perfil)
-admin.site.register(Detalle_Imagen, DetalleImgAdmin)
+admin.site.register(Imagen, ImageAdmin)
 admin.site.register(Servicio_Flete)
 admin.site.register(Precio_Combustible)
 admin.site.register(Orden_Estado)

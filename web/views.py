@@ -37,7 +37,7 @@ def images_destacados():
 		if contar == 2:
 			break
 		else:
-			cImgD = Detalle_Imagen.objects.filter(Producto=pD).count()
+			cImgD = Imagen.objects.filter(Producto=pD).count()
 			if cImgD > 0:
 				contar = contar + 1
 				destacados = {
@@ -50,6 +50,7 @@ def images_destacados():
 	return listaDestacados
 
 def images_ofertas():
+	dOfertas = {}
 	listaOfertas=[]
 	pOfertas = Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')
 	contar = 0
@@ -57,7 +58,7 @@ def images_ofertas():
 		if contar == 2:
 			break
 		else:
-			cImgO = Detalle_Imagen.objects.filter(Producto=pO).count()
+			cImgO = Imagen.objects.filter(Producto=pO).count()
 			if cImgO > 0:
 				contar = contar + 1
 				ofertas = {
@@ -76,7 +77,7 @@ def images_novedades():
 		if contar == 2:
 			break
 		else:
-			cImgN = Detalle_Imagen.objects.filter(Producto=pN).count()
+			cImgN = Imagen.objects.filter(Producto=pN).count()
 			if cImgN > 0:
 				contar = contar + 1
 				novedades = {
@@ -86,6 +87,15 @@ def images_novedades():
 				}
 				listaNovedades.append(novedades)
 	return listaNovedades
+
+def cargar_imagenes():
+	listaImages = []
+
+	if Imagen.objects.all().count() > 0:
+		for item in Imagen.objects.all():
+			for elemento in Detalle_Imagen.objects.filter(Producto=item):
+				listaImages.append(elemento)
+	return listaImages
 
 #Vista que retorna la pagina de inicio
 def inicio(request):
@@ -185,7 +195,8 @@ def marcas(request):
 	diccionario['destacados']= images_destacados()
 	diccionario['ofertas']= images_ofertas()
 	diccionario['novedades'] = images_novedades()
-	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	#diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	diccionario['detalle_img'] = cargar_imagenes()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
@@ -203,8 +214,8 @@ def marca_producto(request, id_marca):
 	productos = Producto.objects.filter(Descripcion__icontains=" "+marca.Marca+" ")
 	allImages = Detalle_Imagen.objects.all().order_by('Imagen')
 	for producto in productos:
-		if Detalle_Imagen.objects.filter(Producto=producto).count() > 0:
-			allImages = Detalle_Imagen.objects.filter(Producto=producto)[:1]
+		if Imagen.objects.filter(Producto=producto).count() > 0:
+			allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
 			archImg = allImages[0]
 			archImg = archImg.Imagen
 		else:
@@ -262,7 +273,7 @@ def marca_producto(request, id_marca):
 	diccionario['destacados']= images_destacados()
 	diccionario['ofertas']= images_ofertas()
 	diccionario['novedades'] = images_novedades()
-	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	diccionario['detalle_img']= cargar_imagenes()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
@@ -283,8 +294,8 @@ def filtro_marca_subcategoria(request):
 			productos = Producto.objects.filter(Descripcion__icontains=" "+request.POST['marca']+" ", Subcategoria=SubCategoria.objects.get(Subcategoria=request.POST['subcategoria']))
 
 		for producto in productos:
-			if Detalle_Imagen.objects.filter(Producto=producto).count() > 0:
-				allImages = Detalle_Imagen.objects.filter(Producto=producto)[:1]
+			if Imagen.objects.filter(Producto=producto).count() > 0:
+				allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
 				archImg = allImages[0]
 				archImg = archImg.Imagen
 			else:
@@ -335,8 +346,8 @@ def destacados(request):
 	allImages = Detalle_Imagen.objects.all().order_by('Imagen')
 	productos = Producto.objects.filter(Destacado__exact=True)[:12]
 	for producto in productos:
-		if Detalle_Imagen.objects.filter(Producto=producto).count() > 0:
-			allImages = Detalle_Imagen.objects.filter(Producto=producto)[:1]
+		if Imagen.objects.filter(Producto=producto).count() > 0:
+			allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
 			archImg = allImages[0]
 			archImg = archImg.Imagen
 		else:
@@ -360,8 +371,8 @@ def ofertas(request):
 	allImages = Detalle_Imagen.objects.all().order_by('Imagen')
 	productos = Producto.objects.filter(Oferta__exact=True)[:12]
 	for producto in productos:
-		if Detalle_Imagen.objects.filter(Producto=producto).count() > 0:
-			allImages = Detalle_Imagen.objects.filter(Producto=producto)[:1]
+		if Imagen.objects.filter(Producto=producto).count() > 0:
+			allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
 			archImg = allImages[0]
 			archImg = archImg.Imagen
 		else:
@@ -384,8 +395,8 @@ def novedades(request):
 	mes=datetime.now().month
 	productos = Producto.objects.filter(Fecha__month=mes)[:12]
 	for producto in productos:
-		if Detalle_Imagen.objects.filter(Producto=producto).count() > 0:
-			allImages = Detalle_Imagen.objects.filter(Producto=producto)[:1]
+		if Imagen.objects.filter(Producto=producto).count() > 0:
+			allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
 			archImg = allImages[0]
 			archImg = archImg.Imagen
 		else:
@@ -426,8 +437,8 @@ def ver_subcategoria(request, id_subcat):
 	diccionario['totalProductos']=Producto.objects.filter(Subcategoria=subcat).count()
 	productos = Producto.objects.filter(Subcategoria=subcat)
 	for producto in productos:
-		if Detalle_Imagen.objects.filter(Producto=producto.Codigo).count() > 0:
-			allImages = Detalle_Imagen.objects.filter(Producto=producto)[:1]
+		if Imagen.objects.filter(Producto=producto).count() > 0:
+			allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
 			archImg = allImages[0]
 			archImg = archImg.Imagen
 		else:
@@ -480,6 +491,7 @@ def ver_subcategoria(request, id_subcat):
 	diccionario['destacados']= images_destacados()
 	diccionario['ofertas'] = images_ofertas()
 	diccionario['novedades'] = images_novedades()
+	diccionario['imagenes'] = Imagen.objects.all()
 	diccionario['detalle_img'] = Detalle_Imagen.objects.all()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
@@ -499,8 +511,8 @@ def filtro_subcategoria_marca(request):
 			diccionario['totalProductos'] = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=SubCategoria.objects.get(Subcategoria=request.POST['subcategoria'])).count()
 			productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=SubCategoria.objects.get(Subcategoria=request.POST['subcategoria']))
 		for producto in productos:
-			if Detalle_Imagen.objects.filter(Producto=producto).count() > 0:
-				allImages = Detalle_Imagen.objects.filter(Producto=producto)[:1]
+			if Imagen.objects.filter(Producto=producto).count() > 0:
+				allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
 				archImg = allImages[0]
 				archImg = archImg.Imagen
 			else:
@@ -550,15 +562,15 @@ def detalle_producto(request, id_producto):
 	diccionario={}
 	codProd = request.GET.get('id_producto')
 	detalle = get_object_or_404(Producto, Codigo=id_producto)
-	diccionario['cantidad'] = Detalle_Imagen.objects.filter(Producto=detalle).count()
-	diccionario['imagenes'] = Detalle_Imagen.objects.filter(Producto=detalle).order_by('Imagen')
+	diccionario['cantidad'] = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=detalle)).count()
+	diccionario['imagenes'] = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=detalle)).order_by('Imagen')
 	diccionario['detalle']=detalle
 	diccionario['precio']=intcomma(detalle.Precio)
 	diccionario['marcas']=Marca.objects.all()
 	diccionario['destacados']=images_destacados()
 	diccionario['ofertas']=images_ofertas()
 	diccionario['novedades'] = images_novedades()
-	diccionario['detalle_img']= Detalle_Imagen.objects.all().order_by('Imagen')
+	diccionario['detalle_img']= cargar_imagenes()
 	diccionario['formulario']=ContactoForm()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
@@ -573,15 +585,15 @@ def buscar(request):
 	diccionario['destacados']= images_destacados()
 	diccionario['ofertas']= images_ofertas()
 	diccionario['novedades'] = images_novedades()
-	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	diccionario['detalle_img']= cargar_imagenes()
 
 	buscar = request.GET.get("txtBuscar")
 	pagina = request.GET.get("pagina")
 	diccionario['totalProductos'] = Producto.objects.filter(Descripcion__icontains=buscar).count()
 	resultado = Producto.objects.filter(Descripcion__icontains=buscar)
 	for producto in resultado:
-		if Detalle_Imagen.objects.filter(Producto=producto).count() > 0:
-			allImages=Detalle_Imagen.objects.filter(Producto=producto)[:1]
+		if Imagen.objects.filter(Producto=producto).count() > 0:
+			allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
 			archImg=allImages[0]
 			archImg=archImg.Imagen
 		else:
@@ -678,7 +690,7 @@ def agregar_carrito(request):
 		diccionario['marcas']=Marca.objects.all()
 		diccionario['destacados']= images_destacados()
 		diccionario['ofertas']= images_ofertas()
-		diccionario['detalle_img']= Detalle_Imagen.objects.all()
+		diccionario['detalle_img']= cargar_imagenes()
 
 	return HttpResponseRedirect('/carrito/')
 
@@ -808,8 +820,8 @@ def items_en_carrito(request):
 	if Detalle_Carrito.objects.filter(Carrito=carrito).count() > 0:
 		for item in Detalle_Carrito.objects.filter(Carrito=carrito):
 			producto = Producto.objects.get(Codigo=item.Producto.Codigo)
-			if Detalle_Imagen.objects.filter(Producto=producto.Codigo).count() > 0:
-				allImages = Detalle_Imagen.objects.filter(Producto=producto.Codigo)[:1]
+			if Imagen.objects.filter(Producto=producto).count() > 0:
+				allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
 				archImg = allImages[0]
 				archImg = archImg.Imagen
 			else:
@@ -842,8 +854,8 @@ def productos_ofertas(request):
 	pOfertas = Producto.objects.filter(Oferta__exact=True)
 	diccionario['totalProductos'] = Producto.objects.filter(Oferta__exact=True).count()
 	for producto in Producto.objects.filter(Oferta__exact=True):
-		if Detalle_Imagen.objects.filter(Producto=producto).count() > 0:
-			allImages=Detalle_Imagen.objects.filter(Producto=producto)[:1]
+		if Imagen.objects.filter(Producto=producto).count() > 0:
+			allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
 			archImg=allImages[0]
 			archImg=archImg.Imagen
 		else:
@@ -903,8 +915,8 @@ def productos_destacados(request):
 	diccionario['totalProductos'] = Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).count()
 
 	for producto in Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?'):
-		if Detalle_Imagen.objects.filter(Producto=producto).count() > 0:
-			allImages=Detalle_Imagen.objects.filter(Producto=producto)[:1]
+		if Imagen.objects.filter(Producto=producto).count() > 0:
+			allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
 			archImg=allImages[0]
 			archImg=archImg.Imagen
 		else:
@@ -949,7 +961,7 @@ def productos_destacados(request):
 
 	diccionario['ofertas'] = images_ofertas()
 	diccionario['novedades'] = images_novedades()
-	diccionario['detalle_img'] = Detalle_Imagen.objects.all()
+	diccionario['detalle_img'] = cargar_imagenes()
 	diccionario['productos'] = destacados
 	return render_to_response('destacados.html', diccionario, context_instance=RequestContext(request))
 
@@ -1015,7 +1027,7 @@ def envio_direccion(request):
 	diccionario['destacados']= images_destacados()
 	diccionario['ofertas']= images_ofertas()
 	diccionario['novedades'] = images_novedades()
-	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	diccionario['detalle_img']= cargar_imagenes()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
@@ -1036,7 +1048,7 @@ def envio_pago(request):
 	diccionario['destacados']= images_destacados()
 	diccionario['ofertas']= images_ofertas()
 	diccionario['novedades'] = images_novedades()
-	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	diccionario['detalle_img']= cargar_imagenes()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
@@ -1079,7 +1091,7 @@ def envio_pago_directo(request):
 	diccionario['destacados']= images_destacados()
 	diccionario['ofertas']= images_ofertas()
 	diccionario['novedades'] = images_novedades()
-	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	diccionario['detalle_img']= cargar_imagenes()
 	detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
 	anos=[]
 	anoActual = date.today()
@@ -1112,7 +1124,7 @@ def procesar_pago(request):
 	diccionario['destacados']= images_destacados()
 	diccionario['ofertas']= images_ofertas()
 	diccionario['novedades'] = images_novedades()
-	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	diccionario['detalle_img']= cargar_imagenes()
 
 	if request.method=='POST':
 		nT=request.POST['codTar']
@@ -1264,7 +1276,7 @@ def guardar_direccion(request):
 			diccionario['destacados']= images_destacados()
 			diccionario['ofertas']= images_ofertas()
 			diccionario['novedades'] = images_novedades()
-			diccionario['detalle_img']= Detalle_Imagen.objects.all()
+			diccionario['detalle_img']= cargar_imagenes()
 			detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
 			#ciudad=Ciudad.objects.get(pk=idCiudad)
 			for item in detalle:
@@ -1294,7 +1306,7 @@ def editar_perfil(request):
 		diccionario['destacados']= images_destacados()
 		diccionario['ofertas']= images_ofertas()
 		diccionario['novedades'] = images_novedades()
-		diccionario['detalle_img']= Detalle_Imagen.objects.all()
+		diccionario['detalle_img']= cargar_imagenes()
 		return render_to_response('editar-perfil.html', diccionario, context_instance=RequestContext(request))
 
 def actualizar_perfil(request):
@@ -1330,20 +1342,20 @@ def editar_contrasena(request):
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
 		diccionario['marcas']=Marca.objects.all()
-		diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-		diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
-		diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
-		diccionario['detalle_img']= Detalle_Imagen.objects.all()
+		diccionario['destacados']= images_destacados()
+		diccionario['ofertas']= images_ofertas()
+		diccionario['novedades'] = images_novedades()
+		diccionario['detalle_img']= cargar_imagenes()
 	return render_to_response('editar-contrasena.html', diccionario, context_instance=RequestContext(request))
 
 def actualizar_contrasena(request):
 	error=0
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
-	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
-	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas']= images_ofertas()
+	diccionario['novedades'] = images_novedades()
+	diccionario['detalle_img']= cargar_imagenes()
 	if not request.user.is_anonymous():
 		usuario=User.objects.get(pk=request.user.id)
 		if request.method=='POST':
@@ -1357,10 +1369,10 @@ def actualizar_contrasena(request):
 def historial_compra(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
-	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
-	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas']= images_ofertas()
+	diccionario['novedades'] = images_novedades()
+	diccionario['detalle_img']= cargar_imagenes()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
@@ -1371,10 +1383,10 @@ def detalle_compra(request, id_orden):
 	precio=0
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
-	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
-	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas']= images_ofertas()
+	diccionario['novedades'] = images_novedades()
+	diccionario['detalle_img']= cargar_imagenes()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
@@ -1391,10 +1403,10 @@ def detalle_compra(request, id_orden):
 def historial_credito(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
-	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
-	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas']= images_ofertas()
+	diccionario['novedades'] = images_novedades()
+	diccionario['detalle_img']= cargar_imagenes()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
@@ -1405,10 +1417,10 @@ def detalle_credito(request, id_credito):
 	precio=0
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
-	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
-	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas']= images_ofertas()
+	diccionario['novedades'] = images_novedades()
+	diccionario['detalle_img']= cargar_imagenes()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
@@ -1468,27 +1480,23 @@ def cargar_ciudad(request):
 def contactanos(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
-	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
-	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas']= images_ofertas()
+	diccionario['novedades'] = images_novedades()
+	diccionario['detalle_img']= cargar_imagenes()
 	diccionario['contactos']= Contactos.objects.all()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
 	return render_to_response('contactanos.html', diccionario, context_instance=RequestContext(request))
 
-def cargar_imagen(request):
-	formulario = CargarImagenForm()
-	return render_to_response('cargar_imagen_producto.html',{'form':formulario},context_instance=RequestContext(request))
-
 def faq(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
-	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
-	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas']= images_ofertas()
+	diccionario['novedades'] = images_novedades()
+	diccionario['detalle_img']= cargar_imagenes()
 	diccionario['preguntas']=FAQ.objects.all()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
@@ -1498,9 +1506,9 @@ def faq(request):
 def mision_vision(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
-	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas']= images_ofertas()
+	diccionario['novedades'] = images_novedades()
 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
@@ -1510,10 +1518,10 @@ def mision_vision(request):
 def politica(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
-	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
-	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas']= images_ofertas()
+	diccionario['novedades'] = images_novedades()
+	diccionario['detalle_img']= cargar_imagenes()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True

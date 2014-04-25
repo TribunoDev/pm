@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     url(r'^buscar/$', 'web.views.buscar', name='buscar'),
     url(r'^agregar-carrito/$', 'web.views.agregar_carrito', name='agregar_carrito'),
     url(r'^catalogo-productos/$', 'web.views.catalogo_productos', name='catalogo_productos'),
-    url(r'^cargar-imagen/$', 'web.views.cargar_imagen', name='cargar_imagen'),
+    
     url(r'^carrito/$', 'web.views.carrito', name='carrito'),
     url(r'^contactanos/$', 'web.views.contactanos', name='contactanos'),
     url(r'^datos-carrito/$', 'web.views.datos_carrito', name='datos_carrito'),
@@ -55,7 +55,6 @@ urlpatterns = patterns('',
     url(r'^registrado/$', 'web.views.registrado', name='registrado'),
     url(r'^salir/$', logout,{'template_name': 'index.html',}, name='logout'),
     url(r'^servicio-flete/$', 'web.views.servicio_flete', name='servicio_flete'),
-
 
     #prueba
     url(r'^user/password/reset/$', password_reset,{'template_name': 'password_reset_form.html','post_reset_redirect': '/user/password/reset/done/'}, name='password_reset'),
