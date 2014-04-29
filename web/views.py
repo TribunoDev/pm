@@ -417,8 +417,8 @@ def novedades(request):
 #Vista que genera los item de la pestaña productos en el menu principal
 def catalogo_productos(request):
 	diccionario={}
-	diccionario['categorias']=Categoria.objects.all()
-	diccionario['subcategorias']=SubCategoria.objects.all()
+	diccionario['categorias']=Categoria.objects.order_by('Categoria')
+	diccionario['subcategorias']=SubCategoria.objects.order_by('Subcategoria')
 	producto = Producto.objects.all()
 	diccionario['total']=SubCategoria.objects.annotate(existencia=Count('producto'))
 	return render_to_response('categorias-productos.html', diccionario, context_instance=RequestContext(request))
@@ -435,7 +435,7 @@ def ver_subcategoria(request, id_subcat):
 	subcat = get_object_or_404(SubCategoria, pk=id_subcat)
 	diccionario['datos']=subcat
 	diccionario['totalProductos']=Producto.objects.filter(Subcategoria=subcat).count()
-	productos = Producto.objects.filter(Subcategoria=subcat)
+	productos = Producto.objects.filter(Subcategoria=subcat).order_by('Descripcion')
 	for producto in productos:
 		if Imagen.objects.filter(Producto=producto).count() > 0:
 			allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
@@ -1002,10 +1002,16 @@ def enviar_email(request):
 			contenido+=formulario.cleaned_data['url']+ "\n"
 			
 			correo=EmailMessage(titulo, contenido, to=[amigo])
-			correo.send()
+			
+			if correo.send():
+				return render_to_response('email-enviado.html',diccionario, context_instance=RequestContext(request))
+			else:
+				raise Http404
 		else:
 			formulario = ContactoForm()
-	return render_to_response('email-enviado.html',diccionario, context_instance=RequestContext(request))
+			HttpResponseRedirect('/')
+	else:
+		raise Http404
 
 def envio_datos_pago(request):
 	if not request.user.is_anonymous():
