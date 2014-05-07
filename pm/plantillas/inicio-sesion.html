@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 {% block titulo %}Iniciar Sesión{% endblock %}
+{% block style %}
+    <style type="text/css">
+        #idOlvideContrasena{
+            margin-top: 10px;
+        }   
+    </style>
+{% endblock style %}
 {% block contenido %}
+    <input type="hidden" id="centinela_marca" value="0">
     <div id="InicioSesion" class="row">
         <article  class="col-sm-offset-3 col-sm-6">
             <div class="contenido-titulo row">
@@ -18,19 +26,16 @@
                     <div class="form-group">
                         <h3>{{ form.password.label_tag }}</h3>
                             {{ form.password }}
-                            <!--a href="/recuperar-contrasena/">Olvidé mi contraseña</a-->
+                            
+                        <a id="idOlvideContrasena" href="/user/password/reset/">Olvidé mi contraseña</a>
                     </div>
-
                     <div class="form-group">
                         <div>
                             <input type="submit" class="btn btn-default" value="Ingresar" />
                             <input type="hidden" name="next" value="{{next}}" />
                         </div>
                     </div>
-                </form>
-                <div class="row">
-                    <a href="/registro/">Registrarse</a>
-                </div>    
+                </form>  
             </div>
         </article>
     </div>

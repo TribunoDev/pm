@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
-{% block titulo %}Detalle de Producto{% endblock %}
+{% block titulo %}P&amp;M - Detalle de Producto{% endblock %}
+{% block metadata %}
+    <meta property="og:title" content="Detalle de Producto">
+    <meta property="og:url" content="http://django.pm.hn/detalle-producto/{{detalle.Codigo}}">
+    <meta property="og:description" content="{{detalle.Descripcion}}">
+{% endblock metadata %}
 {% block style %}
     <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/lightview.css">
     <style type="text/css" media="screen">
@@ -70,13 +75,13 @@
                      <div id="muestra">
                     <article id="producto-detalle" class="cuerpo-contenido row">
                             <div class="row no-print social">
+                                
+                                    <a href="https://twitter.com/share" class="twitter-share-button" data-url="www.django.pm.hn/detalle-producto/{{detalle.Codigo}}" data-text="Visita nuestro sitio y conoce de nuestros precios" data-via="papermore" data-lang="es" data-count="none">Twittear</a>
+                                
+                                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
                                 <div>
                                     <div class="fb-share-button" data-href="http://www.django.pm.hn/detalle-producto/{{detalle.Codigo}}" data-type="button"></div>
                                 </div>
-                                <div >
-                                    <a href="https://twitter.com/share" class="twitter-share-button" data-url="www.django.pm.hn/detalle-producto/{{detalle.Codigo}}" data-text="Visita nuestro sitio y conoce de nuestros precios" data-via="papermore" data-lang="es" data-count="none">Twittear</a>
-                                </div>
-                                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
                             </div>
                             <div id="print-imagen-producto">
                             <div class="col col-sm-5">
@@ -86,7 +91,7 @@
                                         {% if cantidad > 0 %}
                                             {% for imagen in imagenes %}
                                                 {% if forloop.first %}
-                                                   <img src="{{MEDIA_URL}}{{imagen.Imagen}}"/> 
+                                                   <img src="{{MEDIA_URL}}{{imagen.Imagen}}" alt="{{detalle.Descripcion}}" /> 
                                                 {% endif %}
                                             {% endfor %}
                                         {% else %}
@@ -97,12 +102,12 @@
                                         {% if cantidad > 0 %}
                                             {% for imagen in imagenes %}
                                                 <a href="{{MEDIA_URL}}{{imagen.Imagen}}" class="lightview" data-lightview-group="thumbnail-demo" data-lightview-group-options="controls: 'thumbnails'">
-                                                    <img src="{{MEDIA_URL}}{{imagen.Imagen}}" width="20" height="auto" class="img-thumbnail">
+                                                    <img src="{{MEDIA_URL}}{{imagen.Imagen}}" width="20" class="img-thumbnail" alt="{{detalle.Descripcion}} - Thumbnail">
                                                 </a>
                                           
                                             {% endfor %}
                                         {% else %}
-                                            <img src="{{STATIC_URL}}img/sin_imagen.png" width="20" height="auto" class="img-thumbnail">
+                                            <img src="{{STATIC_URL}}img/sin_imagen.png" width="20" class="img-thumbnail">
                                         {% endif %}
                                     </figure>
                                 </div>
@@ -111,7 +116,7 @@
                                     <figure class="cycle-slideshow img-thumbnail" data-cycle-swipe=true data-cycle-fx=scrollHorz data-cycle-timeout=0 data-cycle-pager=".cycle-pager" data-cycle-prev=".cycle-prev" data-cycle-next=".cycle-next">
                                         {% if cantidad > 0 %}
                                             {% for imagen in imagenes %}
-                                                    <img src="{{MEDIA_URL}}{{imagen.Imagen}}" class="img-rounded"/>
+                                                    <img src="{{MEDIA_URL}}{{imagen.Imagen}}" alt="{{detalle.Descripcion}} - Movil" class="img-rounded"/>
                                             {% endfor %}
                                         {% else %}
                                             <img src="{{STATIC_URL}}img/sin_imagen.png">
@@ -119,7 +124,12 @@
                                         <div class="cycle-caption"></div>
                                     </figure>
                                     <div class="cycle-controles">
-                                        <a href="#" class="cycle-prev"><span class="glyphicon glyphicon-chevron-left"></span></a><a href="#" class="cycle-next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+                                        <a href="#" class="cycle-prev">
+                                            <span class="glyphicon glyphicon-chevron-left"></span>
+                                        </a>
+                                        <a href="#" class="cycle-next">
+                                            <span class="glyphicon glyphicon-chevron-right"></span>
+                                        </a>
                                     </div>
                                 </div>
                                 <div id="panel-opciones" class="row no-print">
@@ -155,8 +165,7 @@
                                     <div class="espacio"></div>
                                     <p>{{detalle.Comentarios|linebreaks}}</p>
                                 </div>
-                            </div>
-                       
+                            </div>                   
                     </article>
                     </div>
                 </div>
@@ -185,7 +194,7 @@
                             {{formulario.mensaje}}
                         </div>
                         <div class="form-group">
-                            <input type="hidden" class="form-control" id="id_url" name="url" maxlength="500">
+                            <input type="hidden" class="form-control" id="id_url" name="url" />
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -207,10 +216,10 @@
                     <article class="producto-elemento row">
                             <div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
                             <div class="row">
-                                <figure id="s2" class="s2 demo">
+                                <figure class="s2 demo">
                                     {% for img in detalle_img %}
                                         {% if img.Producto.Producto.Codigo == item.Codigo %}
-                                            <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+                                            <img src="{{MEDIA_URL}}{{img.Imagen}}" alt="{{item.Descripcion}}" >
                                         {% endif %}
                                     {% endfor %}
                                 </figure>
@@ -223,7 +232,7 @@
                                         <form method="post" action="/agregar-carrito/">{% csrf_token %}
                                             <input type="hidden" value="{{item.Codigo}}" name="Producto">
                                             <input type="hidden" value="1" name="Cantidad">
-                                            <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a></p>
+                                            <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></span></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a>
                                         </form>
                                     </div>
                                 </div>
@@ -242,10 +251,10 @@
                     <article class="producto-elemento row">
                         <div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
                         <div class="row">
-                            <figure id="s2" class="s2 demo">
+                            <figure class="s2 demo">
                                 {% for img in detalle_img %}
                                     {% if img.Producto.Producto.Codigo == item.Codigo %}
-                                        <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+                                        <img src="{{MEDIA_URL}}{{img.Imagen}}" alt="{{item.Descripcion}}">
                                     {% endif %}
                                 {% endfor %}
                             </figure>
@@ -258,7 +267,7 @@
                                         <form method="post" action="/agregar-carrito/">{% csrf_token %}
                                             <input type="hidden" value="{{item.Codigo}}" name="Producto">
                                             <input type="hidden" value="1" name="Cantidad">
-                                            <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a></p>
+                                            <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></span></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a>
                                         </form>
                                     </div>
                                 </div>
@@ -277,10 +286,10 @@
                     <article class="producto-elemento row">
                         <div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
                         <div class="row">
-                            <figure id="s2" class="s2 demo">
+                            <figure class="s2 demo">
                                 {% for img in detalle_img %}
                                     {% if img.Producto.Producto.Codigo == item.Codigo %}
-                                        <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+                                        <img src="{{MEDIA_URL}}{{img.Imagen}}" alt="{{item.Descripcion}}">
                                     {% endif %}
                                 {% endfor %}
                             </figure>
@@ -293,7 +302,7 @@
                                         <form method="post" action="/agregar-carrito/">{% csrf_token %}
                                             <input type="hidden" value="{{item.Codigo}}" name="Producto">
                                             <input type="hidden" value="1" name="Cantidad">
-                                            <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a></p>
+                                            <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></span></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a>
                                         </form>
                                     </div>
                                 </div>

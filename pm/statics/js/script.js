@@ -273,12 +273,9 @@ $(document).on("ready", function(){
 		$('#myCarousel').css('display', 'block');
 	};
 
-	var marcas = home + 'marcas/';
-	var ingresar = home + 'ingresar/';
-	var registrar = home + 'registro/';
-	var rec_contrasena = home + 'recuperar-contrasena/';
-	if (href == marcas || href == ingresar || href == registrar || href == rec_contrasena) {
-		$('#list_carousel').css('display', 'none');
+	var centinela_marca = $('#centinela_marca').val();
+	if (centinela_marca == 0) {
+		$('#list_carousel').css('display', 'none');	
 	};
 
 	$('#carouMarcas').carouFredSel({

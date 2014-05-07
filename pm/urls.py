@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     url(r'^actualizar-perfil/$', 'web.views.actualizar_perfil', name='actualizar_perfil'),
     url(r'^buscar/$', 'web.views.buscar', name='buscar'),
     url(r'^agregar-carrito/$', 'web.views.agregar_carrito', name='agregar_carrito'),
+    
     url(r'^catalogo-productos/$', 'web.views.catalogo_productos', name='catalogo_productos'),
     
     url(r'^carrito/$', 'web.views.carrito', name='carrito'),
@@ -57,10 +58,10 @@ urlpatterns = patterns('',
     url(r'^servicio-flete/$', 'web.views.servicio_flete', name='servicio_flete'),
 
     #prueba
-    url(r'^user/password/reset/$', password_reset,{'template_name': 'password_reset_form.html','post_reset_redirect': '/user/password/reset/done/'}, name='password_reset'),
-    url(r'^user/password/reset/done/$', password_reset_done,{'template_name': 'password_reset_done.html'},name='password_reset_done'),
-    url(r'^user/password/reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', password_reset_confirm,{'template_name': 'password_reset_email.html', 'post_reset_redirect': '/user/password/done/'}, name='password_reset_confirm'),
-    url(r'^user/password/done/$', password_reset_complete,{'template_name': 'password_reset_complete.html'},name='password_reset_complete'),
+    url(r'^user/password/reset/$', password_reset,{'template_name': 'registration/password_reset_form.html','post_reset_redirect': '/user/password/reset/done/'}, name='password_reset'),
+    url(r'^user/password/reset/done/$', password_reset_done,{'template_name': 'registration/password_reset_done.html'},name='password_reset_done'),
+    url(r'^user/password/reset/contrasena/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$', password_reset_confirm,{'template_name': 'registration/password_reset_confirm.html', 'post_reset_redirect': '/user/password/done/'}, name='password_reset_confirm'),
+    url(r'^user/password/done/$', password_reset_complete,{'template_name': 'registration/password_reset_complete.html'},name='password_reset_complete'),
     #
 
     #URL'S AJAX---

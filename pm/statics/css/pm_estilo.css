@@ -122,6 +122,10 @@ label{
 	color: #2E2C42;
 }
 
+.caja-sin-border{
+	border: 0;
+}
+
 .caption-precio{
 	color:#e46764;
 	font-family: Helvetica, Arial, Sans-Serif;

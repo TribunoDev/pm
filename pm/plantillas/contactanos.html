@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block titulo %}Contactanos{% endblock %}
+{% block titulo %}Paper & More - Contactanos{% endblock %}
 {% block contenido %}
 	<div class="row">
 			<article id="caja-contenido" class="col-xs-12 col-sm-8 col-md-9">
@@ -15,7 +15,7 @@
 								<div class="panel panel-default">
 									<div class="panel-heading">
 								    	<h4 class="panel-title">
-								        	<a data-toggle="collapse" data-parent="#accordion" href="#collapse{{elemento.pk}}">{{elemento.nombre}}</a>
+								        	<a data-toggle="collapse" data-parent="#accordion" href="#collapse{{elemento.pk}}">{{elemento.nombre}} - {{elemento.cargo}}</a>
 								      	</h4>
 								    </div>
 								    <div id="collapse{{elemento.pk}}" class="panel-collapse collapse">

@@ -96,7 +96,7 @@ class Region(models.Model):
 class Ciudad(models.Model):
 	Ciudad=models.CharField(max_length=200, verbose_name=u'Ciudad')
 	Region=models.ForeignKey(Region, verbose_name=u'Región')
-	Servicio_Domicilio=models.DecimalField(max_digits=5, decimal_places=2)
+	Servicio_Domicilio=models.DecimalField(max_digits=5, decimal_places=2, verbose_name=u'Costo Flete')
 	def __unicode__(self):
 		return self.Ciudad
 

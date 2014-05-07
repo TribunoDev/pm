@@ -780,6 +780,8 @@ def eliminar_item_detalle(request):
 		if request.method == 'POST':
 			idDetalle = request.POST['idDetalle']
 			detalle = Detalle_Carrito.objects.filter(id=idDetalle).delete()
+		else:
+			raise Http404
 	return HttpResponse(json.dumps({'dato':detalle}), content_type='application/json')
 
 #Vista que retorna a la pagina del perfil de usuario
@@ -966,7 +968,6 @@ def productos_destacados(request):
 	diccionario['detalle_img'] = cargar_imagenes()
 	diccionario['productos'] = destacados
 	return render_to_response('destacados.html', diccionario, context_instance=RequestContext(request))
-
 
 #Vista que retorna los datos del servicio de flete
 def servicio_flete(request):

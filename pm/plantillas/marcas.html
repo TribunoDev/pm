@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 
-{% block titulo %}Paper & More{% endblock %}
+{% block titulo %}Paper &amp; More - Marcas{% endblock %}
 
 {% block contenido %}
+	<input type="hidden" id="centinela_marca" value="0">
 	<div class="row">
 		<article id="caja-contenido" class="col-xs-12 col-sm-8 col-md-9">
 			<div class="contenido-titulo row">
@@ -13,7 +14,7 @@
 					{% for elemento in marcas %}
 						<div class="col-xs-6 col-sm-4">
 							<a class="thumbnail" href="/marcas/{{elemento.id}}" data-toggle="tooltip" data-placement="top" title="Ver productos de marca {{elemento.Marca}}">
-								<img src="{{MEDIA_URL}}{{elemento.Logotipo}}">
+								<img src="{{MEDIA_URL}}{{elemento.Logotipo}}" alt="{{elemento.Marca}}">
 							</a>
 						</div>
 					{% endfor %}
@@ -30,10 +31,10 @@
 						<article class="producto-elemento row">
 							<div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
 							<div class="row">
-								<figure id="s2" class="s2 demo">
+								<figure class="s2 demo">
 	                                {% for img in detalle_img %}
 		                                {% if img.Producto.Producto.Codigo == item.Codigo %}
-		                                    <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+		                                    <img src="{{MEDIA_URL}}{{img.Imagen}}" alt="{{item.Descripcion}}">
 		                                {% endif %}
 		                            {% endfor %}
 	                            </figure>
@@ -46,7 +47,7 @@
 	                                    <form method="post" action="/agregar-carrito/">{% csrf_token %}
 	                                        <input type="hidden" value="{{item.Codigo}}" name="Producto">
 	                                        <input type="hidden" value="1" name="Cantidad">
-	                                        <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a></p>
+	                                        <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></span></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a>
 	                                    </form>
 	                                </div>
 								</div>
@@ -65,10 +66,10 @@
 						<article class="producto-elemento row">
 							<div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
 							<div class="row">
-								<figure id="s2" class="s2 demo">
+								<figure class="s2 demo">
 	                                {% for img in detalle_img %}
 		                                {% if img.Producto.Producto.Codigo == item.Codigo %}
-		                                    <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+		                                    <img src="{{MEDIA_URL}}{{img.Imagen}}" alt="{{item.Descripcion}}">
 		                                {% endif %}
 		                            {% endfor %}
 	                            </figure>
@@ -81,7 +82,7 @@
 	                                    <form method="post" action="/agregar-carrito/">{% csrf_token %}
 	                                        <input type="hidden" value="{{item.Codigo}}" name="Producto">
 	                                        <input type="hidden" value="1" name="Cantidad">
-	                                        <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a></p>
+	                                        <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></span></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a>
 	                                    </form>
 	                                </div>
 								</div>
@@ -90,7 +91,8 @@
 						</article>
 					{% endfor %}
 				</div>
-				<div class="row producto-filtro-lateral">
+			</div>
+			<div class="row producto-filtro-lateral">
 				<div class="row">
 					<h2 class="titulo">Destacados</h2>
 				</div>
@@ -99,10 +101,10 @@
 						<article class="producto-elemento row">
 							<div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
 							<div class="row">
-								<figure id="s2" class="s2 demo">
+								<figure class="s2 demo">
 	                                {% for img in detalle_img %}
 		                                {% if img.Producto.Producto.Codigo == item.Codigo %}
-		                                    <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+		                                    <img src="{{MEDIA_URL}}{{img.Imagen}}" alt="{{item.Descripcion}}" >
 		                                {% endif %}
 		                            {% endfor %}
 	                            </figure>
@@ -115,7 +117,7 @@
 	                                    <form method="post" action="/agregar-carrito/">{% csrf_token %}
 	                                        <input type="hidden" value="{{item.Codigo}}" name="Producto">
 	                                        <input type="hidden" value="1" name="Cantidad">
-	                                        <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a></p>
+	                                        <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></span></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a>
 	                                    </form>
 	                                </div>
 								</div>
