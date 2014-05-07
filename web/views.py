@@ -100,7 +100,7 @@ def cargar_imagenes():
 #Vista que devuelve los productos que no tienen imagen
 def producto_imagen(request):
 	lista=[]
-	productos = Producto.objects.all()
+	productos = Producto.objects.all().order_by('Descripcion')
 	for elemento in productos:
 		if not Imagen.objects.filter(Producto=elemento).exists():
 			lista.append(elemento)
