@@ -171,7 +171,7 @@
 					<ul id="carouMarcas">
 						{% for marca in marcas %}
 						<li>
-							<a href="/marcas/{{marca.id}}"><img src="{{MEDIA_URL}}{{marca.Logotipo}}" class="img-thumbnail"></a>
+							<a href="/marcas/{{marca.id}}"><img src="{{MEDIA_URL}}{{marca.Logotipo}}" class="img-thumbnail" alt="{{marca.Marca}}"></a>
 						</li>
 						{% endfor %}
 					</ul>	

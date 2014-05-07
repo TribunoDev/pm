@@ -51,15 +51,6 @@ class Detalle_Imagen(models.Model):
 	Producto = models.ForeignKey(Imagen)
 	Imagen = models.ImageField(upload_to='img_detalle')
 
-#class Detalle_Imagen(models.Model):
-#	Imagen = models.ImageField(upload_to='img_detalle',verbose_name=u'Imágen')
-#	Producto, help_text='Producto asociado a la imagen', verbose_name=u'Producto')
-#	class Meta:
-#		verbose_name=u'Detalle Imagen'
-#		verbose_name_plural=u'Detalle Imagen'
-#	def __unicode__(self):
-#		return str(self.Imagen)
-
 class Estado(models.Model):
 	Estado = models.CharField(max_length=45, help_text='Describe el estado del carrito', verbose_name=u'Estado de Carrito')
 	def __unicode__(self):
@@ -88,7 +79,6 @@ class Pais(models.Model):
 
 class Region(models.Model):
 	Region=models.CharField(max_length=100, verbose_name=u'Región')
-	Precio=models.DecimalField(max_digits=5, decimal_places=2, verbose_name=u'Precio')
 	Pais=models.ForeignKey(Pais, verbose_name=u'País')
 	def __unicode__(self):
 		return self.Region

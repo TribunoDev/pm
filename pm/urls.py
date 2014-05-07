@@ -57,6 +57,7 @@ urlpatterns = patterns('',
     url(r'^salir/$', logout,{'template_name': 'index.html',}, name='logout'),
     url(r'^servicio-flete/$', 'web.views.servicio_flete', name='servicio_flete'),
 
+   url(r'^imagenes/$', 'web.views.producto_imagen', name='producto_imagen'),
     #prueba
     url(r'^user/password/reset/$', password_reset,{'template_name': 'registration/password_reset_form.html','post_reset_redirect': '/user/password/reset/done/'}, name='password_reset'),
     url(r'^user/password/reset/done/$', password_reset_done,{'template_name': 'registration/password_reset_done.html'},name='password_reset_done'),

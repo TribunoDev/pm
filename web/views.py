@@ -97,6 +97,15 @@ def cargar_imagenes():
 				listaImages.append(elemento)
 	return listaImages
 
+#Vista que devuelve los productos que no tienen imagen
+def producto_imagen(request):
+	lista=[]
+	productos = Producto.objects.all()
+	for elemento in productos:
+		if not Imagen.objects.filter(Producto=elemento).exists():
+			lista.append(elemento)
+	return render_to_response('productos-imagen.html', {'productos':lista}, context_instance=RequestContext(request))
+
 #Vista que retorna la pagina de inicio
 def inicio(request):
 	diccionario={}
