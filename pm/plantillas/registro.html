@@ -1,62 +1,79 @@
 {% extends 'base.html' %}
 {% block titulo %}Nuevo Usuario{% endblock %}
+{% block style %}
+    <style type="text/css">
+        .titulo{
+            border-radius: 0;
+            color: black;
+            background-color: white;
+            border-bottom: 1px solid black;
+            font-size: 24px;
+            margin-bottom: 10px;
+            padding: 1.5% 0%;
+        }
+    </style>
+{% endblock style %}
 {% block contenido %}
-	<input type="hidden" id="centinela_marca" value="0">
 <div id="Registro" class="row">
-	<article class="col-sm-offset-2 col-sm-8">
-		<div class="contenido-titulo row">
-			<h2 class="titulo">Registro de un nuevo usuario</h2>
-		</div>
-		<div id="frmRegistro" class="row">
-			<article class="cuerpo-contenido row">
-				<form role="form" id="frmRegUsuario" name="frmRegUsuario" method="post" action="/registro/">{% csrf_token %}
+	<div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+		<form role="form" id="frmRegUsuario" name="frmRegUsuario" method="post" action="/registro/">{% csrf_token %}
+			<h2 class="titulo">Crear una cuenta</h2>
+			<div class="row">
+				<div class="col col-xs-12 col-sm-6 col-md-6">
 					<div class="form-group">
-					    <label for="first_name" class="control-label">No. de Identidad</label>
-					    <input type="text" class="form-control" id="RNP" name="RNP" placeholder="Ingrese su RNP" required>
+					    <input type="text" class="form-control input-lg" id="first_name" name="first_name" tabindex="1" placeholder="Nombres" required>
+					</div>
+				</div>
+				<div class="col col-xs-12 col-sm-6 col-md-6">
+					<div class="form-group">
+				    	<input type="text" class="form-control input-lg" id="last_name" name="last_name" tabindex="2" placeholder="Apellidos" required>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col col-xs-12 col-sm-6 col-md-6">
+					<div class="form-group">
+						<input type="text" class="form-control input-lg" id="RNP" name="RNP" placeholder="Ingrese su ID" tabindex="3" required>
 					    <span id="verificaRNP"></span>
 					</div>
+				</div>
+				<div class="col col-xs-12 col-sm-6 col-md-6">
 					<div class="form-group">
-					    <label for="first_name" class="control-label">Nombre</label>
-					    <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Ingrese su nombre" required>
-					 </div>
-					 <div class="form-group">
-				    	<label for="last_name" class="control-label">Apellidos</label>
-				      	<input type="text" class="form-control" id="last_name" name="last_name" placeholder="Ingrese sus apellidos" required>
-				  	</div>
-				  	<div class="form-group">
-				    	<label for="username" class="control-label">Usuario</label>
-				      	<input type="text" class="form-control" id="username" name="username" placeholder="Nombre de usuario" required>
+						<input type="text" class="form-control input-lg" id="username" name="username" placeholder="Nombre de usuario" tabindex="4" required>
 				      	<span id="verificaUser"></span>
-				  	</div>
-				  	<div class="form-group">
-				    	<label for="email" class="control-label">Correo</label>
-				      	<input type="email" class="form-control" id="email" name="email" placeholder="correo@ejemplo.com" required>
-				      	<span id="verificarEmail"></span>
-				  	</div>
-				  	<div class="form-group">
-				    	<label for="password" class="control-label">Contraseña</label>
-				      	<input type="password" class="form-control" id="password" name="password" placeholder="Ingrese una contraseña" required>
-				  	</div>
-				  	<div class="form-group">
-				    	<label for="txtPassword2" class="control-label">Repetir Contraseña</label>
-			      		<input type="password" class="form-control" id="txtPassword2" name="txtPassword2" placeholder="Repita la contraseña" required>
-				  	</div>
-				  	<div class="form-group">
-				    	<label for="Telefono" class="control-label">Teléfono</label>
-				      		<input type="tel" class="form-control" id="Telefono" name="Telefono" placeholder="Teléfono del usuario" required>
-				  	</div>
-				  	<div class="form-group">
-				    	<label for="Direccion" class="control-label">Dirección</label>
-				      	<input type="text" class="form-control" id="Direccion" name="Direccion" placeholder="Direccion" required>
-			      	</div>
-			      	<div class="form-group">
-					 	<button type="submit" class="btn btn-default">Registrar</button>    
-				 	</div>
-			  	</div>
-				</form>
-			</article>
-		</div>
-	</article>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<input type="email" class="form-control input-lg" id="email" name="email" placeholder="Correo eletrónico" tabindex="5" required>
+				<span id="verificarEmail"></span>
+			</div>
+			<div class="row">
+				<div class="col col-xs-12 col-sm-6 col-md-6">
+					<div class="form-group">
+						<input type="password" class="form-control input-lg" id="password" name="password" tabindex="6" placeholder="Contraseña" required>
+					</div>	
+				</div>
+				<div class="col col-xs-12 col-sm-6 col-md-6">
+					<div class="form-group">
+						<input type="password" class="form-control input-lg" id="txtPassword2" name="txtPassword2" tabindex="7" placeholder="Repita la contraseña" required>
+					</div>	
+				</div>
+			</div>
+			<div class="form-group">
+				<input type="tel" class="form-control input-lg" id="Telefono" name="Telefono" placeholder="Teléfono" tabindex="8" required>
+			</div>
+			<div class="form-group">
+				<textarea name="Direccion" id="idDireccion" class="form-control input-lg" cols="30" rows="5" placeholder="Dirección" tabindex="9" required></textarea>
+			</div>
+			<div class="col col-xs-12 col-sm-6 col-md-6">
+				<div class="form-group">
+					<button type="submit" tabindex="10" class="btn btn-block btn-success">Registrar</button>    
+				</div>
+			</div>
+		</form>
+	</div>
 </div>
+<input type="hidden" id="centinela_marca" value="0">
 
 {% endblock %}

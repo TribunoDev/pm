@@ -1,19 +1,31 @@
 {% extends 'base.html' %}
 {% block titulo %}Políticas{% endblock %}
+{% block style %}
+	<style>
+		.politicas{
+			padding-right: 15px;
+			padding-left: 15px;
+		}
+		.politicas .media-body p, .politicas .media-body ul{
+			font-size: 14px;
+			line-height: 16px;
+		}
+	</style>
+{% endblock style %}
 {% block contenido %}
 		<div class="row">
 			<article id="caja-contenido" class="col-xs-12 col-sm-8 col-md-9">
 				<div class="contenido-titulo row">
 					<h2 class="titulo">Política de nuestra empresa</h2>
 				</div>
-				<div  class="row">
+				<div  class="politicas row">
 					<article class="cuerpo-contenido row">
 						<div class="media">
 							<figure  class="col-xs-3">
 						   		<img class="media-object" src="{{STATIC_URL}}img/politica.png" alt="Misión" class="img-responsive">
 						  	</figure>
 						  	<div class="media-body">
-						   		<h3 class="media-heading">OBJETIVO GENERAL DE LA EMPRESA</h3>
+						   		<h4 class="media-heading">OBJETIVO GENERAL DE LA EMPRESA</h4>
 						   		<p class="text-justify">Ser la empresa que integre una solución a todas las necesidades de oficina y tecnología de nuestro mercado; nuestra estrategia de TODO EN UN SOLO LUGAR; permite a nuestros clientes encontrar todo lo que necesiten para sus oficinas:</p>
 						   		<ul>
 						   			<li>Computadoras</li>
@@ -26,40 +38,40 @@
 						  	</div>
 						  	<br>
 						  	<div class="media-body">
-						   		<h3 class="media-heading">NUESTROS VALORES</h3>
-						   		<h4>INNOVACIÓN</h4>
+						   		<h4 class="media-heading">NUESTROS VALORES</h4>
+						   		<h5>INNOVACIÓN</h5>
 						   		<p class="text-justify">Nos ayudará a pensar siempre en grande, evitar la miopía empresarial, no se conformaran nunca con los logros alcanzados.</p>
 						   		<br>
-						   		<h4>CALIDAD EN PRODUCTOS Y SERVICIOS</h4>
+						   		<h5>CALIDAD EN PRODUCTOS Y SERVICIOS</h5>
 						   		<p class="text-justify">En lo que se vende y en el servicio; esto será siempre lo que oirán, dirán y pensarán de <strong>“Paper & More”</strong>.</p>
 						   		<br>
-						   		<h4>TRABAJO EN EQUIPO</h4>
+						   		<h5>TRABAJO EN EQUIPO</h5>
 						   		<p class="text-justify">Funcionar bajo el concepto de trabajo en equipo; la importancia de cada uno de las partes dentro del sistema es palpable.</p>
 						   		<br>
-						   		<h4>VALOR AGREGADO</h4>
+						   		<h5>VALOR AGREGADO</h5>
 						   		<p class="text-justify">Toda  etiqueta de <strong>“Paper & More”</strong> está respaldada con un compromiso por su preferencia. Hacer  que cada vez los productos y servicios reciban mayor valor agregado de post venta.</p>
 						   		<br>
-						   		<h4>GARANTÍA</h4>
+						   		<h5>GARANTÍA</h5>
 						   		<p class="text-justify">Garantizar los equipos para que cumplan con sus funciones que justifican su adquisición.</p>
 						   		<br>
-						   		<h4>RESPONSABILIDAD</h4>
+						   		<h5>RESPONSABILIDAD</h5>
 						   		<p class="text-justify">Será uno de los valores con mayor peso que determinará la forma de comportamiento durante todas nuestras tareas; porque esta cualidad no se le compra a los clientes, se gana con el trabajo que día con día se realiza.</p>
 						   		<br>
-						   		<h3 class="media-heading">CÓDIGO DE ÉTICA</h3>
-						   		<h4>PROMETER SIEMPRE LO QUE SE PUEDE HACER</h4>
+						   		<h4 class="media-heading">CÓDIGO DE ÉTICA</h4>
+						   		<h5>PROMETER SIEMPRE LO QUE SE PUEDE HACER</h5>
 						   		<p class="text-justify">Porque no existe peor error que quedar mal con los clientes. Si se comete un error se rectificará de inmediato.</p>
 						   		<br>
-						   		<h4>DECIR LA VERDAD</h4>
+						   		<h5>DECIR LA VERDAD</h5>
 						   		<p class="text-justify">Mentir grave error para una empresa y de los que pagan muy caros.</p>
 						   		<br>
-						   		<h4>SER JUSTOS</h4>
+						   		<h5>SER JUSTOS</h5>
 						   		<p class="text-justify">Al momento de suplir las necesidades de los clientes.</p>
 						   		<br>
-						   		<h4>INCENTIVAR LA CREATIVIDAD</h4>
+						   		<h5>INCENTIVAR LA CREATIVIDAD</h5>
 						   		<p class="text-justify">Seremos un invernadero de innovación en los negocios en todas las dimensiones.</p>
 						   		<p>El fomentar la creatividad nos traerá constantemente frutos a mediano y a largo plazo. Ya que en <strong>“Paper & More”</strong>, creemos que el fomentar las nuevas ideas y la creatividad es lo mejor que podemos hacer porque el poder que moverá los próximos años será el poder de las ideas.</p>
 						   		<br>
-						   		<h4>EQUILIBRIO DE INTERES AMIGO - P&M</h4>
+						   		<h5>EQUILIBRIO DE INTERES AMIGO - P&M</h5>
 						   		<p class="text-justify"><strong>“Paper & More”</strong> tratará de hacer negocios sobre la base de la equidad, el equilibrio de intereses entre las dos partes, la utilidad justa en la compra y venta de nuestros productos y prestación de servicios.</p>
 						  	</div>
 						</div>
@@ -102,6 +114,7 @@
 					{% endfor %}
                 </div>
             </div>
+            <div class="row espacio"></div>
 			<div class="row">
 				<div class="row">
 					<h2 class="titulo">Ofertas</h2>

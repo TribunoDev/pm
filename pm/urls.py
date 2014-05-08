@@ -54,7 +54,7 @@ urlpatterns = patterns('',
     #url(r'^recuperar-contrasena/$', 'web.views.recuperar_contrasena', name='recuperar_contrasena'),
     url(r'^registro/$', 'web.views.registrar', name='registrar'),
     url(r'^registrado/$', 'web.views.registrado', name='registrado'),
-    url(r'^salir/$', logout,{'template_name': 'index.html',}, name='logout'),
+    url(r'^salir/$', logout,{'template_name': 'cerrar-sesion.html',}, name='logout'),
     url(r'^servicio-flete/$', 'web.views.servicio_flete', name='servicio_flete'),
 
    url(r'^imagenes/$', 'web.views.producto_imagen', name='producto_imagen'),

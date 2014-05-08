@@ -8,6 +8,18 @@
 {% block style %}
     <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/lightview.css">
     <style type="text/css" media="screen">
+    #descripcion{
+        display: inline-block;
+        width: 40%;
+    }
+    #imagen{
+        display: inline-block;
+        width: 30%;
+    }
+
+    #mydiv{
+        display: none;
+    }
     
     .cycle-controles a{font-size: 30px;}
     .cycle-controles{
@@ -32,7 +44,11 @@
     .cycle-pager > * { cursor: pointer;}
 
     .cycle-caption { position: absolute; color: white; bottom: 15px; right: 15px; z-index: 700; font-weight: bold;}
-
+    .galeria-label{
+        color: #aab1b0;
+        margin-top: 5px;
+        border-bottom:1px solid  #DDDDDD;
+    }
 
     </style>
 {% endblock %}
@@ -42,6 +58,7 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
     <script>
         $(document).on('ready', function(){
+
             $('#slides').slidesjs({
                 pagination: {
                     active: true,
@@ -51,9 +68,9 @@
                 height: 528
             });
 
-            function imprSelec(muestra)
-            {var ficha=document.getElementById(muestra);var ventimp=window.open(' ','popimpr');ventimp.document.write(ficha.innerHTML);ventimp.document.close();ventimp.print();ventimp.close();}
-                });
+            function imprSelec(muestra){
+                var ficha=document.getElementById(muestra);var ventimp=window.open(' ','popimpr');ventimp.document.write(ficha.innerHTML);ventimp.document.close();ventimp.print();ventimp.close();}
+                
 
             (function(d, s, id) {
               var js, fjs = d.getElementsByTagName(s)[0];
@@ -62,10 +79,11 @@
               js.src = "//connect.facebook.net/es_LA/all.js#xfbml=1&appId=1375158249407034";
               fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));
+        });
     </script>
 {% endblock %}
 {% block contenido %}
-    <div class="row">
+    <div class="row no-print">
         <article id="caja-contenido" class="col-xs-12 col-sm-8 col-md-9">
             <div class="contenido-titulo row">
                 <h2 class="titulo">Detalle del Producto</h2>
@@ -98,6 +116,9 @@
                                             <img src="{{STATIC_URL}}img/sin_imagen.png">
                                         {% endif %}
                                     </figure>
+                                    <div class="row galeria-label no-print">
+                                        <h4>Galería</h4>
+                                    </div>
                                     <figure class="row galeria no-print">
                                         {% if cantidad > 0 %}
                                             {% for imagen in imagenes %}
@@ -134,7 +155,7 @@
                                 </div>
                                 <div id="panel-opciones" class="row no-print">
                                     <!-- Button trigger modal -->
-                                    <button class="btn btn-primary btn-default btnEmailProducto" data-toggle="modal" data-target="#myModal"><span class="icon-mail icon-mail3"></span></button>
+                                    <button class="btn btn-primary btn-default btnEmailProducto" data-toggle="modal" data-target="#myModalRecomendacion"><span class="icon-mail icon-mail3"></span></button>
                                     <a href="javascript:window.print()" class="btn btn-primary btn-default btnImprimirProducto"><span class="icon-printer icon-printer"></span></a>
                                 </div>
                             </div>
@@ -178,35 +199,34 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" id="myModalLabel">Enviar e-mail</h4>
                     </div>
-                    <form id="formularioEmail" role="form" method="post" action="/enviar-email/">
                     <div class="modal-body">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <label>Para:</label>
-                            {{formulario.amigo}}
+                        <form id="formularioEmail" role="form" method="post" action="/enviar-email/">{% csrf_token %}
+                        <div class="col col-xs-12 col-sm-12 col-md-12">
+                            <div class="input-group">
+                                <span class="input-group-addon">@</span>
+                                <input type="email" class="form-control input-lg" id="id_amigo" name="amigo" placeholder="Para:">
+                            </div>
+                        </div>
+                        <div class="col col-xs-12 col-sm-12 col-md-12">
+                            <div class="input-group">
+                                <span class="input-group-addon">@</span>
+                                <input type="text" class="form-control input-lg" id="id_correo" name="correo" placeholder="De:">
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label>De:</label>
-                            {{formulario.correo}}
+                            <textarea cols="30" id="id_mensaje" name="mensaje" rows="5" class="form-control input-lg" placeholder="Escriba aquí su mensaje" required></textarea>
                         </div>
+                        <input type="hidden" id="id_url" name="url"/>
                         <div class="form-group">
-                            <label>Mensaje:</label>
-                            {{formulario.mensaje}}
+                            <button type="button" class="btn btncerrarModal" data-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btnaceptarModal">Enviar</button>
                         </div>
-                        <div class="form-group">
-                            <input type="hidden" class="form-control" id="id_url" name="url" />
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Enviar</button>
-                    </div>
                     </form>
                 </div><!-- /.modal-content -->
               </div><!-- /.modal-dialog -->
             </div><!-- /.modal -->
         </article>
-        <article id="contenido-lateral" class="hidden-xs col-sm-4 col-md-3 contenido-lateral" >
+        <article id="contenido-lateral" class="hidden-xs col-sm-4 col-md-3 contenido-lateral no-print" >
             <div class="row producto-filtro-lateral">
                 <div class="row">
                     <h2 class="titulo">Novedades</h2>
@@ -260,8 +280,7 @@
                             </figure>
                             <div class="contenido-lateral-precio ">
                                 <div class="row">
-                                    {% load humanize %}
-                                    <h3 ><span class="label label-danger">L. {{item.Precio|intcomma}}</span></h3>
+                                    <h3 ><span class="label label-danger">L. {{item.Precio}}</span></h3>
                                 </div>
                                     <div class="row producto-caja-btn">
                                         <form method="post" action="/agregar-carrito/">{% csrf_token %}
@@ -313,5 +332,31 @@
                 </div>
             </div>
         </article>
+    </div>
+    <div id="mydiv" class="print">
+        <figure id="logo">
+            <img src="{{STATIC_URL}}img/logo-paper.jpg" alt="Paper&amp;More">
+        </figure>
+        <div id="cuerpo">
+            <figure id="imagen" class="img-thumbnail">
+                {% if cantidad > 0 %}
+                    {% for imagen in imagenes %}
+                        {% if forloop.first %}
+                           <img src="{{MEDIA_URL}}{{imagen.Imagen}}" alt="{{detalle.Descripcion}}" /> 
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <img src="{{STATIC_URL}}img/sin_imagen.png">
+                {% endif %}
+            </figure>
+            <div id="descripcion">
+                <h5>{{detalle.Descripcion}}</h5>
+                <p><strong>Código del producto:</strong> {{detalle.Codigo}}</p>
+                <p><strong>Precio: <span>L. {{precio}}</span></strong></p>  
+                <div class="espacio"></div>
+                    <p>{{detalle.Comentarios|linebreaks}}</p>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

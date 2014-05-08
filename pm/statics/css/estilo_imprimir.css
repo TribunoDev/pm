@@ -1,15 +1,18 @@
-footer{
-	display: none;
+body{
+	color: #000;
+	float: none !important;
+	font: 100%/150% Georgia, "Times New Roman", Times, serif;
+	margin: 0 !important;
+	padding: 0 !important;
+	width: auto !important;
+	height: auto !important;
 }
 
-#contenido-lateral{
+header{
+	display: none !important;
 	visibility: hidden;
-	display: none;
 }
 
-#list_carousel{
-	display: none;
-}
 
 #producto-detalle-descripcion{
 	display: inline-block;
@@ -29,6 +32,46 @@ footer{
 }
 
 .no-print{
-	display: none;
+	display: none !important;
 	visibility: hidden;
+}
+
+#descripcion{
+	display: inline-block;
+	margin: 0;
+	margin-left: 20px;
+	vertical-align: middle;
+	width: 65%;
+}
+
+#cuerpo{
+	display: block;
+	border-top: 2px solid black;
+	padding-top: 7px;
+	width: 100%;
+}
+
+#logo{
+	display: block;
+	padding-bottom: 10px;
+}
+
+#imagen{
+	display: inline-block;
+	margin: 0;
+	width: 30%;
+	height: auto;
+}
+
+#mydiv{
+	background-color: white;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 35px;
+    margin: 0;
+    margin-left: 40px;
+    font-size: 14px;
+    line-height: 18px;
 }

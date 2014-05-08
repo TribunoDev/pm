@@ -4,9 +4,34 @@
     <style type="text/css">
         #idOlvideContrasena{
             margin-top: 10px;
-        }   
+        }
+        #ayuda{
+            text-align: center;
+        }
+        #ayuda>a{
+            display: block;
+        }
+        #ayuda label{
+            display: inline;
+        }
+        .titulo{
+            border-radius: 0;
+            color: black;
+            background-color: white;
+            border-bottom: 1px solid black;
+            font-size: 24px;
+            padding: 1.5% 0%;
+        }
     </style>
 {% endblock style %}
+
+{% block js %}
+    <script>
+        $('#id_username').attr('placeholder', 'Nombre de Usuario');
+        $('#id_password').attr('placeholder', 'Contraseña');
+    </script>
+{% endblock js %}
+
 {% block contenido %}
     <input type="hidden" id="centinela_marca" value="0">
     <div id="InicioSesion" class="row">
@@ -20,19 +45,21 @@
                 {% endif %}
                 <form role="form" id="frmRegUsuario" class="cuerpo-contenido row" name="frmRegUsuario" method="post" action="{%  url 'django.contrib.auth.views.login' %}">{% csrf_token %}
                     <div class="form-group">
-                        <h3>{{ form.username.label_tag }}</h3>
                             {{ form.username }}  
                     </div>
                     <div class="form-group">
-                        <h3>{{ form.password.label_tag }}</h3>
                             {{ form.password }}
-                            
-                        <a id="idOlvideContrasena" href="/user/password/reset/">Olvidé mi contraseña</a>
                     </div>
                     <div class="form-group">
                         <div>
-                            <input type="submit" class="btn btn-default" value="Ingresar" />
+                            <input type="submit" class="btn btn-lg btn-success btn-block" value="Ingresar" />
                             <input type="hidden" name="next" value="{{next}}" />
+                        </div>
+                    </div>
+                    <div id="ayuda">
+                        <a id="idOlvideContrasena" href="/user/password/reset/">Olvidé mi contraseña</a>
+                        <div>
+                        <label>¿No tienes una cuenta? </label><a href="/registro/">Regístrate aqui</a></span>
                         </div>
                     </div>
                 </form>  

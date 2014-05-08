@@ -160,28 +160,29 @@
 
     <!--CONTENIDO -->
     <section class="contenedor container">
-    {% block contenido %}{% endblock %}
-    <div id="list_carousel" class="row">
-		<article class="list_carousel row">
-			<div class="row">
-				<div class="hidden-xs col-sm-1">
-					<a id="prev2" class="prev" href="#"><span class="icon icon-flechitaizquierda"></span></a>
+    	{% block contenido %}{% endblock %}
+    	<div id="list_carousel" class="row no-print">
+			<article class="list_carousel row">
+				<div class="row">
+					<div class="hidden-xs col-sm-1">
+						<a id="prev2" class="prev" href="#"><span class="icon icon-flechitaizquierda"></span></a>
+					</div>
+					<div class="col-sm-11">
+						<ul id="carouMarcas">
+							{% for marca in marcas %}
+							<li>
+								<a href="/marcas/{{marca.id}}"><img src="{{MEDIA_URL}}{{marca.Logotipo}}" class="img-thumbnail" alt="{{marca.Marca}}"></a>
+							</li>
+							{% endfor %}
+						</ul>	
+					</div>
+					<div class="hidden-xs col-sm-1">
+						<a id="next2" class="next" href="#"><span class="icon icon-flechitaderecha"></span></a>
+					</div>
 				</div>
-				<div class="col-sm-11">
-					<ul id="carouMarcas">
-						{% for marca in marcas %}
-						<li>
-							<a href="/marcas/{{marca.id}}"><img src="{{MEDIA_URL}}{{marca.Logotipo}}" class="img-thumbnail" alt="{{marca.Marca}}"></a>
-						</li>
-						{% endfor %}
-					</ul>	
-				</div>
-				<div class="hidden-xs col-sm-1">
-					<a id="next2" class="next" href="#"><span class="icon icon-flechitaderecha"></span></a>
-				</div>
-			</div>
-		</article>
-    </div>
+			</article>
+	    </div>
+    </section>
     <!--Modal Horario-->
     <div class="modal fade" id="myModalHorarioServicio">
 	  	<div class="modal-dialog">
@@ -197,14 +198,14 @@
 	      			<div class="horarios">
 	      				<table class="table">
 	      					<tbody>
-	      						<tr><td>Lunes-Viernes</td><td>8:00 a.m. - 6:00 p.m.</td></tr>
+	      						<tr><td>Lunes - Viernes</td><td>8:00 a.m. - 6:00 p.m.</td></tr>
 	      						<tr><td>Sábados</td><td>8:00 a.m. - 5:00 p.m.</td></tr>
 	      					</tbody>
 	      				</table>
 	      			</div>
 	      		</div>
 	      		<div class="modal-footer">
-	        		<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+	        		<button type="button" class="btn btncerrarModal" data-dismiss="modal">Cerrar</button>
 	      		</div>
 	   		</div><!-- /.modal-content -->
 	  	</div><!-- /.modal-dialog -->
@@ -229,56 +230,62 @@
 					    	<div class="espacio"></div>
 					    	<ul>
 					    		<li>Voluntario – Aprendiz por corto tiempo ó periodo de vacaciones</li>
+					    		<li>Voluntario – Aprendiz a mediano plazo; hasta 6 meses</li>
+					    		<li>Voluntario – Aprendiz a mediano plazo; hasta 6 meses con opción de continuar</li>
+					    		<li>Medio tiempo con paga</li>
+					    		<li>Por Contrato con paga</li>
 					    	</ul>
 					  	</div>
 					</div>
 	      		</div>
 	      		<div class="modal-footer">
-	        		<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+	        		<button type="button" class="btn btncerrarModal" data-dismiss="modal">Cerrar</button>
 	      		</div>
 	   		</div><!-- /.modal-content -->
 	  	</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 
-	<!--Modal Horario-->
-    <div class="modal fade" id="myModalRecomendacion">
+	<!--Modal Recomendar Amigo-->
+    <div class="modal fade" id="myModalRecomendacion" role="dialog">
 	  	<div class="modal-dialog">
 	    	<div class="modal-content">
 	      		<div class="modal-header">
 	        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 	        		<h4 class="modal-title">Recomendar esta página a un amigo</h4>
 	      		</div>
-	      		<form id="formularioEmail" role="form" method="post" action="/enviar-email/">
-		      		<div class="modal-body">
-		      			{% csrf_token %}
+	      		<div class="modal-body">
+	      			<form id="formularioEmail" role="form" method="post" action="/enviar-email/">{% csrf_token %}
+		      			<div class="col col-xs-12 col-sm-12 col-md-12">
+		      				<div class="input-group">
+		      					<span class="input-group-addon">@</span>
+	                            <input type="email" class="form-control input-lg" id="id_amigo" name="amigo" placeholder="Para:">
+		      				</div>
+	                    </div>
+		      			<div class="col col-xs-12 col-sm-12 col-md-12">
+		      				<div class="input-group">
+		      					<span class="input-group-addon">@</span>
+	                            <input type="text" class="form-control input-lg" id="id_correo" name="correo" placeholder="De:">
+		      				</div>
+	                    </div>
+			      		<div class="form-group">
+		                    <textarea cols="30" id="id_mensaje" name="mensaje" rows="5" class="form-control input-lg" placeholder="Escriba aquí su mensaje" required></textarea>
+	                    </div>
+	                    {% if detalle %}
+	                    	<input type="hidden" id="id_url" name="url" value="{{url}}" />
+	                    {% else %}
+                        	<input type="hidden" id="id_url" name="url"/>
+	                    {% endif %}
                         <div class="form-group">
-                            <label>Para:</label>
-                            <input type="text" class="form-control" id="id_amigo" name="amigo">
+	        				<button type="button" class="btn btncerrarModal" data-dismiss="modal">Cerrar</button>
+	        				<button type="submit" class="btn btnaceptarModal">Enviar</button>
                         </div>
-                        <div class="form-group">
-                            <label>De:</label>
-                            <input type="text" class="form-control" id="id_correo" name="correo">
-                        </div>
-                        <div class="form-group">
-                            <label>Mensaje:</label>
-                            <textarea cols="40" id="id_mensaje" name="mensaje" rows="10" class="form-control" required="required"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <input type="hidden" class="form-control" id="id_url" name="url"/>
-                        </div>
-		      		</div>
-		      		<div class="modal-footer">
-		        		<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-		        		<button type="submit" class="btn btn-default">Enviar</button>
-		      		</div>
-		      	</form>
+		      		</form>
+	      		</div><!--Fin modal-body -->
 	   		</div><!-- /.modal-content -->
 	  	</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
-
-    </section>
 	{% csrf_token %}
-	<footer>
+	<footer class="no-print">
 		<div id="contenido-foot">
 			<article id="caja1-foot">
 				<div>
@@ -317,7 +324,7 @@
 	<script type="text/javascript" src="{{STATIC_URL}}js/jquery.cycle2.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/holder.js"></script>
-	<script type="text/javascript" src="{{STATIC_URL}}js/webflow.js"></script>
+	
 	<script type="text/javascript" src="{{STATIC_URL}}js/jquery.cycle.all.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/tabs.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/jquery.carouFredSel.js"></script>

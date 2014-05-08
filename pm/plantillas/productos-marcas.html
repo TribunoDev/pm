@@ -27,31 +27,25 @@
 {% endblock %}
 {% block contenido %}
 {% load humanize %}
-		<ol class="breadcrumb">
-			<li><a href="/">Inicio</a></li>
-		  	<li><a href="/marcas/">Marcas</a></li>
-		  	<li class="active">{{marca.Marca}}</li>
-		</ol>
+	<ol class="breadcrumb">
+		<li><a href="/">Inicio</a></li>
+	  	<li><a href="/marcas/">Marcas</a></li>
+	  	<li class="active">{{marca.Marca}}</li>
+	</ol>
 	<div class="row filtro-marcas">
-		<div class="col col-sm-12">
-			<form class="form-inline" role="form" action="">
-				{% csrf_token %}
-				<div class="form-group col col-xs-9 col-sm-6 ">
-					<input type="hidden" name="marca" value="{{marca.Marca}}">
-					<div class="">
-					<select name="subcategoria" id="selectSubcategoria" class="form-control filtroSelect" required>
-						<option value="all">Todos los productos</option>
-				  		{% for subcategoria in subcategorias %}
-			    			<option value="{{subcategoria.Subcategoria}}">{{subcategoria.Subcategoria}}</option>
-				  		{% endfor %}
-			    	</select>
-			    	</div>
+		<form class="form-inline" role="form">
+			{% csrf_token %}
+				<input type="hidden" name="marca" value="{{marca.Marca}}">
+				<div class="form-group">
+				<select name="subcategoria" id="selectSubcategoria" class="form-control filtroSelect" required>
+					<option value="all">Todos los productos</option>
+			  		{% for subcategoria in subcategorias %}
+		    			<option value="{{subcategoria.Subcategoria}}">{{subcategoria.Subcategoria}}</option>
+			  		{% endfor %}
+		    	</select>
 		    	</div>
-		    	<div>
-		    		<button id="btnFiltroSubcat" type="button" class="btn btn-default btn-sm btnFiltro">Mostrar</button>	
-			    </div>
-			</form>
-    	</div>
+	    		<button id="btnFiltroSubcat" type="button" class="btn btn-info btn-sm btnFiltro">Mostrar</button>	
+		</form>
 	</div>
 	<div class="row">
 		<article id="caja-contenido" class="col-xs-12 col-sm-8 col-md-9">
@@ -82,6 +76,10 @@
 				      		</div>
 				    	</div>
 					  </div>
+					 {% empty %}
+					 	<div class="alert alert-warning">
+					 		<h3>No hay productos disponible para esta marca.</h3>
+					 	</div>
 					{% endfor %}
 				</article>
 				{% if totalProductos > 18 %}

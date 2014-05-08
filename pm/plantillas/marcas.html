@@ -17,6 +17,10 @@
 								<img src="{{MEDIA_URL}}{{elemento.Logotipo}}" alt="{{elemento.Marca}}">
 							</a>
 						</div>
+					{% empty %}
+						<div class="alert alert-warning">
+							<h3>No hay marcas disponibles para mostrar.</h3>
+						</div>
 					{% endfor %}
 				</article>
 			</div>

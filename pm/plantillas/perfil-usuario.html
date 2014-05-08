@@ -50,7 +50,7 @@
 			</div>
 		</article>
 		<article id="contenido-lateral" class="hidden-xs col-sm-4 col-md-3 contenido-lateral" >
-			<div class="row">
+			<div class="row producto-filtro-lateral">
 				<div class="row">
 					<h2 class="titulo">Novedades</h2>
 				</div>
@@ -61,7 +61,7 @@
 							<div class="row">
 								<figure id="s2" class="s2 demo">
 	                                {% for img in detalle_img %}
-		                                {% if img.Producto.Codigo == item.Codigo %}
+		                                {% if img.Producto.Producto.Codigo == item.Codigo %}
 		                                    <img src="{{MEDIA_URL}}{{img.Imagen}}" >
 		                                {% endif %}
 		                            {% endfor %}
@@ -85,7 +85,7 @@
 					{% endfor %}
 				</div>
 			</div>
-			<div class="row">
+			<div class="row producto-filtro-lateral">
 				<div class="row">
 					<h2 class="titulo">Ofertas</h2>
 				</div>
@@ -96,7 +96,7 @@
 							<div class="row">
 								<figure id="s2" class="s2 demo">
 	                                {% for img in detalle_img %}
-		                                {% if img.Producto.Codigo == item.Codigo %}
+		                                {% if img.Producto.Producto.Codigo == item.Codigo %}
 		                                    <img src="{{MEDIA_URL}}{{img.Imagen}}" >
 		                                {% endif %}
 		                            {% endfor %}
@@ -120,8 +120,7 @@
 					{% endfor %}
 				</div>
 			</div>
-			<div class="row espacio"></div>
-			<div class="row">
+			<div class="row producto-filtro-lateral">
 				<div class="row">
 					<h2 class="titulo">Destacados</h2>
 				</div>
@@ -132,7 +131,7 @@
 							<div class="row">
 								<figure id="s2" class="s2 demo">
 	                                {% for img in detalle_img %}
-		                                {% if img.Producto.Codigo == item.Codigo %}
+		                                {% if img.Producto.Producto.Codigo == item.Codigo %}
 		                                    <img src="{{MEDIA_URL}}{{img.Imagen}}" >
 		                                {% endif %}
 		                            {% endfor %}

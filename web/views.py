@@ -404,7 +404,7 @@ def novedades(request):
 	diccionario={}
 	novedades=[]
 	mes=datetime.now().month
-	productos = Producto.objects.filter(Fecha__month=mes)[:12]
+	productos = Producto.objects.filter(Fecha__month=mes).order_by('?')[:12]
 	for producto in productos:
 		if Imagen.objects.filter(Producto=producto).count() > 0:
 			allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
@@ -571,6 +571,8 @@ def filtro_subcategoria_marca(request):
 #Vista que retorna el detalle de cada producto
 def detalle_producto(request, id_producto):
 	diccionario={}
+	diccionario['detalle'] = True
+	diccionario['url'] = request.get_full_path()
 	codProd = request.GET.get('id_producto')
 	detalle = get_object_or_404(Producto, Codigo=id_producto)
 	diccionario['cantidad'] = Imagen.objects.filter(Producto=detalle).count()
@@ -996,10 +998,10 @@ def servicio_flete(request):
 def enviar_email(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-	diccionario['novedades'] = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')[:2]
-	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
-	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas']= images_ofertas()
+	diccionario['novedades'] = images_novedades()
+	diccionario['detalle_img']= cargar_imagenes()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
@@ -1095,8 +1097,10 @@ def envio_pago(request):
 		idDir=request.POST['idDireccion']
 		diccionario['direccion']=Direccion_Orden.objects.get(Usuario=request.user, pk=idDir)
 		dire=Direccion_Orden.objects.get(pk=idDir)
-		diccionario['total']=precio+dire.Ciudad.Servicio_Domicilio
+		diccionario['total']= intcomma(precio+dire.Ciudad.Servicio_Domicilio)
 		diccionario['region']=dire
+	else:
+		raise Http404
 				
 	return render_to_response('enviar-pago.html', diccionario, context_instance=RequestContext(request))
 

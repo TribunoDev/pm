@@ -10,10 +10,17 @@ label{
 	float: right;
 }
 
+#caja-contenido .cuerpo-contenido{
+	border: none;
+	padding: 0;
+}
+
 #caja-contenido .producto-elemento h3{
 	height: 60px;
 	margin-bottom: 5px;
 }
+
+
 
 #direccionPago{
 	border-right: 1px solid #dddddd;
@@ -69,6 +76,11 @@ label{
 	
 }
 
+#myModalEmpleos .media-body p, #myModalEmpleos .media-body ul{
+	font-size: 12px;
+	line-height: 14px;
+}
+
 #logos-marcas{
 	padding: 4% 1%;
 }
@@ -96,7 +108,7 @@ label{
 }
 
 #Registro{
-	padding: 5%;
+	padding: 5% 0;
 }
 
 #resultado-productos{
@@ -104,6 +116,32 @@ label{
 	height: 100%;
 	padding: 5px 2%;
 	position: relative;
+}
+
+.btncerrarModal{
+	background-color: #e46764;
+	border-color: #e46764;
+}
+
+.btncerrarModal, .btnaceptarModal{
+	color: white;
+	font-size: Helvetica, Verdana, Sans-Serif;
+	font-weight: bold;
+}
+
+.btncerrarModal:hover{
+	background-color: #F24E4E;
+	color: white;
+}
+
+.btnaceptarModal{
+	background-color: #006bb6;
+	border-color: #006bb6;
+}
+
+.btnaceptarModal:hover{
+	background-color: #107FC9;
+	color:white;
 }
 
 .btnEmailProducto, .btnImprimirProducto{
@@ -134,7 +172,7 @@ label{
 }
 
 .col{
-	padding: 0;
+	padding: 2px;
 }
 
 .contenedor #caja-contenido{
@@ -280,6 +318,19 @@ label{
 	padding: 3px;*/
 }
 
+.mision_vision{
+	padding-right: 10px;
+}
+
+.mision_vision>div{
+	margin-top: 20px;
+}
+
+.mision_vision .media-body p{
+	font-size: 16px;
+	line-height: 18px;
+}
+
 .media-body p, .media-body ul{
 	text-align: justify;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -289,8 +340,7 @@ label{
 }
 
 #panel-opciones{
-	border-radius: 4px;
-	border: 1px solid #dddddd;
+	border-top: 1px solid #dddddd;
 	margin-bottom: 5px;
 	padding: 5px;
 }

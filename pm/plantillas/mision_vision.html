@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 {% block titulo %}Misión y Visión{% endblock %}
+{% block style %}
+	<style>
+		
+	</style>
+{% endblock %}
 {% block contenido %}
 	{% load humanize %}
 		<div class="row">
@@ -7,34 +12,36 @@
 				<div class="contenido-titulo row">
 					<h2 class="titulo">Misión y Visión</h2>
 				</div>
-				<div  class="row">
-					<article class="cuerpo-contenido row">
-						<div class="media">
-							<figure  class="col-xs-3">
-						   		<img class="media-object" src="{{STATIC_URL}}img/mision.png" alt="Misión" class="img-responsive">
-						  	</figure>
-						  	<div class="media-body">
-						   		<h4 class="media-heading">MISIÓN</h4>
-						   		<p class="text-justify">Somos una empresa comprometida a que con nuestro esfuerzo y trabajo en equipo atendemos con alto nivel de excelencia en servicio al cliente, todas las necesidades de oficina y tecnología de nuestro mercado.<strong>Donde quieran, como quieran, a la hora que quieran, a tiempo, todo el tiempo.</strong></p>
-						  	</div>
-						</div>
-					</article>
-				</div>
-				<div class="espacio"></div>
-				<div  class="row">
-					<article class="cuerpo-contenido row">
-						<div class="media">
-							<figure  class="col-xs-3">
-						   		<img class="media-object" src="{{STATIC_URL}}img/vision.png" alt="Misión" class="img-responsive">
-						  	</figure>
-						  	<div class="media-body">
-						   		<h4 class="media-heading">VISIÓN</h4>
-						   		<p><strong>“Paper & More”</strong>, buscara siempre el reconocimiento y preferencia por parte de sus Clientes-Amigos y la clave de este éxito se fundamentara en <strong>nuestros valores</strong>, la forma de actuar siempre y constantemente estará bajo el <strong>código de ética.</strong></p>
-						   		<p>Para el año 2020 no será solo <strong>Paper & More</strong>, será un grupo de unidades estratégicas de negocios que constituirán uno de los grupos mayor diversificados y rentables en la región, contribuyendo así al desarrollo íntegro y sostenible de nuestros Clientes-Amigos en todo el país dándole a la vez renombre a la ciudad de Choluteca.</p>
-						   		<p>Nos mantendremos en la búsqueda permanente de anticipar y responder debidamente a los volátiles cambios que representa el mercado; somos y <strong>nos mantendremos líderes porque sabemos mejor que nadie de atención al cliente.</strong></p>
-						  	</div>
-						</div>
-					</article>
+				<div class="mision_vision">		
+					<div  class="row">
+						<article class="cuerpo-contenido row">
+							<div class="media">
+								<figure  class="col-xs-3">
+							   		<img class="media-object" src="{{STATIC_URL}}img/mision.png" alt="Misión" class="img-responsive">
+							  	</figure>
+							  	<div class="media-body">
+							   		<h4 class="media-heading">MISIÓN</h4>
+							   		<p class="text-justify">Somos una empresa comprometida a que con nuestro esfuerzo y trabajo en equipo atendemos con alto nivel de excelencia en servicio al cliente, todas las necesidades de oficina y tecnología de nuestro mercado.<strong>Donde quieran, como quieran, a la hora que quieran, a tiempo, todo el tiempo.</strong></p>
+							  	</div>
+							</div>
+						</article>
+					</div>
+					<div class="espacio"></div>
+					<div  class="row">
+						<article class="cuerpo-contenido row">
+							<div class="media">
+								<figure  class="col-xs-3">
+							   		<img class="media-object" src="{{STATIC_URL}}img/vision.png" alt="Misión" class="img-responsive">
+							  	</figure>
+							  	<div class="media-body">
+							   		<h4 class="media-heading">VISIÓN</h4>
+							   		<p><strong>“Paper & More”</strong>, buscara siempre el reconocimiento y preferencia por parte de sus Clientes-Amigos y la clave de este éxito se fundamentara en <strong>nuestros valores</strong>, la forma de actuar siempre y constantemente estará bajo el <strong>código de ética.</strong></p>
+							   		<p>Para el año 2020 no será solo <strong>Paper & More</strong>, será un grupo de unidades estratégicas de negocios que constituirán uno de los grupos mayor diversificados y rentables en la región, contribuyendo así al desarrollo íntegro y sostenible de nuestros Clientes-Amigos en todo el país dándole a la vez renombre a la ciudad de Choluteca.</p>
+							   		<p>Nos mantendremos en la búsqueda permanente de anticipar y responder debidamente a los volátiles cambios que representa el mercado; somos y <strong>nos mantendremos líderes porque sabemos mejor que nadie de atención al cliente.</strong></p>
+							  	</div>
+							</div>
+						</article>
+					</div>
 				</div>
 			</article>
 			<article id="contenido-lateral" class="hidden-xs col-sm-4 col-md-3 contenido-lateral" >
@@ -73,6 +80,7 @@
 					{% endfor %}
                 </div>
             </div>
+            <div class="row espacio"></div>
 			<div class="row">
 				<div class="row">
 					<h2 class="titulo">Ofertas</h2>
