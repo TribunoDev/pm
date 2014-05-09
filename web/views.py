@@ -427,12 +427,15 @@ def novedades(request):
 
 #Vista que genera los item de la pestaña productos en el menu principal
 def catalogo_productos(request):
-	diccionario={}
-	diccionario['categorias']=Categoria.objects.order_by('Categoria')
-	diccionario['subcategorias']=SubCategoria.objects.order_by('Subcategoria')
-	producto = Producto.objects.all()
-	diccionario['total']=SubCategoria.objects.annotate(existencia=Count('producto'))
-	return render_to_response('categorias-productos.html', diccionario, context_instance=RequestContext(request))
+	if request.is_ajax():
+		diccionario={}
+		diccionario['categorias']=Categoria.objects.order_by('Categoria')
+		s=SubCategoria.objects.order_by('Subcategoria')
+		producto = Producto.objects.all()
+		diccionario['total']=s.annotate(existencia=Count('producto')).order_by('Subcategoria')
+		return render_to_response('categorias-productos.html', diccionario, context_instance=RequestContext(request))
+	else:
+		raise Http404
 
 
 
