@@ -7,6 +7,14 @@
 	{% block metadata %}{% endblock %}
 	<title>{% block titulo %}{% endblock %}</title>
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap.css">
+	<!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/carousel.css">
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/normalize.css">
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/pm.css">
@@ -32,29 +40,34 @@
 	<!--End of Zopim Live Chat Script-->
 </head>
 <body>
-	<header>
-		<section>
-			<article id="logo">
-				<figure>
-					<img src="{{STATIC_URL}}img/logo-paper.jpg" alt="Paper & More">
-				</figure>
-				<figure>
-					<img src="{{STATIC_URL}}img/logo-megastore.jpg" alt="Paper & More">
-				</figure>
-			</article>
-			<article id="buscar" class="no-print">
-				<label>Llámenos (+504) 2780-5200</label>
-				<form class="form-inline" role="form" method="GET" action="/buscar/">
-				  <div class="form-group">
-				    <input type="text" class="form-control" id="txtBuscar" name="txtBuscar" placeholder="Buscar...">
-				  	<input type="hidden" name="pagina" value="1">
-				  </div>
-				  <button type="submit" id="btnBuscar" class="btn btn-primary">Buscar</button>
-				</form>
-			</article>
-		</section>
-	</header>
-
+<!--Encabezado -->
+	<header class="navbar-wrapper">
+    	<div class="container">
+        	<div class="col col-xs-12 col-sm-6 col-md-6">
+          		<figure class="col col-xs-6 col-sm-6 col-md-6">
+            		<img src="{{STATIC_URL}}img/logo-paper.jpg" class="img-responsive" alt="">
+          		</figure>
+          		<figure id="logo-megastore" class="col col-xs-6 col-sm-6 col-md-6">
+            		<img src="{{STATIC_URL}}img/logo-megastore.jpg" class="img-responsive" alt="">
+          		</figure>
+        	</div>
+        	<div id="busca" class="col col-xs-12 col-sm-4 col-md-4 pull-right text-right no-print">
+          		<form action="">
+          			<label>Llámenos (+504) 2780-5200</label>
+          			<div class="input-group ">
+          				<form class="form-inline" role="form" method="GET" action="/buscar/">
+	            			<input type="text" class="form-control" name="txtBuscar" placeholder="Escriba aquí">
+	            			<span class="input-group-btn">
+	              				<button id="btnBuscar" class="btn btn-info" type="submit">Buscar</button>
+	            			</span>
+				  			<input type="hidden" name="pagina" value="1">
+	            		</form>
+          			</div><!-- /input-group -->
+          		</form>
+        	</div>
+      	</div>
+    </header>
+<!--Fin Encabezado -->
 <!--Menú-->
 	<div id="contenedor-menu">
 		<div class="navbar-wrapper">
@@ -117,42 +130,32 @@
    
     	<!-- Carousel
     ================================================== -->
+   
     <div id="myCarousel" class="carousel slide" data-ride="carousel">
-      <!-- Indicators -->
-    	<ol class="carousel-indicators">
-    		<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-			<li data-target="#myCarousel" data-slide-to="1"></li>
-        	<li data-target="#myCarousel" data-slide-to="2"></li>
-      	</ol>
     	<div class="carousel-inner">
-        	<div class="item active">
+    		{% for item in banner %}
+    			<div class="item">
+    				{% if item.url %}
+    					<a href="{{item.url}}" target="_blank">
+    				{% else %}
+    					<a>
+    				{% endif %}
+	          			<img src="{{MEDIA_URL}}{{item.imagen_pc}}" class="visible-md visible-lg banner-link"  alt="First slide" />
+	              		<img  src="{{MEDIA_URL}}{{item.imagen_tablet}}" class="visible-sm" alt="First slide" />
+	              		<img  src="{{MEDIA_URL}}{{item.imagen_movil}}" class="visible-xs" alt="First slide" />
+	          		</a>
+	        	</div>
+    		{% endfor %}
+        	<!--div class="item active">
           		<img id="baner1" src="{{STATIC_URL}}img/baner1.jpg"  alt="First slide" />
               	<img id="baner_movil1" src="{{STATIC_URL}}img/baner_movil1.jpg" alt="First slide" />
-      			<div class="container">
-        			<div class="carousel-caption">
-          				<h1>Paper and More</h1>
-          				<p></p>
-        			</div>
-      			</div>
         	</div>
         	<div class="item">
           		<img id="baner2" src="{{STATIC_URL}}img/baner2.jpg" alt="Second slide">
-          		<div class="container">
-            		<div class="carousel-caption">
-              			<h1>Paper and More | MegaStore</h1>
-              			<p></p>
-            		</div>
-          		</div>
         	</div>
         	<div class="item">
           		<img id="baner3" src="{{STATIC_URL}}img/baner3.jpg" alt="Third slide">
-          		<div class="container">
-            		<div class="carousel-caption">
-              			<h1>Paper and More Soporte Ténico</h1>
-              			<p></p>
-            		</div>
-          		</div>
-        	</div>
+        	</div-->
       	</div>
       	<a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
     	<a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
@@ -165,7 +168,7 @@
 			<article class="list_carousel row">
 				<div class="row">
 					<div class="hidden-xs col-sm-1">
-						<a id="prev2" class="prev" href="#"><span class="icon icon-flechitaizquierda"></span></a>
+						<a id="prev2" class="prev" href="#"><span class="glyphicon glyphicon-chevron-left"></span></a>
 					</div>
 					<div class="col-sm-11">
 						<ul id="carouMarcas">
@@ -177,7 +180,7 @@
 						</ul>	
 					</div>
 					<div class="hidden-xs col-sm-1">
-						<a id="next2" class="next" href="#"><span class="icon icon-flechitaderecha"></span></a>
+						<a id="next2" class="next" href="#"><span class="glyphicon glyphicon-chevron-right"></span></a>
 					</div>
 				</div>
 			</article>
@@ -335,8 +338,6 @@
 	<div id="fb-root"></div>
 	{% block js %}{% endblock js %}
 	<script type="text/javascript" src="{{STATIC_URL}}js/script.js"></script>
-	<script>
-	</script>
 	
 </body>
 </html>

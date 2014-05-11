@@ -281,10 +281,11 @@ $(document).on("ready", function(){
 	$('#carouMarcas').carouFredSel({
 		items: {
 			width: 200,
+			height: 175,
 		//	height: '30%',	//	optionally resize item-height
 			visible: {
 				min: 2,
-				max: 6
+				max: 8
 			}
 		},
 		prev: '#prev2',

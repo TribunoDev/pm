@@ -6,9 +6,20 @@ label{
 	margin: 0;
 }
 
+header label{color: white;}
+
 #btnPagar{
 	float: right;
 }
+
+#btnBuscar{
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+#busca{padding-top: 1.5%;}
+
+#busca input{height: 34px;}
 
 #caja-contenido .cuerpo-contenido{
 	border: none;
@@ -88,6 +99,10 @@ label{
 #logos-marcas div{
 	margin-bottom: 4% ;
 }
+
+#logo-megastore{
+    margin-top: 4.16%;
+  }
 
 #panel-direccion{
 	padding: 0px;
@@ -172,7 +187,7 @@ label{
 }
 
 .col{
-	padding: 2px;
+	padding: 0;
 }
 
 .contenedor #caja-contenido{
@@ -452,6 +467,10 @@ label{
 	.btn{
 		font-size: 14px;
 		padding: 3px 8px;
+	}
+
+	#busca .btn{
+		padding: 6px 12px;
 	}
 
 	.caption-precio{

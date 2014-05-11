@@ -1,15 +1,26 @@
 {% extends 'base.html' %}
 
 {% block titulo %}Paper & More - Inicio{% endblock %}
+{% block style %}
+  <style>
+    .carousel-inner>.item>a>img{
+      height: 500px;
+    }
+  </style>
+{% endblock style %}
 {% block js %}
   
   <script>
     $(document).on('ready', function(){
+      $('.carousel-inner div:first-child').addClass('active');
+      $('#myCarousel').css('display', 'block');
+
       Novedades();
 
       $("#novedades").on("click", function(){
         Novedades();
       });
+
 
       function Novedades(){
         $.get("/productos-en-novedades/", function(data){

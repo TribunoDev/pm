@@ -112,6 +112,7 @@ def producto_imagen(request):
 def inicio(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
+	diccionario['banner']=Jumbotron.objects.all()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
@@ -294,16 +295,30 @@ def filtro_marca_subcategoria(request):
 	diccionario={}
 	pSM=[]
 	if request.is_ajax() and request.method == 'POST':
-
-		if request.POST['subcategoria'] == 'all':
-			diccionario['totalProductos'] = Producto.objects.filter(Descripcion__icontains=" "+request.POST['marca']+" ").count()
-
-			productos = Producto.objects.filter(Descripcion__icontains=" "+request.POST['marca']+" ")
-
-		else:
-			diccionario['totalProductos'] = Producto.objects.filter(Descripcion__icontains=" "+request.POST['marca']+" ", Subcategoria=SubCategoria.objects.get(Subcategoria=request.POST['subcategoria'])).count()
-			productos = Producto.objects.filter(Descripcion__icontains=" "+request.POST['marca']+" ", Subcategoria=SubCategoria.objects.get(Subcategoria=request.POST['subcategoria']))
-
+		s = request.POST['subcategoria']
+		m = request.POST['marca']
+		e = request.POST['existencia']
+		marca = " "+m+" "
+		
+		productos = Producto.objects.filter(Descripcion__icontains=marca)
+		if s == 'all' and e == 0:
+			productos = Producto.objects.filter(Descripcion__icontains=marca)
+		elif s == 'all' and e == '1':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Existencia__gt=0)
+		elif s == 'all' and e == '2':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Existencia__lte=0)
+		
+		sub = SubCategoria.objects.filter(Subcategoria=s)
+		if sub.count() > 0:
+			sub = SubCategoria.objects.get(Subcategoria=s)
+			if s != 'all' and e == '0':
+				productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub)
+			elif s != 'all' and e == '1':
+				productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__gt=0)
+			elif s != 'all' and e == '2':
+				productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__lte=0)
+		
+		diccionario['totalProductos'] = productos.count()
 		for producto in productos:
 			if Imagen.objects.filter(Producto=producto).count() > 0:
 				allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
@@ -516,14 +531,34 @@ def filtro_subcategoria_marca(request):
 	diccionario={}
 	pMS=[]
 	if request.is_ajax() and request.method == 'POST':
-		if request.POST['marca'] == 'all':
-			diccionario['totalProductos']= Producto.objects.filter(Subcategoria=SubCategoria.objects.get(Subcategoria=request.POST['subcategoria'])).count()
-			productos = Producto.objects.filter(Subcategoria=SubCategoria.objects.get(Subcategoria=request.POST['subcategoria']))
-		else:
-			marca = Marca.objects.get(id=request.POST['marca'])
-			marca = " "+marca.Marca+" "
-			diccionario['totalProductos'] = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=SubCategoria.objects.get(Subcategoria=request.POST['subcategoria'])).count()
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=SubCategoria.objects.get(Subcategoria=request.POST['subcategoria']))
+		m = request.POST['marca']
+		e = request.POST['existencia']
+		s = request.POST['subcategoria']
+
+		sub = SubCategoria.objects.get(Subcategoria=s)
+		marca = Marca.objects.get(id=m)
+		marca = " "+marca.Marca+" "
+		productos = Producto.objects.filter(Subcategoria=sub).order_by('Descripcion')
+		if m == 'all' and e == '0':
+			productos = Producto.objects.filter(Subcategoria=sub).order_by('Descripcion')
+
+		elif m == 'all' and e == '1':
+			productos = Producto.objects.filter(Subcategoria=sub, Existencia__gt=0).order_by('Descripcion')
+		
+		elif m == 'all' and e == '2':
+			productos = Producto.objects.filter(Subcategoria=sub, Existencia__lte=0).order_by('Descripcion')
+		
+		elif not m == 'all' and e == '0':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub).order_by('Descripcion')
+
+		elif m != 'all' and e == '1':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__gt=0).order_by('Descripcion')
+		
+		elif m != 'all' and e == '2':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__lte=0).order_by('Descripcion')
+
+		diccionario['totalProductos']=productos.count()
+
 		for producto in productos:
 			if Imagen.objects.filter(Producto=producto).count() > 0:
 				allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
@@ -1554,3 +1589,11 @@ def politica(request):
 		diccionario['centinela']=True
 	return render_to_response('politica.html', diccionario,context_instance=RequestContext(request))
 
+def encuesta_ventas(request):
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas']= images_ofertas()
+	diccionario['novedades'] = images_novedades()
+	diccionario['detalle_img']= cargar_imagenes()
+	return render_to_response('encuesta-ventas.html', diccionario,context_instance=RequestContext(request))

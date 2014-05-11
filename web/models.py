@@ -182,3 +182,41 @@ class FAQ(models.Model):
 	respuesta=models.TextField()
 	def __unicode__(self):
 		return self.pregunta
+
+class Jumbotron(models.Model):
+	nombre_banner = models.CharField(max_length=100, verbose_name=u'Nombre Imagen')
+	imagen_pc = models.ImageField(upload_to='jumbotron/pc', verbose_name=u'Imagen PC', blank=True, null=True)
+	imagen_tablet = models.ImageField(upload_to='jumbotron/tablet', verbose_name=u'Imagen Tablet', blank=True, null=True)
+	imagen_movil = models.ImageField(upload_to='jumbotron/movil', verbose_name=u'Imagen movil', blank=True, null=True)
+	url = models.URLField(max_length=1000, verbose_name=u'URL', blank=True, null=True)
+	class Meta:
+		verbose_name=u'Jumbotron'
+		verbose_name_plural=u'Jumbotron'
+	def __unicode__(self):
+		return self.nombre_banner
+
+class EncuestaVentas(models.Model):
+	nombre = models.CharField(max_length=100, verbose_name=u'Nombre', blank=True, null=True)
+	telefono = models.CharField(max_length=10, verbose_name=u'Teléfono', blank=True, null=True)
+	email = models.EmailField(max_length=50, verbose_name=u'Correo Electrónico', blank=True, null=True)
+	comentario = models.TextField(verbose_name=u'Comentario', blank=True, null=True)
+	fecha = models.DateField(auto_now_add=True)
+	p1 = models.IntegerField(verbose_name=u'Pregunta 1')
+	p2 = models.IntegerField(verbose_name=u'Pregunta 2')
+	p3 = models.IntegerField(verbose_name=u'Pregunta 3')
+	p4 = models.IntegerField(verbose_name=u'Pregunta 4')
+	p5 = models.IntegerField(verbose_name=u'Pregunta 5')
+	p6 = models.IntegerField(verbose_name=u'Pregunta 6')
+	p7 = models.IntegerField(verbose_name=u'Pregunta 7')
+	p8 = models.IntegerField(verbose_name=u'Pregunta 8')
+	p9 = models.IntegerField(verbose_name=u'Pregunta 9')
+	p10 = models.IntegerField(verbose_name=u'Pregunta 10')
+	p11 = models.IntegerField(verbose_name=u'Pregunta 11')
+	p12 = models.IntegerField(verbose_name=u'Pregunta 12')
+
+	def __unicode__(self):
+		return self.fecha
+
+
+
+

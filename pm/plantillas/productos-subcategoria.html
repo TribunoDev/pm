@@ -15,6 +15,7 @@
 				data: 	{
 					'subcategoria': $('input[name="subcategoria"]').val(),
 					'marca': $('select[name="marca"]').val(),
+					'existencia': $('select[name="existencia"]').val(),
 					'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
 				},
 				success: function(data){
@@ -31,13 +32,20 @@
 			<form class="form-inline" role="form">
 				<input type="hidden" name="subcategoria" value="{{datos.Subcategoria}}">
 			  	<div class="form-group">
-			    <select name="marca" id="selectMarcas" class="filtroSelect form-control" required>
-					<option value="all">TODAS LAS MARCAS...</option>
-			  		{% for marca in listaMarcas %}
-		    			<option value="{{marca.pk}}">{{marca.Marca}}</option>
-			  		{% endfor %}
-		    	</select>
-			  </div>
+				    <select name="marca" id="selectMarcas" class="filtroSelect form-control" required>
+						<option value="all">TODAS LAS MARCAS...</option>
+				  		{% for marca in listaMarcas %}
+			    			<option value="{{marca.pk}}">{{marca.Marca}}</option>
+				  		{% endfor %}
+			    	</select>
+		    	</div>
+		    	<div class="form-group">
+			    	<select name="existencia" id="selectExistencia" class="filtroSelect form-control" required>
+						<option value="0">TODOS...</option>
+			    		<option value="1">CON EXISTENCIAS</option>
+			    		<option value="2">SIN EXISTENCIAS</option>
+			    	</select>
+				  </div>
 			  <button id="btnFiltroMarca" type="button" class="btn btn-info btn-sm btnFiltro">Mostrar</button>
 			</form>
 		</div>
