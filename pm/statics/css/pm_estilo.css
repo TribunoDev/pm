@@ -427,6 +427,10 @@ header label{color: white;}
 }
 
 @media screen and (max-width: 1024px){
+	header .container{
+		padding-right: 0;
+		padding-left: 0;
+	}
 	.img_oferta{
 		width: 40%;
 	}
@@ -443,6 +447,12 @@ header label{color: white;}
 		font-size: 14px;
 	}
 
+}
+
+@media screen and (max-width: 768px){
+	#logos{
+		margin-top: 1.5%;
+	}
 }
 
 @media screen and (max-width: 480px){

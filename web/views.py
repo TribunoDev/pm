@@ -535,26 +535,28 @@ def filtro_subcategoria_marca(request):
 		e = request.POST['existencia']
 		s = request.POST['subcategoria']
 
+		if Marca.objects.filter(id=m).count() > 0:
+			marca = Marca.objects.get(id=m)
+			marca = " "+marca.Marca+" "
+
 		sub = SubCategoria.objects.get(Subcategoria=s)
-		marca = Marca.objects.get(id=m)
-		marca = " "+marca.Marca+" "
 		productos = Producto.objects.filter(Subcategoria=sub).order_by('Descripcion')
-		if m == 'all' and e == '0':
+		if m == '0' and e == '0':
 			productos = Producto.objects.filter(Subcategoria=sub).order_by('Descripcion')
 
-		elif m == 'all' and e == '1':
+		elif m == '0' and e == '1':
 			productos = Producto.objects.filter(Subcategoria=sub, Existencia__gt=0).order_by('Descripcion')
 		
-		elif m == 'all' and e == '2':
+		elif m == '0' and e == '2':
 			productos = Producto.objects.filter(Subcategoria=sub, Existencia__lte=0).order_by('Descripcion')
 		
-		elif not m == 'all' and e == '0':
+		elif m != '0' and e == '0':
 			productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub).order_by('Descripcion')
 
-		elif m != 'all' and e == '1':
+		elif m != '0' and e == '1':
 			productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__gt=0).order_by('Descripcion')
 		
-		elif m != 'all' and e == '2':
+		elif m != '0' and e == '2':
 			productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__lte=0).order_by('Descripcion')
 
 		diccionario['totalProductos']=productos.count()
@@ -951,6 +953,17 @@ def productos_ofertas(request):
 
 	diccionario['page_number']=page_number
 
+	listaMarcas = []
+	if Marca.objects.all().count() > 0:
+		for marca in Marca.objects.all():
+			cP = Producto.objects.filter(Oferta__exact=True, Descripcion__icontains=" "+marca.Marca+" ").count()
+			if cP > 0:
+				listaMarcas.append(marca)
+	diccionario['listaMarcas']=listaMarcas
+
+	diccionario['existencia1']=Producto.objects.filter(Oferta__exact=True, Existencia__gt=0).count()
+	diccionario['existencia2']=Producto.objects.filter(Oferta__exact=True, Existencia__lte=0).count()
+
 	diccionario['destacados'] = images_destacados()
 	diccionario['novedades'] = images_novedades()
 	diccionario['detalle_img'] = Detalle_Imagen.objects.all()
@@ -967,9 +980,9 @@ def productos_destacados(request):
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['totalProductos'] = Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).count()
+	diccionario['totalProductos'] = Producto.objects.filter(Destacado__exact=True).count()
 
-	for producto in Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?'):
+	for producto in Producto.objects.filter(Destacado__exact=True).order_by('Descripcion'):
 		if Imagen.objects.filter(Producto=producto).count() > 0:
 			allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
 			archImg=allImages[0]
@@ -1013,6 +1026,16 @@ def productos_destacados(request):
 
 	diccionario['page_number']=page_number
 
+	listaMarcas = []
+	if Marca.objects.all().count() > 0:
+		for marca in Marca.objects.all():
+			cP = Producto.objects.filter(Destacado__exact=True, Descripcion__icontains=" "+marca.Marca+" ").count()
+			if cP > 0:
+				listaMarcas.append(marca)
+	diccionario['listaMarcas']=listaMarcas
+
+	diccionario['existencia1']=Producto.objects.filter(Destacado__exact=True, Existencia__gt=0).count()
+	diccionario['existencia2']=Producto.objects.filter(Destacado__exact=True, Existencia__lte=0).count()
 
 	diccionario['ofertas'] = images_ofertas()
 	diccionario['novedades'] = images_novedades()
@@ -1714,5 +1737,313 @@ def guardarEncuestaSoporte(request):
 		else:
 			diccionario['error'] = True
 		return render_to_response('resultado-encuesta.html', diccionario, context_instance=RequestContext(request))
+	else:
+		raise Http404
+
+def filtro_oferta(request):
+	diccionario={}
+	pOM=[]
+	if request.is_ajax() and request.method == 'POST':
+		m = request.POST['marca']
+		e = request.POST['existencia']
+
+		if Marca.objects.filter(id=m).count() > 0:
+			marca = Marca.objects.get(id=m)
+			marca = " "+marca.Marca+" "
+
+		productos = Producto.objects.filter(Oferta__exact=True).order_by('Descripcion')
+		if m == '0' and e == '0':
+			productos = Producto.objects.filter(Oferta__exact=True).order_by('Descripcion')
+
+		elif m == '0' and e == '1':
+			productos = Producto.objects.filter(Oferta__exact=True, Existencia__gt=0).order_by('Descripcion')
+		
+		elif m == '0' and e == '2':
+			productos = Producto.objects.filter(Oferta__exact=True, Existencia__lte=0).order_by('Descripcion')
+
+		elif m != '0' and e == '0':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Oferta__exact=True).order_by('Descripcion')
+
+		elif m != '0' and e == '1':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Oferta__exact=True, Existencia__gt=0).order_by('Descripcion')
+		
+		elif m != '0' and e == '2':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Oferta__exact=True, Existencia__lte=0).order_by('Descripcion')
+
+		diccionario['totalProductos']=productos.count()
+
+		for producto in productos:
+			if Imagen.objects.filter(Producto=producto).count() > 0:
+				allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
+				archImg = allImages[0]
+				archImg = archImg.Imagen
+			else:
+				archImg = "img_detalle/sin_imagen.png"
+			infoProducto = {
+				'Codigo': producto.Codigo,
+				'Descripcion': producto.Descripcion,
+				'Precio': intcomma(producto.Precio),
+				'Oferta': producto.Oferta,
+				'Imagen': archImg
+				}
+			pOM.append(infoProducto)
+
+		paginador = Paginator(pOM, 18)
+		try:
+			pagina = int(request.GET.get('page','1'))
+			productos = paginador.page(pagina)
+		except PageNotAnInteger:
+			pagina = 1
+		except EmptyPage:
+			productos = paginador.page(paginador.num_pages)
+
+		startPage = max(pagina - 2, 1)
+		if startPage <= 3:
+			startPage = 1
+
+		endPage = pagina + 2 + 1
+		if endPage >= paginador.num_pages - 1:
+			endPage = paginador.num_pages + 1
+
+		page_number = []
+
+		for n in range(startPage, endPage):
+			if n > 0 and n <= paginador.num_pages:
+				page_number.append(n)
+
+		diccionario['page_number']=page_number
+
+		diccionario['productos']=productos
+		return render_to_response('filtro-subcategoria-marca.html', diccionario, context_instance=RequestContext(request))
+	else:
+		raise Http404
+
+def productos_novedades(request):
+	diccionario={}
+	novedades = []
+	centinela = False
+	usuario = ""
+	fecha1 = date.today() - timedelta(days=60)
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+	diccionario['marcas']=Marca.objects.all()
+	pNovedades = Producto.objects.filter(Fecha__gte=fecha1).order_by('Descripcion')
+	#pNovedades = Producto.objects.filter(Fecha__month__range=(fecha1, datetime.now().month)).order_by('Descripcion')
+	diccionario['totalProductos'] = pNovedades.count()
+	for producto in pNovedades:
+		if Imagen.objects.filter(Producto=producto).count() > 0:
+			allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
+			archImg=allImages[0]
+			archImg=archImg.Imagen
+		else:
+			archImg = "img_detalle/sin_imagen.png"
+
+		infoProducto = {
+		'Codigo': producto.Codigo,
+		'Descripcion': producto.Descripcion,
+		'Precio': intcomma(producto.Precio),
+		'Destacado': producto.Destacado,
+		'Oferta':producto.Oferta,
+		'Imagen': archImg
+		}
+		novedades.append(infoProducto)
+
+	paginador = Paginator(novedades, 18)
+	try:
+		pagina = int(request.GET.get('page','1'))
+		novedades = paginador.page(pagina)
+	except PageNotAnInteger:
+		pagina = 1
+	except EmptyPage:
+		novedades = paginador.page(paginador.num_pages)
+
+	startPage = max(pagina - 2, 1)
+	if startPage <= 3:
+		startPage = 1
+
+	endPage = pagina + 2 + 1
+	if endPage >= paginador.num_pages - 1:
+		endPage = paginador.num_pages + 1
+
+	page_number = []
+
+	for n in range(startPage, endPage):
+		if n > 0 and n <= paginador.num_pages:
+			page_number.append(n)
+
+	diccionario['page_number']=page_number
+
+	listaMarcas = []
+	if Marca.objects.all().count() > 0:
+		for marca in Marca.objects.all():
+			cP = Producto.objects.filter(Fecha__gte=fecha1, Descripcion__icontains=" "+marca.Marca+" ").count()
+			if cP > 0:
+				listaMarcas.append(marca)
+	diccionario['listaMarcas']=listaMarcas
+
+	diccionario['existencia1']=Producto.objects.filter(Fecha__gte=fecha1, Existencia__gt=0).count()
+	diccionario['existencia2']=Producto.objects.filter(Fecha__gte=fecha1, Existencia__lte=0).count()
+
+	diccionario['destacados'] = images_destacados()
+	diccionario['novedades'] = images_novedades()
+	diccionario['detalle_img'] = Detalle_Imagen.objects.all()
+	diccionario['productos'] = novedades
+	return render_to_response('novedades.html', diccionario, context_instance=RequestContext(request))
+
+def filtro_novedades(request):
+	diccionario={}
+	pNM=[]
+	fecha1 = date.today() - timedelta(days=60)
+	if request.is_ajax() and request.method == 'POST':
+		m = request.POST['marca']
+		e = request.POST['existencia']
+
+		if Marca.objects.filter(id=m).count() > 0:
+			marca = Marca.objects.get(id=m)
+			marca = " "+marca.Marca+" "
+
+		productos = Producto.objects.filter(Fecha__gte=fecha1).order_by('Descripcion')
+		if m == '0' and e == '0':
+			productos = Producto.objects.filter(Fecha__gte=fecha1).order_by('Descripcion')
+
+		elif m == '0' and e == '1':
+			productos = Producto.objects.filter(Fecha__gte=fecha1, Existencia__gt=0).order_by('Descripcion')
+		
+		elif m == '0' and e == '2':
+			productos = Producto.objects.filter(Fecha__gte=fecha1, Existencia__lte=0).order_by('Descripcion')
+
+		elif m != '0' and e == '0':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Fecha__gte=fecha1).order_by('Descripcion')
+
+		elif m != '0' and e == '1':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Fecha__gte=fecha1, Existencia__gt=0).order_by('Descripcion')
+		
+		elif m != '0' and e == '2':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Fecha__gte=fecha1, Existencia__lte=0).order_by('Descripcion')
+
+		diccionario['totalProductos']=productos.count()
+
+		for producto in productos:
+			if Imagen.objects.filter(Producto=producto).count() > 0:
+				allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
+				archImg = allImages[0]
+				archImg = archImg.Imagen
+			else:
+				archImg = "img_detalle/sin_imagen.png"
+			infoProducto = {
+				'Codigo': producto.Codigo,
+				'Descripcion': producto.Descripcion,
+				'Precio': intcomma(producto.Precio),
+				'Oferta': producto.Oferta,
+				'Imagen': archImg
+				}
+			pNM.append(infoProducto)
+
+		paginador = Paginator(pNM, 18)
+		try:
+			pagina = int(request.GET.get('page','1'))
+			productos = paginador.page(pagina)
+		except PageNotAnInteger:
+			pagina = 1
+		except EmptyPage:
+			productos = paginador.page(paginador.num_pages)
+
+		startPage = max(pagina - 2, 1)
+		if startPage <= 3:
+			startPage = 1
+
+		endPage = pagina + 2 + 1
+		if endPage >= paginador.num_pages - 1:
+			endPage = paginador.num_pages + 1
+
+		page_number = []
+
+		for n in range(startPage, endPage):
+			if n > 0 and n <= paginador.num_pages:
+				page_number.append(n)
+
+		diccionario['page_number']=page_number
+
+		diccionario['productos']=productos
+		return render_to_response('filtro-subcategoria-marca.html', diccionario, context_instance=RequestContext(request))
+	else:
+		raise Http404
+
+def filtro_destacados(request):
+	diccionario={}
+	pDM=[]
+	if request.is_ajax() and request.method == 'POST':
+		m = request.POST['marca']
+		e = request.POST['existencia']
+
+		if Marca.objects.filter(id=m).count() > 0:
+			marca = Marca.objects.get(id=m)
+			marca = " "+marca.Marca+" "
+
+		productos = Producto.objects.filter(Destacado__exact=True).order_by('Descripcion')
+		if m == '0' and e == '0':
+			productos = Producto.objects.filter(Destacado__exact=True).order_by('Descripcion')
+
+		elif m == '0' and e == '1':
+			productos = Producto.objects.filter(Destacado__exact=True, Existencia__gt=0).order_by('Descripcion')
+		
+		elif m == '0' and e == '2':
+			productos = Producto.objects.filter(Destacado__exact=True, Existencia__lte=0).order_by('Descripcion')
+
+		elif m != '0' and e == '0':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Destacado__exact=True).order_by('Descripcion')
+
+		elif m != '0' and e == '1':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Destacado__exact=True, Existencia__gt=0).order_by('Descripcion')
+		
+		elif m != '0' and e == '2':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Destacado__exact=True, Existencia__lte=0).order_by('Descripcion')
+
+		diccionario['totalProductos']=productos.count()
+
+		for producto in productos:
+			if Imagen.objects.filter(Producto=producto).count() > 0:
+				allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
+				archImg = allImages[0]
+				archImg = archImg.Imagen
+			else:
+				archImg = "img_detalle/sin_imagen.png"
+			infoProducto = {
+				'Codigo': producto.Codigo,
+				'Descripcion': producto.Descripcion,
+				'Precio': intcomma(producto.Precio),
+				'Oferta': producto.Oferta,
+				'Imagen': archImg
+				}
+			pDM.append(infoProducto)
+
+		paginador = Paginator(pDM, 18)
+		try:
+			pagina = int(request.GET.get('page','1'))
+			productos = paginador.page(pagina)
+		except PageNotAnInteger:
+			pagina = 1
+		except EmptyPage:
+			productos = paginador.page(paginador.num_pages)
+
+		startPage = max(pagina - 2, 1)
+		if startPage <= 3:
+			startPage = 1
+
+		endPage = pagina + 2 + 1
+		if endPage >= paginador.num_pages - 1:
+			endPage = paginador.num_pages + 1
+
+		page_number = []
+
+		for n in range(startPage, endPage):
+			if n > 0 and n <= paginador.num_pages:
+				page_number.append(n)
+
+		diccionario['page_number']=page_number
+
+		diccionario['productos']=productos
+		return render_to_response('filtro-subcategoria-marca.html', diccionario, context_instance=RequestContext(request))
 	else:
 		raise Http404

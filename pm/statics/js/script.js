@@ -284,7 +284,7 @@ $(document).on("ready", function(){
 			height: 175,
 		//	height: '30%',	//	optionally resize item-height
 			visible: {
-				min: 2,
+				min: 1,
 				max: 8
 			}
 		},

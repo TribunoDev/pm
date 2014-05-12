@@ -33,7 +33,7 @@
 				<input type="hidden" name="subcategoria" value="{{datos.Subcategoria}}">
 			  	<div class="form-group">
 				    <select name="marca" id="selectMarcas" class="filtroSelect form-control" required>
-						<option value="all">TODAS LAS MARCAS...</option>
+						<option value="0">TODAS LAS MARCAS...</option>
 				  		{% for marca in listaMarcas %}
 			    			<option value="{{marca.pk}}">{{marca.Marca}}</option>
 				  		{% endfor %}

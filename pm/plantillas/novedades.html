@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
-{% block titulo %}Ofertas{% endblock %}
+{% block titulo %}Paper &amp; More - Novedades{% endblock %}
 {% block js %}
 	<script>
 		$('#btnFiltroOferta').on('click', function(){
 			$.ajax({
 				type: 	'POST',
-				url: 	'/filtro-oferta/',
+				url: 	'/filtro-novedades/',
 				data: 	{
 					'marca': $('select[name="marca"]').val(),
 					'existencia': $('.existencia').val(),

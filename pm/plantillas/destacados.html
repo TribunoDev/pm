@@ -1,13 +1,56 @@
 {% extends 'base.html' %}
 {% block titulo %}Ofertas{% endblock %}
+{% block js %}
+	<script>
+		$('#btnFiltroDestacados').on('click', function(){
+			$.ajax({
+				type: 	'POST',
+				url: 	'/filtro-destacados/',
+				data: 	{
+					'marca': $('select[name="marca"]').val(),
+					'existencia': $('.existencia').val(),
+					'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+				},
+				success: function(data){
+					$('#resultadoFiltro').html(data);
+				},
+				dataType: 'html'
+			});
+		});
+	</script>
+{% endblock %}
 {% block contenido %}
-	{% load humanize %}
+		<div class="row filtro-marcas">
+			<form class="form-inline" role="form">
+			  	<div class="form-group">
+				    <select name="marca" id="selectMarcas" class="filtroSelect form-control" required>
+						<option value="0">TODAS LAS MARCAS...</option>
+				  		{% for marca in listaMarcas %}
+			    			<option value="{{marca.pk}}">{{marca.Marca}}</option>
+				  		{% endfor %}
+			    	</select>
+		    	</div>
+
+				{% if existencia1 > 0  and existencia2 > 0 %}
+		    	<div class="form-group">
+			    	<select name="existencia" id="selectExistencia" class="filtroSelect existencia form-control" required>
+						<option value="0">TODOS...</option>
+			    		<option value="1">CON EXISTENCIAS</option>
+			    		<option value="2">SIN EXISTENCIAS</option>
+			    	</select>
+				  </div>
+				 {% else %}
+				 	<input type="hidden" class="existencia" name="existencia" value="0">
+			   	{% endif %}
+			  <button id="btnFiltroDestacados" type="button" class="btn btn-info btn-sm btnFiltro">Mostrar</button>
+			</form>
+		</div>
 		<div class="row">
 			<article id="caja-contenido" class="col-xs-12 col-sm-8 col-md-9">
 				<div class="contenido-titulo row">
 					<h2 class="titulo">Productos Destacados</h2>
 				</div>
-				<div  class="row">
+				<div id="resultadoFiltro"  class="row">
 					<article class="cuerpo-contenido row">
 						{% for elemento in productos %}
 					   	<div class="producto-elemento col-xs-6 col-sm-6 col-md-4">

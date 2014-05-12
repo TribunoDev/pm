@@ -984,8 +984,8 @@ html, body{
 	}
 
 	.contenedor{
-		margin-left: 10%;
-		margin-right: 10%;
+		margin-left: 0.01%;
+		margin-right: 0.01%;
 		max-width: none;
 	}
 }
