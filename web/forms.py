@@ -21,6 +21,14 @@ class Detalle_PerfilForm(ModelForm):
     class Meta:
         model = Detalle_Perfil
 
+class EncuestaVentasForm(ModelForm):
+	class Meta:
+		model = EncuestaVentas
+
+class EncuestaSoporteForm(ModelForm):
+	class Meta:
+		model = EncuestaSoporte
+
 class ContactoForm(forms.Form):
 	amigo=forms.EmailField(label='Para:')
 	correo=forms.EmailField(label='De:')

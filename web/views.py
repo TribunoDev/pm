@@ -1589,11 +1589,130 @@ def politica(request):
 		diccionario['centinela']=True
 	return render_to_response('politica.html', diccionario,context_instance=RequestContext(request))
 
-def encuesta_ventas(request):
+def encuestas(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
 	diccionario['destacados']= images_destacados()
 	diccionario['ofertas']= images_ofertas()
 	diccionario['novedades'] = images_novedades()
 	diccionario['detalle_img']= cargar_imagenes()
-	return render_to_response('encuesta-ventas.html', diccionario,context_instance=RequestContext(request))
+	return render_to_response('encuestas.html', diccionario,context_instance=RequestContext(request))
+
+def guardarEncuestaVentas(request):
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas']= images_ofertas()
+	diccionario['novedades'] = images_novedades()
+	diccionario['detalle_img']= cargar_imagenes()
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+	if request.method == 'POST':
+		frmEncuesta = EncuestaVentasForm(request.POST)
+		if frmEncuesta.is_valid():
+			nombre = frmEncuesta.cleaned_data["nombre"]
+			telefono = frmEncuesta.cleaned_data["telefono"]
+			email = frmEncuesta.cleaned_data["email"]
+			comentario = frmEncuesta.cleaned_data["comentario"]
+			p1 = frmEncuesta.cleaned_data["p1"]
+			p2 = frmEncuesta.cleaned_data["p2"]
+			p3 = frmEncuesta.cleaned_data["p3"]
+			p4 = frmEncuesta.cleaned_data["p4"]
+			p5 = frmEncuesta.cleaned_data["p5"]
+			p6 = frmEncuesta.cleaned_data["p6"]
+			p7 = frmEncuesta.cleaned_data["p7"]
+			p8 = frmEncuesta.cleaned_data["p8"]
+			p9 = frmEncuesta.cleaned_data["p9"]
+			p10 = frmEncuesta.cleaned_data["p10"]
+			p11 = frmEncuesta.cleaned_data["p11"]
+			p12 = frmEncuesta.cleaned_data["p12"]
+			frm = EncuestaVentas(
+					nombre=nombre,
+					telefono=telefono,
+					email=email,
+					comentario=comentario,
+					p1=p1,
+					p2=p2,
+					p3=p3,
+					p4=p4,
+					p5=p5,
+					p6=p6,
+					p7=p7,
+					p8=p8,
+					p9=p9,
+					p10=p10,
+					p11=p11,
+					p12=p12,
+				)
+			frm.save()
+			diccionario['aceptado']=True
+		else:
+			diccionario['error'] = True
+		return render_to_response('resultado-encuesta.html', diccionario, context_instance=RequestContext(request))
+	else:
+		raise Http404
+
+def guardarEncuestaSoporte(request):
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas']= images_ofertas()
+	diccionario['novedades'] = images_novedades()
+	diccionario['detalle_img']= cargar_imagenes()
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+
+	if request.method == 'POST':
+		frmEncuesta = EncuestaSoporteForm(request.POST)
+		if frmEncuesta.is_valid():
+			nombre = frmEncuesta.cleaned_data["nombre"]
+			telefono = frmEncuesta.cleaned_data["telefono"]
+			email = frmEncuesta.cleaned_data["email"]
+			comentario = frmEncuesta.cleaned_data["comentario"]
+			atendio = frmEncuesta.cleaned_data["atendio"]
+			tiempo = frmEncuesta.cleaned_data["tiempoReparacion"]
+			p1 = frmEncuesta.cleaned_data["p1"]
+			p2 = frmEncuesta.cleaned_data["p2"]
+			p2_1 = frmEncuesta.cleaned_data["p2_1"]
+			p3 = frmEncuesta.cleaned_data["p3"]
+			p4 = frmEncuesta.cleaned_data["p4"]
+			p5 = frmEncuesta.cleaned_data["p5"]
+			p5_1 = frmEncuesta.cleaned_data["p5_1"]
+			p6 = frmEncuesta.cleaned_data["p6"]
+			p7 = frmEncuesta.cleaned_data["p7"]
+			p8 = frmEncuesta.cleaned_data["p8"]
+			p9 = frmEncuesta.cleaned_data["p9"]
+			p10 = frmEncuesta.cleaned_data["p10"]
+			p11 = frmEncuesta.cleaned_data["p11"]
+			p12 = frmEncuesta.cleaned_data["p12"]
+			frm = EncuestaSoporte(
+					nombre=nombre,
+					telefono=telefono,
+					email=email,
+					comentario=comentario,
+					atendio=atendio,
+					tiempoReparacion=tiempo,
+					p1=p1,
+					p2=p2,
+					p2_1=p2_1,
+					p3=p3,
+					p4=p4,
+					p5=p5,
+					p5_1=p5_1,
+					p6=p6,
+					p7=p7,
+					p8=p8,
+					p9=p9,
+					p10=p10,
+					p11=p11,
+					p12=p12,
+				)
+			frm.save()
+			diccionario['aceptado']=True
+		else:
+			diccionario['error'] = True
+		return render_to_response('resultado-encuesta.html', diccionario, context_instance=RequestContext(request))
+	else:
+		raise Http404

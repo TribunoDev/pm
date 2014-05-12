@@ -1,0 +1,894 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Paper &amp; More - Encuestas{% endblock %}
+{% block style %}
+  <style>
+  	#encuestaSoporte{
+  		display: none;
+  	}
+	.cuerpo-encuesta{
+		background-color: rgba(240,240,216, 0.3);
+		border-radius: 3px;
+		margin-top: 10px;
+		padding: 2%;
+	}
+	.encuestado .form-group{
+		margin-bottom: 5px;
+	}
+	.encuestaRecomendacion{
+		margin-top: 7px;
+		margin-bottom: 7px;
+		line-height: 18px;
+		font-size: 14px;
+	}
+	.radios{
+		margin-top: 5px;
+		padding: 0 2%;
+	}
+	.radios div{
+		margin-right: 10px;
+	}
+	.form-group{
+		margin-bottom: 30px;
+	}
+	.form-group>label{
+		font-weight: normal;
+	}
+	.r2Si{
+		padding-top: 5px;
+		border-top: 1px solid black;
+		margin-top: 3px;
+	}
+	.r5Si, .r5No, .r9{
+		margin-top: 5px;
+	}
+	.r5No, .r9{
+		display: none;
+	}
+  </style>
+{% endblock style %}
+{% block js %}
+  <script>
+    $('#tabencuestaVentas').on('click', function(){
+    	$('#encuestaVentas').css('display', 'block');
+    	$('#encuestaSoporte').css('display', 'none');
+    });
+    $('#tabencuestaSoporte').on('click', function(){
+    	$('#encuestaVentas').css('display', 'none');
+    	$('#encuestaSoporte').css('display', 'block');
+    });
+
+    $('#r5_1').on('click', function(){
+    	$('.r5No').css('display', 'none');
+    	$('.r5Si').css('display', 'block');
+    	$('input[name="p5_1"]').removeAttr('checked');
+    });
+    $('#r5_2').on('click', function(){
+    	$('.r5No').css('display', 'block');
+    	$('.r5Si').css('display', 'none');
+    	$('#p5_op1').attr('checked', 'true');
+    	$('#txtAtendio').val('');
+    });
+    $('#r9').on('click', function(){
+    	$('.r9').css('display', 'block');
+    });
+     $('.res9').on('click', function(){
+    	$('.r9').css('display', 'none');
+    	$('#txtAtendio').val('');
+    });
+  </script>
+{% endblock %}
+
+{% block contenido %}
+<div class="row">
+	<article id="caja-contenido" class="col-xs-12 col-sm-8 col-md-9">
+		<div class="contenido-titulo row">
+			<h2 class="titulo">Ayudenos a mejorar</h2>
+		</div>
+		<div id="marcas-subcategorias" class="row">
+			{% if error %}
+				<div class="alert alert-danger">
+					<h3>Su encuesta no se envio, intentelo otra vez.</h3>
+				</div>
+			{% endif %}
+			{% if aceptado %}
+				<div class="alert alert-success">
+					<h3>Su encuesta no se envio, intentelo otra vez.</h3>
+				</div>
+			{% endif %}
+			<article class="cuerpo-contenido row">	
+				<p><strong>Estimado Cliente:</strong> Por Favor, evalue nuestro servicio y ayudenos a mejorar para lograr su entera satisfacción.</p>
+				<p><strong>Instrucciones:</strong> Marque la opción con la respuesta que usted considere.</p>
+				<div class="cuerpo-encuesta row">
+					<ul id="myTab" class="nav nav-tabs">
+			          <li class="active"><a id="tabencuestaVentas" href="#">Encuentas Ventas</a></li>
+			          <li><a id="tabencuestaSoporte" href="#">Encuesta Soporte</a></li>
+			        </ul>
+<!-- *********************** ENCUESTA VENTAS ************************************* -->
+			        <article id="encuestaVentas" class="cuerpo-contenido row">
+					<form action="/resultado-encuesta-ventas/" method="post" role="form">{% csrf_token %}
+						<div class="form-group">
+							<label>1- ¿Con qué frecuencia usted visita Paper &amp; More</label>
+							<div class="radios">
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p1" value="1" checked>
+										Poco
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p1" value="2">
+										Regular
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p1" value="3">
+										Seguido
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label>2- ¿Cómo califica nuestras instalaciones ó salas de ventas?</label>
+							<div class="radios">
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p2" value="1" checked>
+										Deben mejorar
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p2" value="2">
+										Inadecuadas
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p2" value="3">
+										Adecuadas
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p2" value="4">
+										Excelentes
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label>3- ¿Cómo califica el tiempo de atención por parte de nuestro personal de ventas?</label>
+							<div class="radios">
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p3" value="1" checked>
+										Lento
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p3" value="2">
+										Regular
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p3" value="3">
+										Rápido
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label>4- ¿Cómo califica el conocimiento de nuestros vendedores al momento de asesorarte?</label>
+							<div class="radios">
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p4" value="1" checked>
+										Malo
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p4" value="2">
+										Poco
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p4" value="3">
+										Bueno
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p4" value="4">
+										Excelente
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label>5- ¿Cómo califica la atención por parte de nuestro personal de ventas?</label>
+							<div class="radios">
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p5" value="1" checked>
+										Muy mala
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p5" value="2">
+										Mala
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p5" value="3">
+										Buena
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p5" value="4">
+										Muy buena
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label>6- ¿Cómo califica nuestro servicio de caja?</label>
+							<div class="radios">
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p6" value="1" checked>
+										Malo
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p6" value="2">
+										Regular
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p6" value="3">
+										Bueno
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label>7- ¿A pesar de ser conocido, amigo o familiar fue tratado con respeto?</label>
+							<div class="radios">
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p7" value="1" checked>
+										Si
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p7" value="2">
+										No
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label>8- ¿Cada cuanto requiere usted de servicio a domicilio con sus pedidos?</label>
+							<div class="radios">
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p8" value="1" checked>
+										Nunca
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p8" value="2">
+										Poco
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p8" value="3">
+										Seguido
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p8" value="4">
+										Mucho
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label>9- ¿Que línea de productos consume con mayor frecuencia?</label>
+							<div class="radios">
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p9" value="1" checked>
+										Computadoras
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p9" value="2">
+										Suministros
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p9" value="3">
+										Accesorios
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p9" value="4">
+										Mobiliario
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p9" value="5">
+										Utiles de oficina
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p9" value="6">
+										Soporte Técnico
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label>10- ¿Cómo considera nuestro servicio de garantía?</label>
+							<div class="radios">
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p10" value="1" checked>
+										Nunca la he utilizado
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p10" value="2">
+										Mala
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p10" value="3">
+										Igual a todos
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p10" value="4">
+										Regular
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p10" value="5">
+										Soporte Técnico
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label>11- ¿Cómo le gustaría recibir las promociones y ofertas de nuestra empresa?</label>
+							<div class="radios">
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p11" value="1" checked>
+										Por teléfono
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p11" value="2">
+										Por mensajito
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p11" value="3">
+										Impreso
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p11" value="4">
+										E-mail
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label>12- ¿Alguna vez la empresa le ha fallado en algo?</label>
+							<div class="radios">
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p12" value="1" checked>
+										Si
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="p12" value="2">
+										No
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="encuestaRecomendacion">
+								<p class="text-justify">Estimado cliente: si usted considera roporcionarnos sus datos, será tomado muy en cuenta. También puede hacer su comentario de manera anónima, ya que ninguno de sus datos personales es obligatorio al llenar este formulario.</p>
+							</div>
+						<div class="encuestado">
+			      			<div class="row form-group">
+								<div class="col col-xs-12 col-sm-12 col-md-6">
+		                            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre completo">
+			      				</div>
+		                    </div>
+			      			<div class="row form-group">
+			      				<div class="col col-xs-12 col-sm-12 col-md-6">
+		                            <input type="tel" class="form-control" id="telefono" name="telefono" placeholder="Teléfono">
+		                        </div>
+			      			</div>
+			      			<div class="row form-group">
+			      				<div class="col col-xs-12 col-sm-12 col-md-6">
+		                            <input type="email" class="form-control" id="encuestadoemail" name="email" placeholder="Correo electrónico">
+			      				</div>
+			      			</div>
+			      			<div class="row form-group">
+			      				<div class="col col-xs-12 col-sm-12 col-md-6">
+		                            <textarea name="comentario" id="comentario" class="form-control" cols="30" rows="10" placeholder="Comentario"></textarea>
+			      				</div>
+			      			</div>
+			      			<div class="row form-group">
+			      				<input type="submit" value="Enviar" class="btn btn-success">
+			      			</div>
+		      			</div>
+					</form>
+					</article>
+<!-- *********************** ENCUESTA SOPORTE ************************************* -->
+					<article id="encuestaSoporte" class="cuerpo-contenido row">
+						<form action="/resultado-encuesta-soporte/" method="post" role="form">{%  csrf_token %}
+							<div class="form-group">
+								<label>1.- ¿Cómo encontró las instalaciones físicas de nuestro Departamento de Soporte Técnico?</label>
+								<div class="radios">
+									<div class="radio-inline">
+										<label>
+											<input type="radio" name="p1" value="1" checked>
+											Limpio
+										</label>
+									</div>
+									<div class="radio-inline">
+										<label>
+											<input type="radio" name="p1" value="2">
+											Sucio
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label>2.- ¿Recibe usted atención adecuada cuando llega al Departamento de Soporte Técnico?</label>
+								<div class="radios">
+									<div class="radio-inline">
+										<label>
+											<input type="radio" name="p2" value="1" checked>
+											Si
+										</label>
+									</div>
+									<div class="radio-inline">
+										<label>
+											<input type="radio" name="p2" value="2">
+											No
+										</label>
+									</div>
+									<div class="r2Si">
+										<div class="radio-inline">
+											<label>
+												<input type="radio" name="p2_1" value="1" checked>
+												Inmediatamente
+											</label>
+										</div>
+										<div class="radio-inline">
+											<label>
+												<input type="radio" name="p2_1" value="2">
+												En 5 minutos
+											</label>
+										</div>
+										<div class="radio-inline">
+											<label>
+												<input type="radio" name="p2_1" value="3">
+												En 10 minutos
+											</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label>3.- ¿La persona que lo antendió lo saludó y le preguntó "En que puedo servirle"?</label>
+								<div class="radios">
+									<div class="radio-inline">
+										<label>
+											<input type="radio" name="p3" value="1" checked>
+											Si
+										</label>
+									</div>
+									<div class="radio-inline">
+										<label>
+											<input type="radio" name="p3" value="2">
+											No
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label>4.- ¿La persona que lo atendió mencionó el nombre?</label>
+								<div class="radios">
+									<div class="radio-inline">
+										<label>
+											<input type="radio" id="r4Si" name="p4" value="1" checked>
+											Si
+										</label>
+									</div>
+									<div class="radio-inline">
+										<label>
+											<input type="radio" id="r4No" name="p4" value="2">
+											No
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="pregunta5">
+								<div class="form-group">
+									<label>5.- ¿Recuerda el nombre de la persona que lo atendió?</label>
+									<div class="radios">
+										<div class="radio-inline">
+											<label>
+												<input type="radio" id="r5_1" name="p5" value="1" checked>
+												Si
+											</label>
+										</div>
+										<div class="radio-inline">
+											<label>
+												<input type="radio" id="r5_2" name="p5" value="2">
+												No
+											</label>
+										</div>
+										<div class="r5Si">
+											<input type="text" name="atendio" class="form-control" id="txtAtendio" placeholder="¿Quién atendió?">
+										</div>
+										<div class="r5No">
+											<label>¿Porqué no lo recuerda?</label>
+											<div class="radio-inline">
+												<label>
+													<input id="p5_op1" type="radio" name="p5_1" value="1">
+													Lo dijo muy rápido
+												</label>
+											</div>
+											<div class="radio-inline">
+												<label>
+													<input type="radio" name="p5_1" value="2">
+													En voz baja
+												</label>
+											</div>
+											<div class="radio-inline">
+												<label>
+													<input type="radio" name="p5_1" value="3">
+													A usted no le interesó
+												</label>
+											</div>
+											<div class="radio-inline">
+												<label>
+													<input type="radio" name="p5_1" value="4">
+													No lo mencionó
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label>6.- ¿Le prestaron atención cuando usted exponía su problema o duda?</label>
+								<div class="radios">
+									<div class="radio-inline">
+										<label>
+											<input type="radio" name="p6" value="1" checked>
+											Si
+										</label>
+									</div>
+									<div class="radio-inline">
+										<label>
+											<input type="radio" name="p6" value="2">
+											No
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label>7.- ¿A pesar de ser conocido, amigo o familiar fue tratado con respeto?</label>
+								<div class="radios">
+									<div class="radio-inline">
+										<label>
+											<input type="radio" name="p7" value="1" checked>
+											Si
+										</label>
+									</div>
+									<div class="radio-inline">
+										<label>
+											<input type="radio" name="p7" value="2">
+											No
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label>8.- ¿Cuál fue el tiempo de respuesta al diagnóstico de su equipo?</label>
+								<div class="radios">
+									<div class="radio-inline">
+										<label>
+											<input type="radio" name="p8" value="1" checked>
+											5 minutos
+										</label>
+									</div>
+									<div class="radio-inline">
+										<label>
+											<input type="radio" name="p8" value="2">
+											10 minutos
+										</label>
+									</div>
+									<div class="radio-inline">
+										<label>
+											<input type="radio" name="p8" value="3">
+											15 minutos
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label>9.- ¿Cuál fue el tiempo de reparación de su equipo?</label>
+								<div class="radios">
+									<div class="radio-inline">
+										<label>
+											<input type="radio" class="res9" name="p9" value="1" checked>
+											1 día
+										</label>
+									</div>
+									<div class="radio-inline">
+										<label>
+											<input type="radio" class="res9" name="p9" value="2">
+											2 días
+										</label>
+									</div>
+									<div class="radio-inline">
+										<label>
+											<input type="radio" id="r9" name="p9" value="3">
+											Mas de 2 días
+										</label>
+									</div>
+									<div class="r9">
+										<input type="text" name="tiempoReparacion" class="form-control" id="txtAtendio" placeholder="Tiempo de la reparación">
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label>10.- Cuando usted trae su equipo a reparación ¿Cuál es el resultado de nuestro trabajo?</label>
+								<div class="radios">
+									<div class="radio-inline">
+										<label>
+											<input type="radio" name="p10" value="1" checked>
+											Bueno
+										</label>
+									</div>
+									<div class="radio-inline">
+										<label>
+											<input type="radio" name="p10" value="2">
+											Malo
+										</label>
+									</div>
+									<div class="radio-inline">
+										<label>
+											<input type="radio" name="p10" value="3">
+											Por lo general bueno
+										</label>
+									</div>
+									<div class="radio-inline">
+										<label>
+											<input type="radio" name="p10" value="4">
+											Sin reparación
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label>11.- ¿Recomendaría a sus conocidos el Departamento de Soporte Técnico de Paper &amp; More?</label>
+								<div class="radios">
+									<div class="radio-inline">
+										<label>
+											<input type="radio" name="p11" value="1" checked>
+											Si
+										</label>
+									</div>
+									<div class="radio-inline">
+										<label>
+											<input type="radio" name="p11" value="2">
+											No
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label>12.- ¿Volvería usted a buscar de los servicios de nuestro Departamento de Soporte Técnico?</label>
+								<div class="radios">
+									<div class="radio-inline">
+										<label>
+											<input type="radio" name="p12" value="1" checked>
+											Si
+										</label>
+									</div>
+									<div class="radio-inline">
+										<label>
+											<input type="radio" name="p12" value="2">
+											No
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="encuestaRecomendacion">
+								<p class="text-justify">Estimado cliente: si usted considera roporcionarnos sus datos, será tomado muy en cuenta. También puede hacer su comentario de manera anónima, ya que ninguno de sus datos personales es obligatorio al llenar este formulario.</p>
+							</div>
+							<div class="encuestado">
+				      			<div class="row form-group">
+									<div class="col col-xs-12 col-sm-12 col-md-6">
+			                            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre completo">
+				      				</div>
+			                    </div>
+				      			<div class="row form-group">
+				      				<div class="col col-xs-12 col-sm-12 col-md-6">
+			                            <input type="tel" class="form-control" id="telefono" name="telefono" placeholder="Teléfono">
+			                        </div>
+				      			</div>
+				      			<div class="row form-group">
+				      				<div class="col col-xs-12 col-sm-12 col-md-6">
+			                            <input type="email" class="form-control" id="encuestados_email" name="email" placeholder="Correo electrónico">
+				      				</div>
+				      			</div>
+				      			<div class="row form-group">
+				      				<div class="col col-xs-12 col-sm-12 col-md-6">
+			                            <textarea name="comentario" id="comentario" class="form-control" cols="30" rows="10" placeholder="Comentario"></textarea>
+				      				</div>
+				      			</div>
+				      			<div class="row form-group">
+				      				<input type="submit" value="Enviar" class="btn btn-success">
+				      			</div>
+			      			</div>
+						</form>
+					</article>
+<!-- *********************** FIN ENCUESTA SOPORTE ***************************** -->
+				</div>
+			</article>
+		</div>
+	</article>
+	<article id="contenido-lateral" class="hidden-xs col-sm-4 col-md-3 contenido-lateral" >
+		<div class="row producto-filtro-lateral">
+			<div class="row">
+				<h2 class="titulo">Novedades</h2>
+			</div>
+			<div  class="cuerpo-contenido row">
+				{% for item in novedades %}
+				<article class="producto-elemento row">
+					<div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
+					<div class="row">
+						<figure id="s2" class="s2 demo">
+							{% for img in detalle_img %}
+                                {% if img.Producto.Producto.Codigo == item.Codigo %}
+                                    <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+                                {% endif %}
+                            {% endfor %}
+                        </figure>
+						<div class="contenido-lateral-precio">
+							<div class="row">
+								{% load humanize %}
+								<h3 ><span class="label label-success">L. {{item.Precio}}</span></h3>
+							</div>
+							<div class="row producto-caja-btn">
+                                <form method="post" action="/agregar-carrito/">{% csrf_token %}
+                                    <input type="hidden" value="{{item.Codigo}}" name="Producto">
+                                    <input type="hidden" value="1" name="Cantidad">
+                                    <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a></p>
+                                </form>
+                            </div>
+						</div>
+					</div>
+					<div class="row detalle-descripcion"><p>{{item.Descripcion|truncatewords:8}}</p></div>
+				</article>
+				{% endfor %}
+			</div>
+		</div>
+		<div class="row espacio"></div>
+		<div class="row producto-filtro-lateral">
+			<div class="row">
+				<h2 class="titulo">Ofertas</h2>
+			</div>
+			<div  class="cuerpo-contenido row">
+				{% for item in ofertas %}
+				<article class="producto-elemento row">
+					<div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
+					<div class="row">
+						<figure id="s2" class="s2 demo">
+                            {% for img in detalle_img %}
+                                {% if img.Producto.Producto.Codigo == item.Codigo %}
+                                    <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+                                {% endif %}
+                            {% endfor %}
+                        </figure>
+						<div class="contenido-lateral-precio">
+							<div class="row">
+								{% load humanize %}
+								<h3 ><span class="label label-danger">L. {{item.Precio}}</span></h3>
+							</div>
+							<div class="row producto-caja-btn">
+                                <form method="post" action="/agregar-carrito/">{% csrf_token %}
+                                    <input type="hidden" value="{{item.Codigo}}" name="Producto">
+                                    <input type="hidden" value="1" name="Cantidad">
+                                    <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a></p>
+                                </form>
+                            </div>
+						</div>
+					</div>
+					<div class="row detalle-descripcion"><p>{{item.Descripcion|truncatewords:8}}</p></div>
+				</article>
+				{% endfor %}
+			</div>
+		</div>
+		<div class="row producto-filtro-lateral">
+        <div class="row">
+            <h2 class="titulo">Destacados</h2>
+        </div>
+        <div  class="cuerpo-contenido row">
+            {% for item in destacados %}
+            <article class="producto-elemento row">
+                <div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
+                <div class="row">
+                    <figure id="s2" class="s2 demo">
+                        {% for img in detalle_img %}
+                            {% if img.Producto.Producto.Codigo == item.Codigo %}
+                                <img src="{{MEDIA_URL}}{{img.Imagen}}" >
+                            {% endif %}
+                        {% endfor %}
+                    </figure>
+                    <div class="contenido-lateral-precio ">
+                        <div class="row">
+                            {% load humanize %}
+                            <h3 ><span class="label label-success">L. {{item.Precio}}</span></h3>
+                        </div>
+                        <div class="row producto-caja-btn">
+                            <form method="post" action="/agregar-carrito/">{% csrf_token %}
+                                <input type="hidden" value="{{item.Codigo}}" name="Producto">
+                                <input type="hidden" value="1" name="Cantidad">
+                                <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a></p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="row detalle-descripcion"><p>{{item.Descripcion|truncatewords:8}}</p></div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+	</article>
+</div>
+{% endblock %}

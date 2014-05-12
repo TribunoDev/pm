@@ -26,7 +26,7 @@ urlpatterns = patterns('',
     url(r'^destacados/$', 'web.views.productos_destacados', name='productos_destacados'),
     url(r'^editar-perfil/$', 'web.views.editar_perfil', name='editar_perfil'),
     url(r'^editar-contrasena/$', 'web.views.editar_contrasena', name='editar_contrasena'),
-    url(r'^encuesta-ventas/$', 'web.views.encuesta_ventas', name='encuesta_ventas'),
+    url(r'^encuestas/$', 'web.views.encuestas', name='encuestas'),
     url(r'^enviar-email/$', 'web.views.enviar_email', name='enviar_email'),
     url(r'^enviar-datos-pago/$', 'web.views.envio_datos_pago', name='envio_datos_pago'),
     url(r'^enviar-direccion/$', 'web.views.envio_direccion', name='envio_direccion'),
@@ -58,7 +58,11 @@ urlpatterns = patterns('',
     url(r'^salir/$', logout,{'template_name': 'cerrar-sesion.html',}, name='logout'),
     url(r'^servicio-flete/$', 'web.views.servicio_flete', name='servicio_flete'),
 
-   url(r'^imagenes/$', 'web.views.producto_imagen', name='producto_imagen'),
+    url(r'^resultado-encuesta-ventas/$', 'web.views.guardarEncuestaVentas', name='guardarEncuestaVentas'),
+    url(r'^resultado-encuesta-soporte/$', 'web.views.guardarEncuestaSoporte', name='guardarEncuestaSoporte'),
+
+    url(r'^imagenes/$', 'web.views.producto_imagen', name='producto_imagen'),
+
     #prueba
     url(r'^user/password/reset/$', password_reset,{'template_name': 'registration/password_reset_form.html','post_reset_redirect': '/user/password/reset/done/'}, name='password_reset'),
     url(r'^user/password/reset/done/$', password_reset_done,{'template_name': 'registration/password_reset_done.html'},name='password_reset_done'),
