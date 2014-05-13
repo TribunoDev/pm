@@ -8,6 +8,11 @@ label{
 
 header label{color: white;}
 
+header .container{
+	padding-right: 0;
+	padding-left: 0;
+}
+
 #btnPagar{
 	float: right;
 }
@@ -349,6 +354,9 @@ header label{color: white;}
 .media-body p, .media-body ul{
 	text-align: justify;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+#contenedor-menu .navbar{
+	border-radius: 0;
 }
 .paginacion{
 	text-align: center;
