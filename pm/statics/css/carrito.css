@@ -1,7 +1,11 @@
+@font-face{
+	font-family: 'carrito';
+	src:url('../fonts/carrito.eot?') format('embedded-opentype'),
+}
+
 @font-face {
 	font-family: 'carrito';
-	src:url('../fonts/carrito.eot');
-	src:url('../fonts/carrito.eot?#iefix') format('embedded-opentype'),
+	src:url('../fonts/carrito.eot'),
 		url('../fonts/carrito.ttf') format('truetype'),
 		url('../fonts/carrito.woff') format('woff'),
 		url('../fonts/carrito.svg#carrito') format('svg');

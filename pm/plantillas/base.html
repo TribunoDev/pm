@@ -42,7 +42,7 @@
 <!--Encabezado -->
 	<header class="navbar-wrapper">
     	<div class="container">
-        	<div id="logos" class="col col-xs-12 col-sm-7 col-md-7">
+        	<div id="logos" class="col col-xs-12 col-sm-7 col-md-7 col-lg-6">
           		<figure class="col col-xs-6 col-sm-6 col-md-6">
             		<img src="{{STATIC_URL}}img/logo-paper.jpg" class="img-responsive" alt="">
           		</figure>
@@ -139,9 +139,9 @@
     				{% else %}
     					<a>
     				{% endif %}
-	          			<img src="{{MEDIA_URL}}{{item.imagen_pc}}" class="visible-md visible-lg banner-link"  alt="First slide" />
-	              		<img  src="{{MEDIA_URL}}{{item.imagen_tablet}}" class="visible-sm" alt="First slide" />
-	              		<img  src="{{MEDIA_URL}}{{item.imagen_movil}}" class="visible-xs" alt="First slide" />
+	          			<img src="{{MEDIA_URL}}{{item.imagen_pc}}"   alt="First slide" />
+	              		<!--img  src="{{MEDIA_URL}}{{item.imagen_tablet}}" class="visible-sm" alt="First slide" />
+	              		<img  src="{{MEDIA_URL}}{{item.imagen_movil}}" class="visible-xs" alt="First slide" /-->
 	          		</a>
 	        	</div>
     		{% endfor %}
