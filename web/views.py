@@ -39,11 +39,13 @@ def images_destacados():
 		else:
 			cImgD = Imagen.objects.filter(Producto=pD).count()
 			if cImgD > 0:
+				img = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=pD))[:1]
 				contar = contar + 1
 				destacados = {
 					'Codigo':pD.pk,
 					'Descripcion':pD.Descripcion,
-					'Precio': intcomma(pD.Precio)
+					'Precio': intcomma(pD.Precio),
+					'Imagen': img[0].Imagen
 				}
 				listaDestacados.append(destacados)
 				
@@ -60,11 +62,13 @@ def images_ofertas():
 		else:
 			cImgO = Imagen.objects.filter(Producto=pO).count()
 			if cImgO > 0:
+				img = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=pO))[:1]
 				contar = contar + 1
 				ofertas = {
 					'Codigo':pO.pk,
 					'Descripcion':pO.Descripcion,
-					'Precio': intcomma(pO.Precio)
+					'Precio': intcomma(pO.Precio),
+					'Imagen': img[0].Imagen
 				}
 				listaOfertas.append(ofertas)
 	return listaOfertas
@@ -78,14 +82,15 @@ def images_novedades():
 		if contar == 2:
 			break
 		else:
-			
 			cImgN = Imagen.objects.filter(Producto=pN).count()
 			if cImgN > 0:
+				img = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=pN))[:1]
 				contar = contar + 1
 				novedades = {
 					'Codigo':pN.pk,
 					'Descripcion':pN.Descripcion,
-					'Precio': intcomma(pN.Precio)
+					'Precio': intcomma(pN.Precio),
+					'Imagen': img[0].Imagen
 				}
 				listaNovedades.append(novedades)
 	return listaNovedades
