@@ -70,8 +70,9 @@ def images_ofertas():
 	return listaOfertas
 
 def images_novedades():
+	fecha = date.today() - timedelta(days=60)
 	listaNovedades=[]
-	pNovedades = Producto.objects.filter(Fecha__month=datetime.now().month).order_by('?')
+	pNovedades = Producto.objects.filter(Fecha__gte=fecha).order_by('?')
 	contar = 0
 	for pN in pNovedades:
 		if contar == 2:
@@ -418,8 +419,8 @@ def ofertas(request):
 def novedades(request):
 	diccionario={}
 	novedades=[]
-	mes=datetime.now().month
-	productos = Producto.objects.filter(Fecha__month=mes).order_by('?')[:12]
+	fecha = date.today() - timedelta(days=60)
+	productos = Producto.objects.filter(Fecha__gte=fecha).order_by('?')[:12]
 	for producto in productos:
 		if Imagen.objects.filter(Producto=producto).count() > 0:
 			allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]

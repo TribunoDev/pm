@@ -70,10 +70,6 @@ header .container{
 	padding: 1%;
 }
 
-#myCarousel{
-	display: none;
-}
-
 #myModalHorarioServicio figure{
 	display: inline-block;
 	position: relative;
