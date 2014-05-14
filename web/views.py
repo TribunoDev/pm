@@ -78,6 +78,7 @@ def images_novedades():
 		if contar == 2:
 			break
 		else:
+			
 			cImgN = Imagen.objects.filter(Producto=pN).count()
 			if cImgN > 0:
 				contar = contar + 1
