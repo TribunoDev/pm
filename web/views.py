@@ -215,7 +215,7 @@ def marcas(request):
 	diccionario['ofertas']= images_ofertas()
 	diccionario['novedades'] = images_novedades()
 	#diccionario['detalle_img']= Detalle_Imagen.objects.all()
-	diccionario['detalle_img'] = cargar_imagenes()
+	#diccionario['detalle_img'] = cargar_imagenes()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
