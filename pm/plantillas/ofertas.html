@@ -82,52 +82,45 @@
 					</article>
 					{% if totalProductos > 18 %}
 					<article class="cuerpo-contenido row paginacion">
-						<div class="pagination">
-							<span class="paginacion-enlaces">
-							<ul class="pager">
-								<li class="{% if not productos.has_previous %}disabled{% endif %}">
-									{% if not productos.has_previous %}
-										<span class="glyphicon glyphicon-step-backward"></span>
-									{% else %}
-										<a href="?page=1" ><span class="glyphicon glyphicon-step-backward"></span></a>
-									{% endif %}
-								</li>
-								<li class="{% if not productos.has_previous %}disabled{% endif %}">
-									{% if not productos.has_previous %}
-										<span class="glyphicon glyphicon-backward"></span>
-									{% else %}
-										<a href="?page={{productos.previous_page_number}}" ><span class="glyphicon glyphicon-backward"></span></a>
-									{% endif %}
-								</li>
-
-								{% for page in page_number %}
-									{% if page == productos.number %}
-										<span class="active">
-											<li class="disabled"><a>{{page}}</a></li>
-										</span>
-									{% else %}
-										<li><a href="?page={{ page }}">{{ page }}</a></li>
-									{% endif %}
-								{% endfor %}
-
-								<li class="{% if not productos.has_next %}disabled{% endif %}">
-									{% if not productos.has_next %}
-										<span class="glyphicon glyphicon-forward"></span>
-									{% else %}
-										<a href="?page={{productos.next_page_number}}" ><span class="glyphicon glyphicon-forward"></span></a>
-									{% endif %}
-								</li>
-								<li class="{% if not productos.has_next %}disabled{% endif %}">
-									{% if not productos.has_next %}
-										<span class="glyphicon glyphicon-step-forward"></span>
-									{% else %}
-										<a href="?page={{productos.paginator.num_pages}}" ><span class="glyphicon glyphicon-step-forward"></span></a>
-									{% endif %}
-								</li>
-							</ul>	
-							</span>
-							</ul>
-						</div>
+						<ul class="pagination">
+							<li class="{% if not productos.has_previous %}disabled{% endif %}">
+								{% if not productos.has_previous %}
+									<a id="regresaUno" class="">Inicio</a>
+								{% else %}
+									<a id="regresaUno" href="?page=1" class="">Inicio</a>
+								{% endif %}
+							</li>
+							<li class="{% if not productos.has_previous %}disabled{% endif %}">
+								{% if not productos.has_previous %}
+									<a class="">Anterior</a>
+								{% else %}
+									<a href="?page={{productos.previous_page_number}}" class="">Anterior</a>
+								{% endif %}
+							</li>
+							{% for page in page_number %}
+								{% if page == productos.number %}
+									
+										<li class="active"><a class="visible-lg">{{page}}</a></li>
+									
+								{% else %}
+									<li><a class="visible-lg" href="?page={{ page }}">{{ page }}</a></li>
+								{% endif %}
+							{% endfor %}
+							<li class="{% if not productos.has_next %}disabled{% endif %}">
+								{% if not productos.has_next %}
+									<a class="">Siguiente</a>
+								{% else %}
+									<a href="?page={{productos.next_page_number}}" class="" >Siguiente</a>
+								{% endif %}
+							</li>
+							<li class="{% if not productos.has_next %}disabled{% endif %}">
+								{% if not productos.has_next %}
+									<a class="">Ultimo</a>
+								{% else %}
+									<a href="?page={{productos.paginator.num_pages}}" class="">Ultimo</a>
+								{% endif %}
+							</li>
+						</ul>
 					</article>
 					{% endif %}
 				</div>
