@@ -67,8 +67,8 @@
 	text-decoration: underline;
 }
 
-@media screen and (max-width: 480px){
+@media screen and (max-width: 479px){
 	.list_carousel li img{
-		height: 120px;
+		height: 184px;
 	}
 }

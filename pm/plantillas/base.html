@@ -28,7 +28,7 @@
 	<link rel="shortcut icon" href="{{STATIC_URL}}img/icono.png">
 	{% block style %}{% endblock %}
 	<!--Start of Zopim Live Chat Script-->
-	<script type="text/javascript">
+	<!--script type="text/javascript">
 	window.$zopim||(function(d,s){var z=$zopim=function(c){z._.push(c)},$=z.s=
 	d.createElement(s),e=d.getElementsByTagName(s)[0];z.set=function(o){z.set.
 	_.push(o)};z._=[];z.set._=[];$.async=!0;$.setAttribute('charset','utf-8');
@@ -137,8 +137,7 @@
     				{% else %}
     					<a>
     				{% endif %}
-	          			<img src="{{MEDIA_URL}}{{item.imagen_pc}}" class="visible-md visible-lg"  alt="First slide" />
-	              		<img  src="{{MEDIA_URL}}{{item.imagen_tablet}}" class="visible-sm" alt="First slide" />
+	          			<img src="{{MEDIA_URL}}{{item.imagen_pc}}" class="visible-sm visible-md visible-lg"  alt="First slide" />
 	              		<img  src="{{MEDIA_URL}}{{item.imagen_movil}}" class="visible-xs" alt="First slide" />
 	          		</a>
 	        	</div>
@@ -276,7 +275,39 @@
 	</div><!-- /.modal -->
 	{% csrf_token %}
 	<footer class="no-print">
-		<div id="contenido-foot">
+		<div class="container">
+			<div class="col col-xs-3 col-sm-3 col-md-3 text-center">
+				<figure class="col col-xs-6 col-6 col-md-6 text-right">
+					<a href="https://twitter.com/papermore" target="_blank">
+						<img src="{{STATIC_URL}}img/t_logo.png" alt="twitter">
+					</a>
+				</figure>
+				<figure class="col col-xs-6 col-sm-6 col-md-6 text-left">
+					<a href="https://www.facebook.com/paperandmore.hn" target="_blank">
+						<img src="{{STATIC_URL}}img/f_logo.png" alt="facebook">
+					</a>
+				</figure>
+			</div>
+			<div class="col-xs-6 col-sm-6 col-md-6">
+				<p class="text-center">
+					<a href="/ofertas/">Promociones y Ofertas</a> |
+					<a href="/destacados/">Destacados</a> |
+					<a href="/marcas/">Marcas</a> |
+					<a href="/contactanos/">Contactanos</a> |
+					<a href="#" data-toggle="modal" data-target="#myModalEmpleos">Empleos</a> |
+					<a href="#" data-toggle="modal" data-target="#myModalRecomendacion">Recomendar a un amigo</a> |
+					<a href="#">Privacidad y Seguridad</a> |
+					<a href="#" data-toggle="modal" data-target="#myModalHorarioServicio">Horarios de Servicio</a> |
+					<a href="/faq/">FAQ</a> |
+				</p>
+			</div>
+			<div class="col col-xs-3 col-sm-3 col-md-3 text-center">
+				<figure class="col col-xs-12 col-sm-12 col-md-12">
+					<img src="{{STATIC_URL}}img/isv_incluido.png" alt="ISV">
+				</figure>
+			</div>
+		</div>
+		<!--div id="contenido-foot">
 			<article id="caja1-foot">
 				<div>
 					<a href="https://twitter.com/papermore" target="_blank">
@@ -307,7 +338,7 @@
 					<img src="{{STATIC_URL}}img/isv_incluido.png" alt="ISV">
 				</div>
 			</article>
-		</div>
+		</div-->
 	</footer>
 	<script type="text/javascript" src="{{STATIC_URL}}js/jquery-1.10.2.min.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/carousel.js"></script>

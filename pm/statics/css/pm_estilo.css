@@ -2,6 +2,14 @@ aside div{
 	margin-top: 5px;
 }
 
+footer a{
+	color: white;
+}
+
+footer a:hover{
+	color: white;
+}
+
 img{
 	max-width: 100%;
 }
@@ -33,6 +41,7 @@ header .container{
 #caja-contenido .cuerpo-contenido{
 	border: none;
 	padding: 0;
+	margin-top: 0;
 }
 
 #caja-contenido .producto-elemento h3{
@@ -72,6 +81,10 @@ header .container{
 #itemDireccion address{
 	text-align: left;
 	padding: 1%;
+}
+
+#myCarousel{
+	display: none;
 }
 
 #myModalHorarioServicio figure{
@@ -180,6 +193,7 @@ header .container{
 	color: #2E2C42;
 }
 
+
 .caja-sin-border{
 	border: 0;
 }
@@ -209,7 +223,7 @@ header .container{
 .cuerpo-contenido{
 	border: 1px solid #ecf0f1;
 	border-radius: 5px;
-	margin-top: 10px;
+	/*margin-top: 10px;*/
 	padding: 0.7% 1%;
 }
 
@@ -264,13 +278,8 @@ header .container{
 			margin-left: 5px;
 		}
 
-		.filtroSelect{
-			height: 30px;
-			font-weight: bold;
-		}
-
-.filtro-marcas{
-	margin-bottom: 5px;
+.filtroSelect{
+	height: 30px;
 }
 
 .frmCant{
@@ -360,6 +369,10 @@ header .container{
 }
 .paginacion{
 	text-align: center;
+}
+
+.pagination .active a{
+	color: white;
 }
 
 #panel-opciones{

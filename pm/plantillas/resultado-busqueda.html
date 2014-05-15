@@ -34,52 +34,47 @@
 				</article>
 				{% if totalProductos > 18 %}
 				<article class="cuerpo-contenido row paginacion">
-					<div class="pagination">
-						<span class="paginacion-enlaces">
-						<ul class="pager">
+						<ul class="pagination">
 							<li class="{% if not resultado.has_previous %}disabled{% endif %}">
 								{% if not resultado.has_previous %}
-									<span class="glyphicon glyphicon-step-backward"></span>
+									<a class="">Inicio</a>
 								{% else %}
-									<a href="?txtBuscar={{dato}}&page=1" ><span class="glyphicon glyphicon-step-backward"></span></a>
+									<a href="?txtBuscar={{dato}}&page=1" >Inicio</a>
 								{% endif %}
 							</li>
 							<li class="{% if not resultado.has_previous %}disabled{% endif %}">
 								{% if not resultado.has_previous %}
-									<span class="glyphicon glyphicon-backward"></span>
+									<a>Anterior</a>
 								{% else %}
-									<a href="?txtBuscar={{dato}}&pagina={{resultado.previous_page_number}}" ><span class="glyphicon glyphicon-backward"></span></a>
+									<a href="?txtBuscar={{dato}}&pagina={{resultado.previous_page_number}}" >Anterior</a>
 								{% endif %}
 							</li>
 
 							{% for page in page_number %}
 								{% if page == resultado.number %}
-									<span class="active">
-										<li class="disabled"><a>{{page}}</a></li>
-									</span>
+									<li class="active"><a class="visible-lg">{{page}}</a></li>
 								{% else %}
-									<li><a href="?txtBuscar={{dato}}&pagina={{ page }}">{{ page }}</a></li>
+									<li><a class="visible-lg" href="?txtBuscar={{dato}}&pagina={{ page }}">{{ page }}</a></li>
 								{% endif %}
 							{% endfor %}
 
 							<li class="{% if not resultado.has_next %}disabled{% endif %}">
 								{% if not resultado.has_next %}
-									<span class="glyphicon glyphicon-forward"></span>
+									<a>Siguiente</a>
 								{% else %}
-									<a href="?txtBuscar={{dato}}&pagina={{resultado.next_page_number}}" ><span class="glyphicon glyphicon-forward"></span></a>
+									<a href="?txtBuscar={{dato}}&pagina={{resultado.next_page_number}}" >Siguiente</a>
 								{% endif %}
 							</li>
 							<li class="{% if not resultado.has_next %}disabled{% endif %}">
 								{% if not resultado.has_next %}
-									<span class="glyphicon glyphicon-step-forward"></span>
+									<a>Ultimo</a>
 								{% else %}
-									<a href="?txtBuscar={{dato}}&pagina={{resultado.paginator.num_pages}}" ><span class="glyphicon glyphicon-step-forward"></span></a>
+									<a href="?txtBuscar={{dato}}&pagina={{resultado.paginator.num_pages}}" >Ultimo</a>
 								{% endif %}
 							</li>
 						</ul>	
 						</span>
 						</ul>
-					</div>
 				</article>
 				{% endif %}
 			</div>
