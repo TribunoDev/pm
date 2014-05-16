@@ -368,7 +368,7 @@ def filtro_marca_subcategoria(request):
 		diccionario['page_number']=page_number
 
 		diccionario['productos']=productos
-		return render_to_response('filtro-marca-subcategoria.html', diccionario, context_instance=RequestContext(request))
+		return render_to_response('ajax/resultado-filtro.html', diccionario, context_instance=RequestContext(request))
 	else:
 		raise Http404
 
@@ -610,7 +610,7 @@ def filtro_subcategoria_marca(request):
 		diccionario['page_number']=page_number
 
 		diccionario['productos']=productos
-		return render_to_response('filtro-subcategoria-marca.html', diccionario, context_instance=RequestContext(request))
+		return render_to_response('ajax/resultado-filtro.html', diccionario, context_instance=RequestContext(request))
 	else:
 		raise Http404
 
@@ -816,7 +816,7 @@ def form_editar_cantidad(request):
 		if request.method == 'POST':
 			idDetalle = request.POST['idDetalle']
 			detalle = Detalle_Carrito.objects.get(id=idDetalle)
-	return render_to_response('form-editar-cantidad.html', {'detalle':detalle}, context_instance=RequestContext(request))
+	return render_to_response('ajax/form-editar-cantidad.html', {'detalle':detalle}, context_instance=RequestContext(request))
 
 #Vista que actualiza la cantidad de productos en cada item del carrito
 def actualizar_cantidad(request):
@@ -832,7 +832,7 @@ def actualizar_cantidad(request):
 			detalle = Detalle_Carrito.objects.get(Producto=producto, Carrito=carrito)
 			detalle.Cantidad = cantidad
 			detalle.save()
-	return render_to_response('item-cantidad.html',{'item':detalle}, context_instance=RequestContext(request))
+	return render_to_response('ajax/item-cantidad.html',{'item':detalle}, context_instance=RequestContext(request))
 
 #Vista que elimina un item del carrito
 def eliminar_item_detalle(request):
@@ -864,14 +864,17 @@ def perfil_usuario(request):
 
 #Vista que devuelve informacion sobre el usuario
 def info_usuario(request):
-	usuario = False
-	perfil = False
-	if not request.user.is_anonymous():
-		usuario = request.user
-		usuario = User.objects.get(id=usuario.id)
-		if Detalle_Perfil.objects.filter(Usuario=usuario).count() > 0:
-			perfil = Detalle_Perfil.objects.get(Usuario=usuario)
-	return render_to_response('info-usuario.html',{'usuario':usuario, 'perfil':perfil}, context_instance=RequestContext(request))
+	if request.is_ajax():
+		usuario = False
+		perfil = False
+		if not request.user.is_anonymous():
+			usuario = request.user
+			usuario = User.objects.get(id=usuario.id)
+			if Detalle_Perfil.objects.filter(Usuario=usuario).count() > 0:
+				perfil = Detalle_Perfil.objects.get(Usuario=usuario)
+		return render_to_response('ajax/info-usuario.html',{'usuario':usuario, 'perfil':perfil}, context_instance=RequestContext(request))
+	else:
+		raise Http404
 
 #Vista que retorna en ajax los datos de los productos que ya estan en el carrito 
 def items_en_carrito(request):
@@ -900,9 +903,9 @@ def items_en_carrito(request):
 				}
 			detalleCarrito.append(detalle)
 		diccionario['detalle']=detalleCarrito
-		template = 'items-en-carrito.html'
+		template = 'ajax/items-en-carrito.html'
 	else:
-		template = 'no-hay-items-carrito.html'
+		template = 'ajax/no-hay-items-carrito.html'
 	return render_to_response(template,diccionario, context_instance=RequestContext(request))
 
 #Vista que devuelve a la pagina ofertas
@@ -1824,7 +1827,7 @@ def filtro_oferta(request):
 		diccionario['page_number']=page_number
 
 		diccionario['productos']=productos
-		return render_to_response('filtro-subcategoria-marca.html', diccionario, context_instance=RequestContext(request))
+		return render_to_response('ajax/resultado-filtro.html', diccionario, context_instance=RequestContext(request))
 	else:
 		raise Http404
 
@@ -1976,7 +1979,7 @@ def filtro_novedades(request):
 		diccionario['page_number']=page_number
 
 		diccionario['productos']=productos
-		return render_to_response('filtro-subcategoria-marca.html', diccionario, context_instance=RequestContext(request))
+		return render_to_response('ajax/resultado-filtro.html', diccionario, context_instance=RequestContext(request))
 	else:
 		raise Http404
 
@@ -2054,6 +2057,6 @@ def filtro_destacados(request):
 		diccionario['page_number']=page_number
 
 		diccionario['productos']=productos
-		return render_to_response('filtro-subcategoria-marca.html', diccionario, context_instance=RequestContext(request))
+		return render_to_response('ajax/resultado-filtro.html', diccionario, context_instance=RequestContext(request))
 	else:
 		raise Http404

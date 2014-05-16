@@ -1,0 +1,72 @@
+<article  class="cuerpo-contenido row">
+	{% for elemento in productos %}
+	<div class="producto-elemento col-xs-6 col-sm-6 col-md-4">
+	    <div class="thumbnail">
+    		{% if elemento.Oferta %}
+            <img src="{{STATIC_URL}}img/img_oferta.png" class="img_oferta">
+            {% endif %}
+			<a href="/detalle-producto/{{elemento.Codigo}}">
+				<img src="{{MEDIA_URL}}{{elemento.Imagen}}" class="img-thumbnail">
+			</a>
+      		<div class="caption">
+        		<h3 class="nombre-producto">{{elemento.Descripcion|truncatewords:10}}</h3>
+        		<p class="caption-precio">L. {{elemento.Precio}}</p>
+        		<form method="post" action="/agregar-carrito/">{% csrf_token %}
+        			<input type="hidden" value="{{elemento.Codigo}}" name="Producto">
+        			<input type="hidden" value="1" name="Cantidad">
+        			<p class="producto-caja-btn">
+        				<button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></span></button> <a href="/detalle-producto/{{elemento.Codigo}}" class="btn btn-default" role="button">Detalles</a>
+        			</p>
+        		</form>
+      		</div>
+    	</div>
+	</div>
+	{% empty %}
+	 	<div class="alert alert-warning">
+	 		<h3>No hay productos para mostrar con esos parámetros.</h3>
+	 	</div>
+	{% endfor %}
+</article>
+{% if totalProductos > 18 %}
+<article class="cuerpo-contenido row paginacion">
+	<ul class="pagination">
+		<li class="{% if not productos.has_previous %}disabled{% endif %}">
+			{% if not productos.has_previous %}
+				<a class="">Inicio</a>
+			{% else %}
+				<a href="?page=1" class="">Inicio</a>
+			{% endif %}
+		</li>
+		<li class="{% if not productos.has_previous %}disabled{% endif %}">
+			{% if not productos.has_previous %}
+				<a class="">Anterior</a>
+			{% else %}
+				<a href="?page={{productos.previous_page_number}}" class="">Anterior</a>
+			{% endif %}
+		</li>
+		{% for page in page_number %}
+			{% if page == productos.number %}
+				
+					<li class="active"><a class="visible-lg">{{page}}</a></li>
+				
+			{% else %}
+				<li><a class="visible-lg" href="?page={{ page }}">{{ page }}</a></li>
+			{% endif %}
+		{% endfor %}
+		<li class="{% if not productos.has_next %}disabled{% endif %}">
+			{% if not productos.has_next %}
+				<a class="">Siguiente</a>
+			{% else %}
+				<a href="?page={{productos.next_page_number}}" class="" >Siguiente</a>
+			{% endif %}
+		</li>
+		<li class="{% if not productos.has_next %}disabled{% endif %}">
+			{% if not productos.has_next %}
+				<a class="">Ultimo</a>
+			{% else %}
+				<a href="?page={{productos.paginator.num_pages}}" class="">Ultimo</a>
+			{% endif %}
+		</li>
+	</ul>
+</article>
+{% endif %}

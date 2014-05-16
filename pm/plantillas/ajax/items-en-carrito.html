@@ -1,0 +1,46 @@
+<div class="row titulo-items hidden-xs">
+	<div class="col col-sm-8"><label>Producto</label></div>
+	<div class="col col-sm-4">
+		<div class="row titulo-precio-cantidad">
+			<div class="col col-sm-6"><label>Precio</label></div>
+			<div class="col col-sm-6"><label>Cantidad</label></div>
+		</div>
+	</div>
+</div>
+{% for item in detalle %}
+	<div  class="item-carrito">
+		<div class="col col-sm-8">
+			<figure class="col col-xs-3 col-sm-3">
+                <a href="/detalle-producto/{{item.Producto.pk}}"><img src="{{MEDIA_URL}}{{item.Imagen}}" class="img-thumbnail"></a>
+			</figure>
+			<div class="item-descripcion col col-xs-9 col-sm-9">
+				<a href="/detalle-producto/{{item.Producto.pk}}"><h3>{{item.Producto.Descripcion|safe}}</h3></a>
+				<div class="item-eliminar">
+					<a class="btnItem-Eliminar" href="#" data-id="{{item.id}}">Eliminar</a>
+				</div>
+			</div>
+		</div>
+		<div class="col col-xs-12 col-sm-4">
+			<div class="row titulo-precio-cantidad visible-xs">
+				<div class="col col-xs-6 text-center">
+					<label>Precio</label>
+				</div>
+				<div class="col col-xs-6 text-center">
+					<label>Cantidad</label>
+				</div>
+			</div>
+			<div class="row item-precio-cantidad">
+				<div class="col item-precio col-xs-6 col-sm-6">
+					<p>L. {{item.Precio}}</p>
+				</div>
+				<div class="col item-cantidad col-xs-6 col-sm-6" data-id="form_{{item.id}}">
+					<div>
+						<p>{{item.Cantidad}}</p>
+						<a href="#" class="btnItem-Editar" data-id="{{item.id}}">Editar</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% empty %}
+{% endfor %}
