@@ -37,7 +37,6 @@ body {
 /* Declare heights because of positioning of img element */
 .carousel .item {
   /*height: 500px;*/
-  width: 300%;
   min-width: 100%;
   background-color: #777;
 }
@@ -45,7 +44,6 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  width: 300%;
   min-width: 100%;
   /*height: 500px;*/
 }
