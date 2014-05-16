@@ -136,35 +136,41 @@
 		</article>
 		<article id="contenido-lateral" class="hidden-xs col-sm-4 col-md-3 contenido-lateral" >
 			<div class="row producto-filtro-lateral">
-                <div class="row">
-                    <h2 class="titulo">Novedades</h2>
-                </div>
-                <div  class="cuerpo-contenido row">
+				<div class="row">
+					<h2 class="titulo">Novedades</h2>
+				</div>
+				<div  class="cuerpo-contenido row">
 					{% for item in novedades %}
 					<article class="producto-elemento row">
-							<div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
-							<div class="row">
-								<figure id="s2" class="s2 demo">
-		                            <img src="{{MEDIA_URL}}{{item.Imagen}}" >          
-	                            </figure>
-								<div class="contenido-lateral-precio">
-									<div class="row">
-										<h3 ><span class="label label-success">L. {{item.Precio}}</span></h3>
-									</div>
-									<div class="row producto-caja-btn">
-	                                    <form method="post" action="/agregar-carrito/">{% csrf_token %}
-	                                        <input type="hidden" value="{{item.Codigo}}" name="Producto">
-	                                        <input type="hidden" value="1" name="Cantidad">
-	                                        <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a></p>
-	                                    </form>
-	                                </div>
+						<div class="detalle-codigo row">
+							<p><strong>Código:</strong> {{item.Codigo}}</p>
+						</div>
+						<div class="row">
+							<figure id="s2" class="s2 demo">
+								<img src="{{MEDIA_URL}}{{item.Imagen}}" >	
+                            </figure>
+							<div class="contenido-lateral-precio">
+								<div class="row">
+									<h3 ><span class="label label-success">L. {{item.Precio}}</span></h3>
 								</div>
+								<div class="row producto-caja-btn">
+                                    <form method="post" action="/agregar-carrito/">{% csrf_token %}
+                                        <input type="hidden" value="{{item.Codigo}}" name="Producto">
+                                        <input type="hidden" value="1" name="Cantidad">
+                                        <button class="btn btn-primary" type="submit">
+                                        	<span class='icon-carrito icon-carritocart'></span>
+                                        </button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a>
+                                    </form>
+                                </div>
 							</div>
-							<div class="row detalle-descripcion"><p>{{item.Descripcion|truncatewords:8}}</p></div>
-						</article>
+						</div>
+						<div class="row detalle-descripcion">
+							<p>{{item.Descripcion|truncatewords:8}}</p>
+						</div>
+					</article>
 					{% endfor %}
 				</div>
-            </div>
+			</div>
 			<div class="row producto-filtro-lateral">
 				<div class="row">
 					<h2 class="titulo">Ofertas</h2>
@@ -172,25 +178,31 @@
 				<div  class="cuerpo-contenido row">
 					{% for item in ofertas %}
 					<article class="producto-elemento row">
-						<div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
+						<div class="detalle-codigo row">
+							<p><strong>Código:</strong> {{item.Codigo}}</p>
+						</div>
 						<div class="row">
 							<figure id="s2" class="s2 demo">
-	                            <img src="{{MEDIA_URL}}{{item.Imagen}}" >              
+								<img src="{{MEDIA_URL}}{{item.Imagen}}" >	
                             </figure>
 							<div class="contenido-lateral-precio">
-								<div class="row">									
+								<div class="row">
 									<h3 ><span class="label label-success">L. {{item.Precio}}</span></h3>
 								</div>
 								<div class="row producto-caja-btn">
                                     <form method="post" action="/agregar-carrito/">{% csrf_token %}
                                         <input type="hidden" value="{{item.Codigo}}" name="Producto">
                                         <input type="hidden" value="1" name="Cantidad">
-                                        <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a></p>
+                                        <button class="btn btn-primary" type="submit">
+                                        	<span class='icon-carrito icon-carritocart'></span>
+                                        </button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a>
                                     </form>
                                 </div>
 							</div>
 						</div>
-						<div class="row detalle-descripcion"><p>{{item.Descripcion|truncatewords:8}}</p></div>
+						<div class="row detalle-descripcion">
+							<p>{{item.Descripcion|truncatewords:8}}</p>
+						</div>
 					</article>
 					{% endfor %}
 				</div>
@@ -203,25 +215,31 @@
 				<div  class="cuerpo-contenido row">
 					{% for item in destacados %}
 					<article class="producto-elemento row">
-						<div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
+						<div class="detalle-codigo row">
+							<p><strong>Código:</strong> {{item.Codigo}}</p>
+						</div>
 						<div class="row">
 							<figure id="s2" class="s2 demo">
-	                            <img src="{{MEDIA_URL}}{{item.Imagen}}" >               
+								<img src="{{MEDIA_URL}}{{item.Imagen}}" >	
                             </figure>
 							<div class="contenido-lateral-precio">
-								<div class="row">									
+								<div class="row">
 									<h3 ><span class="label label-success">L. {{item.Precio}}</span></h3>
 								</div>
 								<div class="row producto-caja-btn">
                                     <form method="post" action="/agregar-carrito/">{% csrf_token %}
                                         <input type="hidden" value="{{item.Codigo}}" name="Producto">
                                         <input type="hidden" value="1" name="Cantidad">
-                                        <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a></p>
+                                        <button class="btn btn-primary" type="submit">
+                                        	<span class='icon-carrito icon-carritocart'></span>
+                                        </button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a>
                                     </form>
                                 </div>
 							</div>
 						</div>
-						<div class="row detalle-descripcion"><p>{{item.Descripcion|truncatewords:8}}</p></div>
+						<div class="row detalle-descripcion">
+							<p>{{item.Descripcion|truncatewords:8}}</p>
+						</div>
 					</article>
 					{% endfor %}
 				</div>

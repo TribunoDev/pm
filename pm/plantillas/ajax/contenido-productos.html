@@ -1,0 +1,23 @@
+{% for elemento in datos %}
+    <div class="producto-elemento col-xs-6 col-sm-6 col-md-4">
+    	<div class="thumbnail">
+            {% if elemento.Oferta %}
+            <img src="{{STATIC_URL}}img/img_oferta.png" class="img_oferta">
+            {% endif %}
+            <a href="/detalle-producto/{{elemento.Codigo}}">
+                <img src="{{MEDIA_URL}}{{elemento.Imagen}}" class="img-thumbnail">
+            </a>
+      		<div class="caption">
+        		<h3 class="nombre-producto">{{elemento.Descripcion|truncatewords:8}}</h3>
+        		<p class="caption-precio">L. {{elemento.Precio}}</p>
+        		<form method="post" action="/agregar-carrito/">{% csrf_token %}
+        			<input type="hidden" value="{{elemento.Codigo}}" name="Producto">
+        			<input type="hidden" value="1" name="Cantidad">
+        			<p class="producto-caja-btn">
+        			<button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></span></button>
+        			<a href="/detalle-producto/{{elemento.Codigo}}" class="btn btn-default" role="button">Detalles</a></p>
+        		</form>
+      		</div>
+    	</div>
+  	</div>
+{% endfor %}

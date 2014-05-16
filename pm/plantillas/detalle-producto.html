@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block titulo %}P&amp;M - Detalle de Producto{% endblock %}
+{% block titulo %}Paper&amp;More - Detalle de Producto{% endblock %}
 {% block metadata %}
     <meta property="og:title" content="Detalle de Producto">
     <meta property="og:url" content="http://django.pm.hn/detalle-producto/{{detalle.Codigo}}">
@@ -237,11 +237,7 @@
                             <div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
                             <div class="row">
                                 <figure class="s2 demo">
-                                    {% for img in detalle_img %}
-                                        {% if img.Producto.Producto.Codigo == item.Codigo %}
-                                            <img src="{{MEDIA_URL}}{{img.Imagen}}" alt="{{item.Descripcion}}" >
-                                        {% endif %}
-                                    {% endfor %}
+                                    <img src="{{MEDIA_URL}}{{item.Imagen}}" >
                                 </figure>
                                 <div class="contenido-lateral-precio">
                                     <div class="row">
@@ -272,11 +268,7 @@
                         <div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
                         <div class="row">
                             <figure class="s2 demo">
-                                {% for img in detalle_img %}
-                                    {% if img.Producto.Producto.Codigo == item.Codigo %}
-                                        <img src="{{MEDIA_URL}}{{img.Imagen}}" alt="{{item.Descripcion}}">
-                                    {% endif %}
-                                {% endfor %}
+                                <img src="{{MEDIA_URL}}{{item.Imagen}}" >
                             </figure>
                             <div class="contenido-lateral-precio ">
                                 <div class="row">
@@ -306,11 +298,7 @@
                         <div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
                         <div class="row">
                             <figure class="s2 demo">
-                                {% for img in detalle_img %}
-                                    {% if img.Producto.Producto.Codigo == item.Codigo %}
-                                        <img src="{{MEDIA_URL}}{{img.Imagen}}" alt="{{item.Descripcion}}">
-                                    {% endif %}
-                                {% endfor %}
+                                <img src="{{MEDIA_URL}}{{item.Imagen}}" >
                             </figure>
                             <div class="contenido-lateral-precio ">
                                 <div class="row">

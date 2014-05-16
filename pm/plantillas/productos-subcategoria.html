@@ -138,7 +138,9 @@
 					<div  class="cuerpo-contenido row">
 						{% for item in novedades %}
 						<article class="producto-elemento row">
-							<div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
+							<div class="detalle-codigo row">
+								<p><strong>Código:</strong> {{item.Codigo}}</p>
+							</div>
 							<div class="row">
 								<figure id="s2" class="s2 demo">
 									<img src="{{MEDIA_URL}}{{item.Imagen}}" >	
@@ -151,17 +153,20 @@
 	                                    <form method="post" action="/agregar-carrito/">{% csrf_token %}
 	                                        <input type="hidden" value="{{item.Codigo}}" name="Producto">
 	                                        <input type="hidden" value="1" name="Cantidad">
-	                                        <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a></p>
+	                                        <button class="btn btn-primary" type="submit">
+	                                        	<span class='icon-carrito icon-carritocart'></span>
+	                                        </button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a>
 	                                    </form>
 	                                </div>
 								</div>
 							</div>
-							<div class="row detalle-descripcion"><p>{{item.Descripcion|truncatewords:8}}</p></div>
+							<div class="row detalle-descripcion">
+								<p>{{item.Descripcion|truncatewords:8}}</p>
+							</div>
 						</article>
 						{% endfor %}
 					</div>
 				</div>
-				<div class="row espacio"></div>
 				<div class="row producto-filtro-lateral">
 					<div class="row">
 						<h2 class="titulo">Ofertas</h2>
@@ -182,12 +187,16 @@
 	                                    <form method="post" action="/agregar-carrito/">{% csrf_token %}
 	                                        <input type="hidden" value="{{item.Codigo}}" name="Producto">
 	                                        <input type="hidden" value="1" name="Cantidad">
-	                                        <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a></p>
+	                                        <button class="btn btn-primary" type="submit">
+	                                        	<span class='icon-carrito icon-carritocart'></span>
+	                                        </button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a>
 	                                    </form>
 	                                </div>
 								</div>
 							</div>
-							<div class="row detalle-descripcion"><p>{{item.Descripcion|truncatewords:8}}</p></div>
+							<div class="row detalle-descripcion">
+								<p>{{item.Descripcion|truncatewords:8}}</p>
+							</div>
 						</article>
 						{% endfor %}
 					</div>
@@ -216,12 +225,16 @@
                                     <form method="post" action="/agregar-carrito/">{% csrf_token %}
                                         <input type="hidden" value="{{item.Codigo}}" name="Producto">
                                         <input type="hidden" value="1" name="Cantidad">
-                                        <button class="btn btn-primary" type="submit"><span class='icon-carrito icon-carritocart'></button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a></p>
+                                        <button class="btn btn-primary" type="submit">
+                                        	<span class='icon-carrito icon-carritocart'></span>
+                                        </button> <a href="/detalle-producto/{{item.Codigo}}" class="btn btn-default" role="button">Ver</a>
                                     </form>
                                 </div>
                             </div>
                         </div>
-                        <div class="row detalle-descripcion"><p>{{item.Descripcion|truncatewords:8}}</p></div>
+                        <div class="row detalle-descripcion">
+                        	<p>{{item.Descripcion|truncatewords:8}}</p>
+                        </div>
                     </article>
                     {% endfor %}
                 </div>

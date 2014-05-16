@@ -55,6 +55,14 @@ header .container{
 	border-right: 1px solid #dddddd;
 }
 
+#ico-twitter{
+	padding-right: 7px;
+}
+
+#ico-facebook{
+	padding-left: 7px;
+}
+
 #InicioSesion{
 	padding: 10%;
 }

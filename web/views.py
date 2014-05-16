@@ -395,7 +395,7 @@ def destacados(request):
 		destacados.append(infoProducto)
 
 	diccionario['datos']=destacados
-	return render_to_response('contenido-productos.html', diccionario, context_instance= RequestContext(request))
+	return render_to_response('ajax/contenido-productos.html', diccionario, context_instance= RequestContext(request))
 
 #Vista que devuelve los productos que estan en la categoria de Ofertas
 def ofertas(request):
@@ -420,7 +420,7 @@ def ofertas(request):
 		ofertas.append(infoProducto)
 
 	diccionario['datos']=ofertas
-	return render_to_response('contenido-productos.html', diccionario, context_instance=RequestContext(request))
+	return render_to_response('ajax/contenido-productos.html', diccionario, context_instance=RequestContext(request))
 
 def novedades(request):
 	diccionario={}
@@ -444,7 +444,7 @@ def novedades(request):
 		novedades.append(infoProducto)
 
 	diccionario['datos']=novedades
-	return render_to_response('contenido-productos.html', diccionario, context_instance=RequestContext(request))
+	return render_to_response('ajax/contenido-productos.html', diccionario, context_instance=RequestContext(request))
 
 
 #Vista que genera los item de la pestaña productos en el menu principal
@@ -455,7 +455,7 @@ def catalogo_productos(request):
 		s=SubCategoria.objects.order_by('Subcategoria')
 		producto = Producto.objects.all()
 		diccionario['total']=s.annotate(existencia=Count('producto')).order_by('Subcategoria')
-		return render_to_response('categorias-productos.html', diccionario, context_instance=RequestContext(request))
+		return render_to_response('ajax/categorias-productos.html', diccionario, context_instance=RequestContext(request))
 	else:
 		raise Http404
 
@@ -779,7 +779,7 @@ def datos_carrito(request):
 	diccionario['subtotal']=intcomma(precio)
 	diccionario['carrito']=carrito
 
-	return render_to_response('datos-carrito.html',diccionario, context_instance=RequestContext(request))
+	return render_to_response('ajax/datos-carrito.html',diccionario, context_instance=RequestContext(request))
 
 #Vista que retorna la cantidad de productos y mostrarlo en la pestaña "Carrito" del menu
 def item_carrito(request):
@@ -1560,14 +1560,14 @@ def cargar_region(request):
 		if request.method=='POST':
 			pais = request.POST['pais']
 			region = Region.objects.filter(Pais=Pais.objects.get(pk=pais))
-	return render_to_response('cargar-combo.html', {'datos':region, 'r':True},context_instance=RequestContext(request))
+	return render_to_response('ajax/cargar-combo.html', {'datos':region, 'r':True},context_instance=RequestContext(request))
 
 def cargar_ciudad(request):
 	if request.is_ajax():
 		if request.method=='POST':
 			region = request.POST['region']
 			ciudad = Ciudad.objects.filter(Region=Region.objects.get(pk=region))
-	return render_to_response('cargar-combo.html', {'datos':ciudad, 'c':True},context_instance=RequestContext(request))
+	return render_to_response('ajax/cargar-combo.html', {'datos':ciudad, 'c':True},context_instance=RequestContext(request))
 
 def contactanos(request):
 	diccionario={}
@@ -1621,6 +1621,9 @@ def politica(request):
 
 def encuestas(request):
 	diccionario={}
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
 	diccionario['marcas']=Marca.objects.all()
 	diccionario['destacados']= images_destacados()
 	diccionario['ofertas']= images_ofertas()
