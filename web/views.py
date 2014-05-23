@@ -105,6 +105,7 @@ def cargar_imagenes():
 	return listaImages
 
 #Vista que devuelve los productos que no tienen imagen
+@login_required(login_url='/ingresar/')
 def producto_imagen(request):
 	lista=[]
 	total = 0
@@ -152,6 +153,7 @@ def ingresar(request):
 def home(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
+	diccionario['banner']=Jumbotron.objects.all()
 	diccionario['usuario']=request.user
 	diccionario['centinela']=True
 	return render_to_response('index.html',diccionario, context_instance=RequestContext(request))
@@ -201,8 +203,7 @@ def registrar(request):
 			return HttpResponseRedirect('/home')
 	else:
 		frmUser = SignUpForm()
-
-	return render_to_response('registro.html', context_instance=RequestContext(request))
+		return render_to_response('registro.html', context_instance=RequestContext(request))
 
 def registrado(request):
  	return render_to_response('registrado.html', context_instance=RequestContext(request))
@@ -214,8 +215,6 @@ def marcas(request):
 	diccionario['destacados']= images_destacados()
 	diccionario['ofertas']= images_ofertas()
 	diccionario['novedades'] = images_novedades()
-	#diccionario['detalle_img']= Detalle_Imagen.objects.all()
-	#diccionario['detalle_img'] = cargar_imagenes()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
@@ -298,80 +297,6 @@ def marca_producto(request, id_marca):
 		diccionario['centinela']=True
 	return render_to_response('productos-marcas.html', diccionario, context_instance=RequestContext(request))
 
-def filtro_marca_subcategoria(request):
-	diccionario={}
-	pSM=[]
-	if request.is_ajax() and request.method == 'POST':
-		s = request.POST['subcategoria']
-		m = request.POST['marca']
-		e = request.POST['existencia']
-		marca = " "+m+" "
-		
-		productos = Producto.objects.filter(Descripcion__icontains=marca)
-		if s == 'all' and e == 0:
-			productos = Producto.objects.filter(Descripcion__icontains=marca)
-		elif s == 'all' and e == '1':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Existencia__gt=0)
-		elif s == 'all' and e == '2':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Existencia__lte=0)
-		
-		sub = SubCategoria.objects.filter(Subcategoria=s)
-		if sub.count() > 0:
-			sub = SubCategoria.objects.get(Subcategoria=s)
-			if s != 'all' and e == '0':
-				productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub)
-			elif s != 'all' and e == '1':
-				productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__gt=0)
-			elif s != 'all' and e == '2':
-				productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__lte=0)
-		
-		diccionario['totalProductos'] = productos.count()
-		for producto in productos:
-			if Imagen.objects.filter(Producto=producto).count() > 0:
-				allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
-				archImg = allImages[0]
-				archImg = archImg.Imagen
-			else:
-				archImg = "img_detalle/sin_imagen.png"
-			infoProducto = {
-				'Codigo': producto.Codigo,
-				'Descripcion': producto.Descripcion,
-				'Precio': intcomma(producto.Precio),
-				'Oferta': producto.Oferta,
-				'Imagen': archImg
-			}
-			pSM.append(infoProducto)
-
-		paginador = Paginator(pSM, 18)
-		try:
-			pagina = int(request.GET.get('page','1'))
-			productos = paginador.page(pagina)
-		except PageNotAnInteger:
-			productos = 1
-		except EmptyPage:
-			productos = paginador.page(paginador.num_pages)
-
-		startPage = max(pagina - 2, 1)
-		if startPage <= 3:
-			startPage = 1
-
-		endPage = pagina + 2 + 1
-		if endPage >= paginador.num_pages - 1:
-			endPage = paginador.num_pages + 1
-
-		page_number = []
-
-		for n in range(startPage, endPage):
-			if n > 0 and n <= paginador.num_pages:
-				page_number.append(n)
-
-		diccionario['page_number']=page_number
-
-		diccionario['productos']=productos
-		return render_to_response('ajax/resultado-filtro.html', diccionario, context_instance=RequestContext(request))
-	else:
-		raise Http404
-
 #Vista para devolver los productos con categoria "Novedades"
 def destacados(request):
 	diccionario={}
@@ -446,21 +371,6 @@ def novedades(request):
 	diccionario['datos']=novedades
 	return render_to_response('ajax/contenido-productos.html', diccionario, context_instance=RequestContext(request))
 
-
-#Vista que genera los item de la pestaña productos en el menu principal
-def catalogo_productos(request):
-	if request.is_ajax():
-		diccionario={}
-		diccionario['categorias']=Categoria.objects.order_by('Categoria')
-		s=SubCategoria.objects.order_by('Subcategoria')
-		producto = Producto.objects.all()
-		diccionario['total']=s.annotate(existencia=Count('producto')).order_by('Subcategoria')
-		return render_to_response('ajax/categorias-productos.html', diccionario, context_instance=RequestContext(request))
-	else:
-		raise Http404
-
-
-
 #Vista que retorna los productos filtrando por subcategorias
 def ver_subcategoria(request, id_subcat):
 	diccionario={}
@@ -533,86 +443,6 @@ def ver_subcategoria(request, id_subcat):
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
 	return render_to_response('productos-subcategoria.html', diccionario, context_instance=RequestContext(request))
-
-def filtro_subcategoria_marca(request):
-	diccionario={}
-	pMS=[]
-	if request.is_ajax() and request.method == 'POST':
-		m = request.POST['marca']
-		e = request.POST['existencia']
-		s = request.POST['subcategoria']
-
-		if Marca.objects.filter(id=m).count() > 0:
-			marca = Marca.objects.get(id=m)
-			marca = " "+marca.Marca+" "
-
-		sub = SubCategoria.objects.get(Subcategoria=s)
-		productos = Producto.objects.filter(Subcategoria=sub).order_by('Descripcion')
-		if m == '0' and e == '0':
-			productos = Producto.objects.filter(Subcategoria=sub).order_by('Descripcion')
-
-		elif m == '0' and e == '1':
-			productos = Producto.objects.filter(Subcategoria=sub, Existencia__gt=0).order_by('Descripcion')
-		
-		elif m == '0' and e == '2':
-			productos = Producto.objects.filter(Subcategoria=sub, Existencia__lte=0).order_by('Descripcion')
-		
-		elif m != '0' and e == '0':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub).order_by('Descripcion')
-
-		elif m != '0' and e == '1':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__gt=0).order_by('Descripcion')
-		
-		elif m != '0' and e == '2':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__lte=0).order_by('Descripcion')
-
-		diccionario['totalProductos']=productos.count()
-
-		for producto in productos:
-			if Imagen.objects.filter(Producto=producto).count() > 0:
-				allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
-				archImg = allImages[0]
-				archImg = archImg.Imagen
-			else:
-				archImg = "img_detalle/sin_imagen.png"
-			infoProducto = {
-				'Codigo': producto.Codigo,
-				'Descripcion': producto.Descripcion,
-				'Precio': intcomma(producto.Precio),
-				'Oferta': producto.Oferta,
-				'Imagen': archImg
-				}
-			pMS.append(infoProducto)
-
-		paginador = Paginator(pMS, 18)
-		try:
-			pagina = int(request.GET.get('page','1'))
-			productos = paginador.page(pagina)
-		except PageNotAnInteger:
-			pagina = 1
-		except EmptyPage:
-			productos = paginador.page(paginador.num_pages)
-
-		startPage = max(pagina - 2, 1)
-		if startPage <= 3:
-			startPage = 1
-
-		endPage = pagina + 2 + 1
-		if endPage >= paginador.num_pages - 1:
-			endPage = paginador.num_pages + 1
-
-		page_number = []
-
-		for n in range(startPage, endPage):
-			if n > 0 and n <= paginador.num_pages:
-				page_number.append(n)
-
-		diccionario['page_number']=page_number
-
-		diccionario['productos']=productos
-		return render_to_response('ajax/resultado-filtro.html', diccionario, context_instance=RequestContext(request))
-	else:
-		raise Http404
 
 
 #Vista que retorna el detalle de cada producto
@@ -754,47 +584,9 @@ def agregar_carrito(request):
 		diccionario['ofertas']= images_ofertas()
 		diccionario['detalle_img']= cargar_imagenes()
 
-	return HttpResponseRedirect('/carrito/')
-
-#Vista que retorna el total en el carrito
-def datos_carrito(request):
-	diccionario={}
-	cantidad = 0
-	precio = 0
-	estado = 0
-	carrito = 0
-	usuario = 0
-	productoImagen =[]
-	
-	if request.is_ajax():
-			estado = Estado.objects.get(id=1)
-			if not request.user.is_anonymous():
-				usuario = request.user
-				carrito = Carrito.objects.get(Usuario=usuario, Estado=estado)
-				detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
-				for item in detalle:
-					cantidad += item.Cantidad
-					precio += item.Producto.Precio * item.Cantidad
-	diccionario['cantidad']=cantidad
-	diccionario['subtotal']=intcomma(precio)
-	diccionario['carrito']=carrito
-
-	return render_to_response('ajax/datos-carrito.html',diccionario, context_instance=RequestContext(request))
-
-#Vista que retorna la cantidad de productos y mostrarlo en la pestaña "Carrito" del menu
-def item_carrito(request):
-	cantidad = 0
-	estado = 0
-	if not request.user.is_anonymous():
-		usuario = request.user
-	
-	#if Carrito.objects.filter(Usuario=usuario, Estado=estado).count() != 0:
-		estado = Estado.objects.get(id=1)
-		carrito = Carrito.objects.get(Usuario=usuario, Estado=estado)
-		detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
-		for item in detalle:
-			cantidad += item.Cantidad		
-	return HttpResponse(json.dumps({'cantidad':cantidad}), content_type='application/json')
+		return HttpResponseRedirect('/carrito/')
+	else:
+		raise Http404
 
 #Vista que retorna a la pagina de "Carrito"
 @login_required(login_url='/ingresar/')
@@ -809,40 +601,6 @@ def carrito(request):
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
 	return render_to_response('carrito.html',diccionario, context_instance=RequestContext(request))
-
-#Vista que retorna formulario para editar cantidad de cada producto en carrito
-def form_editar_cantidad(request):
-	if request.is_ajax():
-		if request.method == 'POST':
-			idDetalle = request.POST['idDetalle']
-			detalle = Detalle_Carrito.objects.get(id=idDetalle)
-	return render_to_response('ajax/form-editar-cantidad.html', {'detalle':detalle}, context_instance=RequestContext(request))
-
-#Vista que actualiza la cantidad de productos en cada item del carrito
-def actualizar_cantidad(request):
-	if not request.user.is_anonymous():
-		usuario = request.user
-	if request.is_ajax():
-		if request.method == 'POST':
-			cantidad = request.POST['Cantidad']
-			producto = request.POST['Producto']
-
-			carrito = Carrito.objects.get(Usuario=usuario, Estado=1)
-			producto = Producto.objects.get(Codigo=producto)
-			detalle = Detalle_Carrito.objects.get(Producto=producto, Carrito=carrito)
-			detalle.Cantidad = cantidad
-			detalle.save()
-	return render_to_response('ajax/item-cantidad.html',{'item':detalle}, context_instance=RequestContext(request))
-
-#Vista que elimina un item del carrito
-def eliminar_item_detalle(request):
-	if request.is_ajax():
-		if request.method == 'POST':
-			idDetalle = request.POST['idDetalle']
-			detalle = Detalle_Carrito.objects.filter(id=idDetalle).delete()
-		else:
-			raise Http404
-	return HttpResponse(json.dumps({'dato':detalle}), content_type='application/json')
 
 #Vista que retorna a la pagina del perfil de usuario
 @login_required(login_url='/ingresar/')
@@ -861,52 +619,6 @@ def perfil_usuario(request):
 		diccionario['ofertas']= images_ofertas()
 		diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	return render_to_response('perfil-usuario.html',diccionario, context_instance=RequestContext(request))
-
-#Vista que devuelve informacion sobre el usuario
-def info_usuario(request):
-	if request.is_ajax():
-		usuario = False
-		perfil = False
-		if not request.user.is_anonymous():
-			usuario = request.user
-			usuario = User.objects.get(id=usuario.id)
-			if Detalle_Perfil.objects.filter(Usuario=usuario).count() > 0:
-				perfil = Detalle_Perfil.objects.get(Usuario=usuario)
-		return render_to_response('ajax/info-usuario.html',{'usuario':usuario, 'perfil':perfil}, context_instance=RequestContext(request))
-	else:
-		raise Http404
-
-#Vista que retorna en ajax los datos de los productos que ya estan en el carrito 
-def items_en_carrito(request):
-	diccionario={}
-	carrito = 0
-	detalleCarrito = []
-	if not request.user.is_anonymous():
-		usuario = request.user
-		carrito = Carrito.objects.get(Usuario=usuario, Estado=1)
-	if Detalle_Carrito.objects.filter(Carrito=carrito).count() > 0:
-		for item in Detalle_Carrito.objects.filter(Carrito=carrito):
-			producto = Producto.objects.get(Codigo=item.Producto.Codigo)
-			if Imagen.objects.filter(Producto=producto).count() > 0:
-				allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
-				archImg = allImages[0]
-				archImg = archImg.Imagen
-			else:
-				archImg = "img_detalle/sin_imagen.png"
-			detalle = {
-				'id': item.pk,
-				'Carrito': carrito,
-				'Imagen': archImg,
-				'Producto': Producto.objects.get(Codigo=item.Producto.Codigo),
-				'Cantidad': item.Cantidad,
-				'Precio': intcomma(item.Producto.Precio)
-				}
-			detalleCarrito.append(detalle)
-		diccionario['detalle']=detalleCarrito
-		template = 'ajax/items-en-carrito.html'
-	else:
-		template = 'ajax/no-hay-items-carrito.html'
-	return render_to_response(template,diccionario, context_instance=RequestContext(request))
 
 #Vista que devuelve a la pagina ofertas
 def productos_ofertas(request):
@@ -980,7 +692,7 @@ def productos_ofertas(request):
 	diccionario['productos'] = ofertas
 	return render_to_response('ofertas.html', diccionario, context_instance=RequestContext(request))
 
-
+#VISTA QUE RETORNA A LA PLANTILLA PRODUCTOS DESTACADOS
 def productos_destacados(request):
 	diccionario={}
 	destacados=[]
@@ -989,6 +701,7 @@ def productos_destacados(request):
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
+
 	diccionario['marcas']=Marca.objects.all()
 	diccionario['totalProductos'] = Producto.objects.filter(Destacado__exact=True).count()
 
@@ -1009,7 +722,6 @@ def productos_destacados(request):
 		'Imagen': archImg
 		}
 		destacados.append(infoProducto)
-
 
 	paginador = Paginator(destacados, 18)
 	try:
@@ -1043,10 +755,8 @@ def productos_destacados(request):
 			if cP > 0:
 				listaMarcas.append(marca)
 	diccionario['listaMarcas']=listaMarcas
-
 	diccionario['existencia1']=Producto.objects.filter(Destacado__exact=True, Existencia__gt=0).count()
 	diccionario['existencia2']=Producto.objects.filter(Destacado__exact=True, Existencia__lte=0).count()
-
 	diccionario['ofertas'] = images_ofertas()
 	diccionario['novedades'] = images_novedades()
 	diccionario['detalle_img'] = cargar_imagenes()
@@ -1066,6 +776,7 @@ def servicio_flete(request):
 	diccionario['lugar']=Servicio_Flete.objects.all()
 	return render_to_response('servicio-flete.html', diccionario, context_instance=RequestContext(request))
 
+#VISTA QUE ENVIA UN EMAIL DESDE LA PAGINA
 def enviar_email(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
@@ -1098,6 +809,8 @@ def enviar_email(request):
 	else:
 		raise Http404
 
+#VISTA DE EVALUA EL TOTAL DEL CARRITO Y ENVIA REGISTRO DE DIRECCION O PAGO DE CARRITO
+@login_required(login_url='/ingresar/')
 def envio_datos_pago(request):
 	if not request.user.is_anonymous():
 		if request.method=='POST':
@@ -1113,6 +826,8 @@ def envio_datos_pago(request):
 			if Tot<15000:
 				return HttpResponseRedirect('/enviar-pago-carrito/')
 
+#VISTA QUE RETORNA LA PLANTILLA ENVIAR DIRECCIÓN
+@login_required(login_url='/ingresar/')
 def envio_direccion(request):
 	estado=Estado.objects.get(pk=1)
 	diccionario={}
@@ -1131,7 +846,8 @@ def envio_direccion(request):
 	else:
 		HttpResponseRedirect('/ingresar/')
 		
-
+#VISTA QUE RETORNA A LA PLANTILLA ENVIO DE PAGO
+@login_required(login_url='/ingresar/')
 def envio_pago(request):
 	cantidad=0
 	precio=0
@@ -1175,6 +891,8 @@ def envio_pago(request):
 				
 	return render_to_response('enviar-pago.html', diccionario, context_instance=RequestContext(request))
 
+#VISTA QUE RETORNA A LA PLANTILLA ENVIO DE PAGO SIN REGISTRAR UNA DIRECCIÓN
+@login_required(login_url='/ingresar/')
 def envio_pago_directo(request):
 	cantidad=0
 	precio=0
@@ -1205,7 +923,8 @@ def envio_pago_directo(request):
 	return render_to_response('enviar-pago2.html', diccionario, context_instance=RequestContext(request))
 
 
-
+#VISTA QUE PROCESA EL PAGO REALIZADO POR EL CLIENTE Y RETORNA UN RESULTADO
+@login_required(login_url='/ingresar/')
 def procesar_pago(request):
 	diccionario={}
 	if not request.user.is_anonymous():
@@ -1331,6 +1050,8 @@ def procesar_pago(request):
 			
 	return render_to_response(template, diccionario, context_instance=RequestContext(request))
 
+#VISTA QUE GUARDA UNA DIRECCIÓN
+@login_required(login_url='/ingresar/')
 def guardar_direccion(request):
 	cantidad=0
 	precio=0
@@ -1387,7 +1108,11 @@ def guardar_direccion(request):
 			#return HttpResponse(json.dumps({'texto':texto}), content_type='application/json')
 		else:
 			return render_to_response('enviar-pago.html', diccionario, context_instance=RequestContext(request))
+	else:
+		raise Http404
 
+#VISTA QUE RETORNA LA PLANTILLA EDITAR PERFIL
+@login_required(login_url='/ingresar/')
 def editar_perfil(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
@@ -1404,6 +1129,8 @@ def editar_perfil(request):
 		diccionario['detalle_img']= cargar_imagenes()
 		return render_to_response('editar-perfil.html', diccionario, context_instance=RequestContext(request))
 
+#VISTA QUE ACTUALIZA EL PERFIL DEL USUARIO
+@login_required(login_url='/ingresar/')
 def actualizar_perfil(request):
 	if not request.user.is_anonymous():
 		if request.method=='POST':
@@ -1425,11 +1152,14 @@ def actualizar_perfil(request):
 			d.Direccion=direccion
 			u.save()
 			d.save()
-
-		return HttpResponseRedirect('/perfil-usuario/')
+			return HttpResponseRedirect('/perfil-usuario/')
+		else:
+			raise Http404
 	else:
 		return HttpResponseRedirect('/ingresar/')
 
+#VISTA QUE RETORNA A LA PLANTILLA DE EDITAR CONTRASEÑA
+@login_required(login_url='/ingresar/')
 def editar_contrasena(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
@@ -1441,8 +1171,12 @@ def editar_contrasena(request):
 		diccionario['ofertas']= images_ofertas()
 		diccionario['novedades'] = images_novedades()
 		diccionario['detalle_img']= cargar_imagenes()
-	return render_to_response('editar-contrasena.html', diccionario, context_instance=RequestContext(request))
+		return render_to_response('editar-contrasena.html', diccionario, context_instance=RequestContext(request))
+	else:
+		return HttpResponseRedirect('/ingresar/')
 
+#VISTA QUE ACTUALIZA LA CONTRASEÑA DEL USUARIO
+@login_required(login_url='/ingresar/')
 def actualizar_contrasena(request):
 	error=0
 	diccionario={}
@@ -1461,6 +1195,8 @@ def actualizar_contrasena(request):
 	else:
 		return HttpResponseRedirect('/ingresar/')
 
+#VISTA QUE RETORNA A LA PLANTILLA HISTORIAL DE COMPRA
+@login_required(login_url='/ingresar/')
 def historial_compra(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
@@ -1473,7 +1209,9 @@ def historial_compra(request):
 		diccionario['centinela']=True
 		diccionario['compras']=Orden.objects.all()
 	return render_to_response('historial-compra.html',diccionario, context_instance=RequestContext(request))
-	
+
+#VISTA QUE RETORNA A LA PLANTILLA DETALLE DE COMPRA
+@login_required(login_url='/ingresar/')
 def detalle_compra(request, id_orden):
 	precio=0
 	diccionario={}
@@ -1495,6 +1233,7 @@ def detalle_compra(request, id_orden):
 	diccionario['Tot']=Tot
 	return render_to_response('detalle-compra.html', diccionario, context_instance=RequestContext(request))
 
+@login_required(login_url='/ingresar/')
 def historial_credito(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
@@ -1508,6 +1247,8 @@ def historial_credito(request):
 		diccionario['creditos']=Credito.objects.all().order_by('Fecha')
 	return render_to_response('historial-credito.html', diccionario, context_instance=RequestContext(request))
 
+#VISTA QUE RETORNA A LA PLANTILLA DEL DETALLE DE CRÉDITO
+@login_required(login_url='/ingresar/')
 def detalle_credito(request, id_credito):
 	precio=0
 	diccionario={}
@@ -1523,55 +1264,8 @@ def detalle_credito(request, id_credito):
 	diccionario['pagos']=Pagos.objects.filter(Credito=credito)
 	diccionario['credito']=credito
 	return render_to_response('detalle-credito.html', diccionario, context_instance=RequestContext(request))
-#Vista para verificar el Usuario a registrar--Ajax
-def verificar_usuario(request):
-	if request.is_ajax():
-		if request.method=='POST':
-			user=request.POST['usuario']
-			cUser=User.objects.filter(username=user).count()
-			if cUser >=1:
-				tUser=1
-			else:
-				tUser=0
-	return HttpResponse(json.dumps({'tUser':tUser}), content_type='application/json')
 
-#Vista para verificar el email a registrar--Ajax
-def verificar_email(request):
-	if request.is_ajax():
-		if request.method=='POST':
-			email=request.POST['email']
-			cUser=User.objects.filter(email=email).count()
-			if cUser >=1:
-				tUser=1
-			else:
-				tUser=0
-	return HttpResponse(json.dumps({'tUser':tUser}), content_type='application/json')
-
-def verificar_rnp(request):
-	if request.is_ajax():
-		if request.method=='POST':
-			rnp=request.POST['rnp']
-			cUser=Detalle_Perfil.objects.filter(RNP=rnp).count()
-			if cUser >=1:
-				tUser=1
-			else:
-				tUser=0
-	return HttpResponse(json.dumps({'tUser':tUser}), content_type='application/json')
-
-def cargar_region(request):
-	if request.is_ajax():
-		if request.method=='POST':
-			pais = request.POST['pais']
-			region = Region.objects.filter(Pais=Pais.objects.get(pk=pais))
-	return render_to_response('ajax/cargar-combo.html', {'datos':region, 'r':True},context_instance=RequestContext(request))
-
-def cargar_ciudad(request):
-	if request.is_ajax():
-		if request.method=='POST':
-			region = request.POST['region']
-			ciudad = Ciudad.objects.filter(Region=Region.objects.get(pk=region))
-	return render_to_response('ajax/cargar-combo.html', {'datos':ciudad, 'c':True},context_instance=RequestContext(request))
-
+#VISTA QUE RETORNA A LA PLANTILLA DE CONTACTOS
 def contactanos(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
@@ -1585,6 +1279,7 @@ def contactanos(request):
 		diccionario['centinela']=True
 	return render_to_response('contactanos.html', diccionario, context_instance=RequestContext(request))
 
+#VISTA QUE RETORNA A LA PLANTILLA DE PREGUNTAS FRECUENTES
 def faq(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
@@ -1598,6 +1293,7 @@ def faq(request):
 		diccionario['centinela']=True
 	return render_to_response('faq.html',diccionario,context_instance=RequestContext(request))
 
+#VISTA QUE RETORNA A LA PLANTILLA DE MISIÓN Y VISIÓN DE LA EMPRESA
 def mision_vision(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
@@ -1610,6 +1306,7 @@ def mision_vision(request):
 		diccionario['centinela']=True
 	return render_to_response('mision_vision.html', diccionario,context_instance=RequestContext(request))
 
+#VISTA QUE RETORNA A LA PLANTILLA DE POLITICA DE LA EMPRESA
 def politica(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
@@ -1622,6 +1319,7 @@ def politica(request):
 		diccionario['centinela']=True
 	return render_to_response('politica.html', diccionario,context_instance=RequestContext(request))
 
+#VISTA QUE RETORNA A LA PÁGINA DE ENCUESTAS
 def encuestas(request):
 	diccionario={}
 	if not request.user.is_anonymous():
@@ -1634,6 +1332,7 @@ def encuestas(request):
 	diccionario['detalle_img']= cargar_imagenes()
 	return render_to_response('encuestas.html', diccionario,context_instance=RequestContext(request))
 
+#VISTA QUE RETORNA A LA PÁGINA RESULTADO DE ENCUESTA DESPUES DE GUARDAR LOS REGISTROS
 def guardarEncuestaVentas(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
@@ -1689,6 +1388,7 @@ def guardarEncuestaVentas(request):
 	else:
 		raise Http404
 
+#VISTA QUE RETORNA A LA PÁGINA RESULTADO DE ENCUESTA DESPUES DE GUARDAR LOS REGISTROS
 def guardarEncuestaSoporte(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
@@ -1696,6 +1396,7 @@ def guardarEncuestaSoporte(request):
 	diccionario['ofertas']= images_ofertas()
 	diccionario['novedades'] = images_novedades()
 	diccionario['detalle_img']= cargar_imagenes()
+
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
@@ -1753,97 +1454,16 @@ def guardarEncuestaSoporte(request):
 	else:
 		raise Http404
 
-def filtro_oferta(request):
-	diccionario={}
-	pOM=[]
-	if request.is_ajax() and request.method == 'POST':
-		m = request.POST['marca']
-		e = request.POST['existencia']
-
-		if Marca.objects.filter(id=m).count() > 0:
-			marca = Marca.objects.get(id=m)
-			marca = " "+marca.Marca+" "
-
-		productos = Producto.objects.filter(Oferta__exact=True).order_by('Descripcion')
-		if m == '0' and e == '0':
-			productos = Producto.objects.filter(Oferta__exact=True).order_by('Descripcion')
-
-		elif m == '0' and e == '1':
-			productos = Producto.objects.filter(Oferta__exact=True, Existencia__gt=0).order_by('Descripcion')
-		
-		elif m == '0' and e == '2':
-			productos = Producto.objects.filter(Oferta__exact=True, Existencia__lte=0).order_by('Descripcion')
-
-		elif m != '0' and e == '0':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Oferta__exact=True).order_by('Descripcion')
-
-		elif m != '0' and e == '1':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Oferta__exact=True, Existencia__gt=0).order_by('Descripcion')
-		
-		elif m != '0' and e == '2':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Oferta__exact=True, Existencia__lte=0).order_by('Descripcion')
-
-		diccionario['totalProductos']=productos.count()
-
-		for producto in productos:
-			if Imagen.objects.filter(Producto=producto).count() > 0:
-				allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
-				archImg = allImages[0]
-				archImg = archImg.Imagen
-			else:
-				archImg = "img_detalle/sin_imagen.png"
-			infoProducto = {
-				'Codigo': producto.Codigo,
-				'Descripcion': producto.Descripcion,
-				'Precio': intcomma(producto.Precio),
-				'Oferta': producto.Oferta,
-				'Imagen': archImg
-				}
-			pOM.append(infoProducto)
-
-		paginador = Paginator(pOM, 18)
-		try:
-			pagina = int(request.GET.get('page','1'))
-			productos = paginador.page(pagina)
-		except PageNotAnInteger:
-			pagina = 1
-		except EmptyPage:
-			productos = paginador.page(paginador.num_pages)
-
-		startPage = max(pagina - 2, 1)
-		if startPage <= 3:
-			startPage = 1
-
-		endPage = pagina + 2 + 1
-		if endPage >= paginador.num_pages - 1:
-			endPage = paginador.num_pages + 1
-
-		page_number = []
-
-		for n in range(startPage, endPage):
-			if n > 0 and n <= paginador.num_pages:
-				page_number.append(n)
-
-		diccionario['page_number']=page_number
-
-		diccionario['productos']=productos
-		return render_to_response('ajax/resultado-filtro.html', diccionario, context_instance=RequestContext(request))
-	else:
-		raise Http404
-
+#VISTA QUE RETORNA A LA PÁGINA QUE MUESTRA TODOS LOS PRODUCTOS EN NOVEDADES
 def productos_novedades(request):
 	diccionario={}
 	novedades = []
 	centinela = False
-	usuario = ""
 	fecha1 = date.today() - timedelta(days=60)
-	if not request.user.is_anonymous():
-		diccionario['usuario']=request.user
-		diccionario['centinela']=True
 	diccionario['marcas']=Marca.objects.all()
 	pNovedades = Producto.objects.filter(Fecha__gte=fecha1).order_by('Descripcion')
-	#pNovedades = Producto.objects.filter(Fecha__month__range=(fecha1, datetime.now().month)).order_by('Descripcion')
 	diccionario['totalProductos'] = pNovedades.count()
+
 	for producto in pNovedades:
 		if Imagen.objects.filter(Producto=producto).count() > 0:
 			allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
@@ -1894,95 +1514,103 @@ def productos_novedades(request):
 			if cP > 0:
 				listaMarcas.append(marca)
 	diccionario['listaMarcas']=listaMarcas
-
 	diccionario['existencia1']=Producto.objects.filter(Fecha__gte=fecha1, Existencia__gt=0).count()
 	diccionario['existencia2']=Producto.objects.filter(Fecha__gte=fecha1, Existencia__lte=0).count()
-
 	diccionario['destacados'] = images_destacados()
 	diccionario['novedades'] = images_novedades()
 	diccionario['detalle_img'] = Detalle_Imagen.objects.all()
 	diccionario['productos'] = novedades
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
 	return render_to_response('novedades.html', diccionario, context_instance=RequestContext(request))
 
-def filtro_novedades(request):
-	diccionario={}
-	pNM=[]
-	fecha1 = date.today() - timedelta(days=60)
-	if request.is_ajax() and request.method == 'POST':
-		m = request.POST['marca']
-		e = request.POST['existencia']
+##---------> VISTAS AJAX <----------####
 
-		if Marca.objects.filter(id=m).count() > 0:
-			marca = Marca.objects.get(id=m)
-			marca = " "+marca.Marca+" "
+#Vista que actualiza la cantidad de productos en cada item del carrito
+def actualizar_cantidad(request):
+	if not request.user.is_anonymous():
+		usuario = request.user
+	if request.is_ajax() and request.method == 'POST': 
+		cantidad = request.POST['Cantidad']
+		producto = request.POST['Producto']
 
-		productos = Producto.objects.filter(Fecha__gte=fecha1).order_by('Descripcion')
-		if m == '0' and e == '0':
-			productos = Producto.objects.filter(Fecha__gte=fecha1).order_by('Descripcion')
-
-		elif m == '0' and e == '1':
-			productos = Producto.objects.filter(Fecha__gte=fecha1, Existencia__gt=0).order_by('Descripcion')
-		
-		elif m == '0' and e == '2':
-			productos = Producto.objects.filter(Fecha__gte=fecha1, Existencia__lte=0).order_by('Descripcion')
-
-		elif m != '0' and e == '0':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Fecha__gte=fecha1).order_by('Descripcion')
-
-		elif m != '0' and e == '1':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Fecha__gte=fecha1, Existencia__gt=0).order_by('Descripcion')
-		
-		elif m != '0' and e == '2':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Fecha__gte=fecha1, Existencia__lte=0).order_by('Descripcion')
-
-		diccionario['totalProductos']=productos.count()
-
-		for producto in productos:
-			if Imagen.objects.filter(Producto=producto).count() > 0:
-				allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
-				archImg = allImages[0]
-				archImg = archImg.Imagen
-			else:
-				archImg = "img_detalle/sin_imagen.png"
-			infoProducto = {
-				'Codigo': producto.Codigo,
-				'Descripcion': producto.Descripcion,
-				'Precio': intcomma(producto.Precio),
-				'Oferta': producto.Oferta,
-				'Imagen': archImg
-				}
-			pNM.append(infoProducto)
-
-		paginador = Paginator(pNM, 18)
-		try:
-			pagina = int(request.GET.get('page','1'))
-			productos = paginador.page(pagina)
-		except PageNotAnInteger:
-			pagina = 1
-		except EmptyPage:
-			productos = paginador.page(paginador.num_pages)
-
-		startPage = max(pagina - 2, 1)
-		if startPage <= 3:
-			startPage = 1
-
-		endPage = pagina + 2 + 1
-		if endPage >= paginador.num_pages - 1:
-			endPage = paginador.num_pages + 1
-
-		page_number = []
-
-		for n in range(startPage, endPage):
-			if n > 0 and n <= paginador.num_pages:
-				page_number.append(n)
-
-		diccionario['page_number']=page_number
-
-		diccionario['productos']=productos
-		return render_to_response('ajax/resultado-filtro.html', diccionario, context_instance=RequestContext(request))
+		carrito = Carrito.objects.get(Usuario=usuario, Estado=1)
+		producto = Producto.objects.get(Codigo=producto)
+		detalle = Detalle_Carrito.objects.get(Producto=producto, Carrito=carrito)
+		detalle.Cantidad = cantidad
+		detalle.save()
+		return render_to_response('ajax/item-cantidad.html',{'item':detalle}, context_instance=RequestContext(request))
 	else:
 		raise Http404
 
+#VISTA QUE CARGA LAS CIUDADES PARA REGISTRA UNA DIRECCIÓN
+def cargar_ciudad(request):
+	if request.is_ajax() and request.method=='POST':
+		region = request.POST['region']
+		ciudad = Ciudad.objects.filter(Region=Region.objects.get(pk=region))
+		return render_to_response('ajax/cargar-combo.html', {'datos':ciudad, 'c':True},context_instance=RequestContext(request))
+	else:
+		raise Http404
+
+#VISTA QUE CARGA LAS REGIONES O DEPARTAMENTOS PARA REGISTRA UNA DIRECCIÓN
+def cargar_region(request):
+	if request.is_ajax() and request.method=='POST':
+		pais = request.POST['pais']
+		region = Region.objects.filter(Pais=Pais.objects.get(pk=pais))
+		return render_to_response('ajax/cargar-combo.html', {'datos':region, 'r':True},context_instance=RequestContext(request))
+	else:
+		raise Http404
+
+#Vista que genera los item de la pestaña productos en el menu principal
+def catalogo_productos(request):
+	if request.is_ajax():
+		diccionario={}
+		diccionario['categorias']=Categoria.objects.order_by('Categoria')
+		s=SubCategoria.objects.order_by('Subcategoria')
+		producto = Producto.objects.all()
+		diccionario['total']=s.annotate(existencia=Count('producto')).order_by('Subcategoria')
+		return render_to_response('ajax/categorias-productos.html', diccionario, context_instance=RequestContext(request))
+	else:
+		raise Http404
+
+#Vista que retorna el total en el carrito
+def datos_carrito(request):
+	diccionario={}
+	cantidad = 0
+	precio = 0
+	estado = 0
+	carrito = 0
+	usuario = 0
+	productoImagen =[]
+	
+	if request.is_ajax():
+		estado = Estado.objects.get(id=1)
+		if not request.user.is_anonymous():
+			usuario = request.user
+			carrito = Carrito.objects.get(Usuario=usuario, Estado=estado)
+			detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
+			for item in detalle:
+				cantidad += item.Cantidad
+				precio += item.Producto.Precio * item.Cantidad
+		diccionario['cantidad']=cantidad
+		diccionario['subtotal']=intcomma(precio)
+		diccionario['carrito']=carrito
+		return render_to_response('ajax/datos-carrito.html',diccionario, context_instance=RequestContext(request))
+	else:
+		raise Http404
+
+
+#Vista que elimina un item del carrito
+def eliminar_item_detalle(request):
+	if request.method == 'POST' and request.is_ajax():
+		idDetalle = request.POST['idDetalle']
+		detalle = Detalle_Carrito.objects.filter(id=idDetalle).delete()
+		return HttpResponse(json.dumps({'dato':detalle}), content_type='application/json')
+	else:
+		raise Http404
+
+#Vista que filtra los productos destacados por existencias y marcas
 def filtro_destacados(request):
 	diccionario={}
 	pDM=[]
@@ -2058,5 +1686,435 @@ def filtro_destacados(request):
 
 		diccionario['productos']=productos
 		return render_to_response('ajax/resultado-filtro.html', diccionario, context_instance=RequestContext(request))
+	else:
+		raise Http404
+
+#VISTA QUE FILTRA LOS PRODUCTOS POR MARCAS Y SUBCATEGORIAS Y EXISTENCIAS
+def filtro_marca_subcategoria(request):
+	diccionario={}
+	pSM=[]
+	if request.is_ajax() and request.method == 'POST':
+		s = request.POST['subcategoria']
+		m = request.POST['marca']
+		e = request.POST['existencia']
+		marca = " "+m+" "
+		
+		productos = Producto.objects.filter(Descripcion__icontains=marca)
+		if s == 'all' and e == 0:
+			productos = Producto.objects.filter(Descripcion__icontains=marca)
+		elif s == 'all' and e == '1':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Existencia__gt=0)
+		elif s == 'all' and e == '2':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Existencia__lte=0)
+		
+		sub = SubCategoria.objects.filter(Subcategoria=s)
+		if sub.count() > 0:
+			sub = SubCategoria.objects.get(Subcategoria=s)
+			if s != 'all' and e == '0':
+				productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub)
+			elif s != 'all' and e == '1':
+				productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__gt=0)
+			elif s != 'all' and e == '2':
+				productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__lte=0)
+		
+		diccionario['totalProductos'] = productos.count()
+		for producto in productos:
+			if Imagen.objects.filter(Producto=producto).count() > 0:
+				allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
+				archImg = allImages[0]
+				archImg = archImg.Imagen
+			else:
+				archImg = "img_detalle/sin_imagen.png"
+			infoProducto = {
+				'Codigo': producto.Codigo,
+				'Descripcion': producto.Descripcion,
+				'Precio': intcomma(producto.Precio),
+				'Oferta': producto.Oferta,
+				'Imagen': archImg
+			}
+			pSM.append(infoProducto)
+
+		paginador = Paginator(pSM, 18)
+		try:
+			pagina = int(request.GET.get('page','1'))
+			productos = paginador.page(pagina)
+		except PageNotAnInteger:
+			productos = 1
+		except EmptyPage:
+			productos = paginador.page(paginador.num_pages)
+
+		startPage = max(pagina - 2, 1)
+		if startPage <= 3:
+			startPage = 1
+
+		endPage = pagina + 2 + 1
+		if endPage >= paginador.num_pages - 1:
+			endPage = paginador.num_pages + 1
+
+		page_number = []
+
+		for n in range(startPage, endPage):
+			if n > 0 and n <= paginador.num_pages:
+				page_number.append(n)
+
+		diccionario['page_number']=page_number
+
+		diccionario['productos']=productos
+		return render_to_response('ajax/resultado-filtro.html', diccionario, context_instance=RequestContext(request))
+	else:
+		raise Http404
+
+#VISTA QUE FILTRA LOS PRODUCTOS EN NOVEDADES POR EXISTENCIAS Y MARCA
+def filtro_novedades(request):
+	diccionario={}
+	pNM=[]
+	fecha1 = date.today() - timedelta(days=60)
+
+	if request.is_ajax() and request.method == 'POST':
+		m = request.POST['marca']
+		e = request.POST['existencia']
+
+		if Marca.objects.filter(id=m).count() > 0:
+			marca = Marca.objects.get(id=m)
+			marca = " "+marca.Marca+" "
+
+		productos = Producto.objects.filter(Fecha__gte=fecha1).order_by('Descripcion')
+		if m == '0' and e == '0':
+			productos = Producto.objects.filter(Fecha__gte=fecha1).order_by('Descripcion')
+
+		elif m == '0' and e == '1':
+			productos = Producto.objects.filter(Fecha__gte=fecha1, Existencia__gt=0).order_by('Descripcion')
+		
+		elif m == '0' and e == '2':
+			productos = Producto.objects.filter(Fecha__gte=fecha1, Existencia__lte=0).order_by('Descripcion')
+
+		elif m != '0' and e == '0':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Fecha__gte=fecha1).order_by('Descripcion')
+
+		elif m != '0' and e == '1':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Fecha__gte=fecha1, Existencia__gt=0).order_by('Descripcion')
+		
+		elif m != '0' and e == '2':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Fecha__gte=fecha1, Existencia__lte=0).order_by('Descripcion')
+
+		diccionario['totalProductos']=productos.count()
+
+		for producto in productos:
+			if Imagen.objects.filter(Producto=producto).count() > 0:
+				allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
+				archImg = allImages[0]
+				archImg = archImg.Imagen
+			else:
+				archImg = "img_detalle/sin_imagen.png"
+			infoProducto = {
+				'Codigo': producto.Codigo,
+				'Descripcion': producto.Descripcion,
+				'Precio': intcomma(producto.Precio),
+				'Oferta': producto.Oferta,
+				'Imagen': archImg
+				}
+			pNM.append(infoProducto)
+
+		paginador = Paginator(pNM, 18)
+		try:
+			pagina = int(request.GET.get('page','1'))
+			productos = paginador.page(pagina)
+		except PageNotAnInteger:
+			pagina = 1
+		except EmptyPage:
+			productos = paginador.page(paginador.num_pages)
+
+		startPage = max(pagina - 2, 1)
+		if startPage <= 3:
+			startPage = 1
+
+		endPage = pagina + 2 + 1
+		if endPage >= paginador.num_pages - 1:
+			endPage = paginador.num_pages + 1
+
+		page_number = []
+
+		for n in range(startPage, endPage):
+			if n > 0 and n <= paginador.num_pages:
+				page_number.append(n)
+
+		diccionario['page_number']=page_number
+		diccionario['productos']=productos
+		return render_to_response('ajax/resultado-filtro.html', diccionario, context_instance=RequestContext(request))
+	else:
+		raise Http404
+
+#VISTA QUE FILTRA LOS PRODUCTOS EN OFERTA POR EXISTENCIA Y MARCA
+def filtro_oferta(request):
+	diccionario={}
+	pOM=[]
+	if request.is_ajax() and request.method == 'POST':
+		m = request.POST['marca']
+		e = request.POST['existencia']
+
+		if Marca.objects.filter(id=m).count() > 0:
+			marca = Marca.objects.get(id=m)
+			marca = " "+marca.Marca+" "
+
+		productos = Producto.objects.filter(Oferta__exact=True).order_by('Descripcion')
+		if m == '0' and e == '0':
+			productos = Producto.objects.filter(Oferta__exact=True).order_by('Descripcion')
+
+		elif m == '0' and e == '1':
+			productos = Producto.objects.filter(Oferta__exact=True, Existencia__gt=0).order_by('Descripcion')
+		
+		elif m == '0' and e == '2':
+			productos = Producto.objects.filter(Oferta__exact=True, Existencia__lte=0).order_by('Descripcion')
+
+		elif m != '0' and e == '0':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Oferta__exact=True).order_by('Descripcion')
+
+		elif m != '0' and e == '1':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Oferta__exact=True, Existencia__gt=0).order_by('Descripcion')
+		
+		elif m != '0' and e == '2':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Oferta__exact=True, Existencia__lte=0).order_by('Descripcion')
+
+		diccionario['totalProductos']=productos.count()
+
+		for producto in productos:
+			if Imagen.objects.filter(Producto=producto).count() > 0:
+				allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
+				archImg = allImages[0]
+				archImg = archImg.Imagen
+			else:
+				archImg = "img_detalle/sin_imagen.png"
+			infoProducto = {
+				'Codigo': producto.Codigo,
+				'Descripcion': producto.Descripcion,
+				'Precio': intcomma(producto.Precio),
+				'Oferta': producto.Oferta,
+				'Imagen': archImg
+				}
+			pOM.append(infoProducto)
+
+		paginador = Paginator(pOM, 18)
+		try:
+			pagina = int(request.GET.get('page','1'))
+			productos = paginador.page(pagina)
+		except PageNotAnInteger:
+			pagina = 1
+		except EmptyPage:
+			productos = paginador.page(paginador.num_pages)
+
+		startPage = max(pagina - 2, 1)
+		if startPage <= 3:
+			startPage = 1
+
+		endPage = pagina + 2 + 1
+		if endPage >= paginador.num_pages - 1:
+			endPage = paginador.num_pages + 1
+
+		page_number = []
+
+		for n in range(startPage, endPage):
+			if n > 0 and n <= paginador.num_pages:
+				page_number.append(n)
+
+		diccionario['page_number']=page_number
+		diccionario['productos']=productos
+		return render_to_response('ajax/resultado-filtro.html', diccionario, context_instance=RequestContext(request))
+	else:
+		raise Http404
+
+#VISTA QUE FILTRA LOS PRODUCTOS POR SUBCATEGORIA Y MARCA
+def filtro_subcategoria_marca(request):
+	diccionario={}
+	pMS=[]
+	if request.is_ajax() and request.method == 'POST':
+		m = request.POST['marca']
+		e = request.POST['existencia']
+		s = request.POST['subcategoria']
+
+		if Marca.objects.filter(id=m).count() > 0:
+			marca = Marca.objects.get(id=m)
+			marca = " "+marca.Marca+" "
+
+		sub = SubCategoria.objects.get(Subcategoria=s)
+		productos = Producto.objects.filter(Subcategoria=sub).order_by('Descripcion')
+		if m == '0' and e == '0':
+			productos = Producto.objects.filter(Subcategoria=sub).order_by('Descripcion')
+
+		elif m == '0' and e == '1':
+			productos = Producto.objects.filter(Subcategoria=sub, Existencia__gt=0).order_by('Descripcion')
+		
+		elif m == '0' and e == '2':
+			productos = Producto.objects.filter(Subcategoria=sub, Existencia__lte=0).order_by('Descripcion')
+		
+		elif m != '0' and e == '0':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub).order_by('Descripcion')
+
+		elif m != '0' and e == '1':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__gt=0).order_by('Descripcion')
+		
+		elif m != '0' and e == '2':
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__lte=0).order_by('Descripcion')
+
+		diccionario['totalProductos']=productos.count()
+
+		for producto in productos:
+			if Imagen.objects.filter(Producto=producto).count() > 0:
+				allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
+				archImg = allImages[0]
+				archImg = archImg.Imagen
+			else:
+				archImg = "img_detalle/sin_imagen.png"
+			infoProducto = {
+				'Codigo': producto.Codigo,
+				'Descripcion': producto.Descripcion,
+				'Precio': intcomma(producto.Precio),
+				'Oferta': producto.Oferta,
+				'Imagen': archImg
+				}
+			pMS.append(infoProducto)
+
+		paginador = Paginator(pMS, 18)
+		try:
+			pagina = int(request.GET.get('page','1'))
+			productos = paginador.page(pagina)
+		except PageNotAnInteger:
+			pagina = 1
+		except EmptyPage:
+			productos = paginador.page(paginador.num_pages)
+
+		startPage = max(pagina - 2, 1)
+		if startPage <= 3:
+			startPage = 1
+
+		endPage = pagina + 2 + 1
+		if endPage >= paginador.num_pages - 1:
+			endPage = paginador.num_pages + 1
+
+		page_number = []
+
+		for n in range(startPage, endPage):
+			if n > 0 and n <= paginador.num_pages:
+				page_number.append(n)
+
+		diccionario['page_number']=page_number
+
+		diccionario['productos']=productos
+		return render_to_response('ajax/resultado-filtro.html', diccionario, context_instance=RequestContext(request))
+	else:
+		raise Http404
+
+#Vista que retorna formulario para editar cantidad de cada producto en carrito
+def form_editar_cantidad(request):
+	if request.is_ajax() and request.method == 'POST':
+		idDetalle = request.POST['idDetalle']
+		detalle = Detalle_Carrito.objects.get(id=idDetalle)
+		return render_to_response('ajax/form-editar-cantidad.html', {'detalle':detalle}, context_instance=RequestContext(request))
+	else:
+		raise Http404
+
+#Vista que devuelve informacion sobre el usuario
+def info_usuario(request):
+	if request.is_ajax():
+		usuario = False
+		perfil = False
+		if not request.user.is_anonymous():
+			usuario = request.user
+			usuario = User.objects.get(id=usuario.id)
+			if Detalle_Perfil.objects.filter(Usuario=usuario).count() > 0:
+				perfil = Detalle_Perfil.objects.get(Usuario=usuario)
+		return render_to_response('ajax/info-usuario.html',{'usuario':usuario, 'perfil':perfil}, context_instance=RequestContext(request))
+	else:
+		raise Http404
+
+#Vista que retorna la cantidad de productos y mostrarlo en la pestaña "Carrito" del menu
+def item_carrito(request):
+	cantidad = 0
+	estado = 0
+	if request.is_ajax():
+		if not request.user.is_anonymous():
+			usuario = request.user
+	
+		#if Carrito.objects.filter(Usuario=usuario, Estado=estado).count() != 0:
+			estado = Estado.objects.get(id=1)
+			carrito = Carrito.objects.get(Usuario=usuario, Estado=estado)
+			detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
+			for item in detalle:
+				cantidad += item.Cantidad		
+		return HttpResponse(json.dumps({'cantidad':cantidad}), content_type='application/json')
+	else:
+		raise Http404
+
+#Vista que retorna en ajax los datos de los productos que ya estan en el carrito 
+def items_en_carrito(request):
+	diccionario={}
+	carrito = 0
+	detalleCarrito = []
+	if request.is_ajax():
+		if not request.user.is_anonymous():
+			usuario = request.user
+			carrito = Carrito.objects.get(Usuario=usuario, Estado=1)
+		if Detalle_Carrito.objects.filter(Carrito=carrito).count() > 0:
+			for item in Detalle_Carrito.objects.filter(Carrito=carrito):
+				producto = Producto.objects.get(Codigo=item.Producto.Codigo)
+				if Imagen.objects.filter(Producto=producto).count() > 0:
+					allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
+					archImg = allImages[0]
+					archImg = archImg.Imagen
+				else:
+					archImg = "img_detalle/sin_imagen.png"
+				detalle = {
+					'id': item.pk,
+					'Carrito': carrito,
+					'Imagen': archImg,
+					'Producto': Producto.objects.get(Codigo=item.Producto.Codigo),
+					'Cantidad': item.Cantidad,
+					'Precio': intcomma(item.Producto.Precio)
+					}
+				detalleCarrito.append(detalle)
+			diccionario['detalle']=detalleCarrito
+			template = 'ajax/items-en-carrito.html'
+		else:
+			template = 'ajax/no-hay-items-carrito.html'
+		return render_to_response(template,diccionario, context_instance=RequestContext(request))
+	else:
+		raise Http404
+
+
+#VISTA QUE VERIFICA SI EL EMAIL ESTA REGISTRADO.
+def verificar_email(request):
+	if request.is_ajax() and request.method=='POST':
+		email=request.POST['email']
+		cUser=User.objects.filter(email=email).count()
+		if cUser >=1:
+			tUser=1
+		else:
+			tUser=0
+		return HttpResponse(json.dumps({'tUser':tUser}), content_type='application/json')
+	else:
+		raise Http404
+
+#VISTA QUE VERIFICA SI EL RNP DE UN USUARIO YA ESTA REGISTRADO.
+def verificar_rnp(request):
+	if request.is_ajax() and request.method=='POST':
+		rnp=request.POST['rnp']
+		cUser=Detalle_Perfil.objects.filter(RNP=rnp).count()
+		if cUser >=1:
+			tUser=1
+		else:
+			tUser=0
+		return HttpResponse(json.dumps({'tUser':tUser}), content_type='application/json')
+	else:
+		raise Http404
+
+#VISTA QUE VERIFICA SI EL USUARIO YA ESTA REGISTRADO
+def verificar_usuario(request):
+	if request.is_ajax() and request.method=='POST':
+		user=request.POST['usuario']
+		cUser=User.objects.filter(username=user).count()
+		if cUser >=1:
+			tUser=1
+		else:
+			tUser=0
+		return HttpResponse(json.dumps({'tUser':tUser}), content_type='application/json')
 	else:
 		raise Http404

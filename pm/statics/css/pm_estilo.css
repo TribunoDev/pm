@@ -34,9 +34,9 @@ header .container{
 	border-bottom-left-radius: 0;
 }
 
-#busca{padding-top: 1.5%;}
+#busca{padding-top: 0.6%;}
 
-#busca input{height: 34px;}
+/*#busca input{height: 34px;}*/
 
 #caja-contenido .cuerpo-contenido{
 	border: none;
