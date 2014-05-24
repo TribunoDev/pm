@@ -119,6 +119,7 @@ def producto_imagen(request):
 #Vista que retorna la pagina de inicio
 def inicio(request):
 	diccionario={}
+	diccionario['accesos']=AccesosDirectos.objects.all()
 	diccionario['marcas']=Marca.objects.all()
 	diccionario['banner']=Jumbotron.objects.all()
 	if not request.user.is_anonymous():
@@ -152,6 +153,7 @@ def ingresar(request):
 @login_required(login_url='/ingresar/')
 def home(request):
 	diccionario={}
+	diccionario['accesos']=AccesosDirectos.objects.all()
 	diccionario['marcas']=Marca.objects.all()
 	diccionario['banner']=Jumbotron.objects.all()
 	diccionario['usuario']=request.user

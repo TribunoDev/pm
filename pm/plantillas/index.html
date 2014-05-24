@@ -9,6 +9,10 @@
       margin-top: 45px;
     }
 
+    #contenido-lateral .row{
+      margin-bottom: 15px;
+    }
+
     #myTab{
       padding-top: 5px;
       margin-bottom: 7px;
@@ -19,6 +23,20 @@
     }
     .contenedor{
       padding-top: 5px;
+    }
+
+    .icon{
+      font-size: 35px;
+      position: absolute;
+      top:45%;
+      z-index: 5;
+    }
+
+    .icon-flechitaizquierda{
+      left: 20%;
+    }
+    .icon-flechitaderecha{
+      right: 20%;
     }
   </style>
 {% endblock style %}
@@ -57,6 +75,16 @@
       </div>
     </article>
     <aside id="contenido-lateral" class="hidden-xs col-sm-4 col-md-3 contenido-lateral">
+    {% for item in accesos %}
+      {% if item.Imagen %}
+        <div class="row">
+          <a href="{{item.Url}}">
+            <img src="{{MEDIA_URL}}{{item.Imagen}}" alt="acceso directo" class="img-rounded"/>
+          </a>
+        </div>
+      {% endif %}
+    {% endfor %}
+      <!--
       <div class="row">
         <a href="/ofertas/">
           <img src="{{STATIC_URL}}img/ofertas.jpg" alt="acceso directo" class="img-rounded"/>
@@ -77,6 +105,7 @@
           <img class="img-rounded" src="http://www.ingvillamizar.com/wp-content/uploads/2013/01/logo-facebook-300x200.jpg" alt="acceso directo"/>
         </a>
       </div>
+      -->
     </aside> 
   </div>
 {% endblock %}
