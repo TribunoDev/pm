@@ -53,19 +53,16 @@
     </style>
 {% endblock %}
 {% block js %}
-    
-    <script type="text/javascript" src="{{STATIC_URL}}js/jquery.slides.min.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
     <script>
         $(document).on('ready', function(){
 
-            $('#slides').slidesjs({
-                pagination: {
-                    active: true,
-                },
-                navigation: false,
-                width: 940,
-                height: 528
+            $('#s2').cycle({ 
+                fx:     'turnDown', 
+                speed:  'fast', 
+                timeout: 0, 
+                next:   '#next2', 
+                prev:   '#prev2' 
             });
 
             function imprSelec(muestra){
@@ -134,7 +131,7 @@
                                 </div>
                                 <!--Imagen Movil -->
                                 <div class="row visible-xs">
-                                    <figure class="cycle-slideshow img-thumbnail" data-cycle-swipe=true data-cycle-fx=scrollHorz data-cycle-timeout=0 data-cycle-pager=".cycle-pager" data-cycle-prev=".cycle-prev" data-cycle-next=".cycle-next">
+                                    <figure id="s2" class="" >
                                         {% if cantidad > 0 %}
                                             {% for imagen in imagenes %}
                                                     <img src="{{MEDIA_URL}}{{imagen.Imagen}}" alt="{{detalle.Descripcion}} - Movil" class="img-rounded"/>
@@ -142,15 +139,11 @@
                                         {% else %}
                                             <img src="{{STATIC_URL}}img/sin_imagen.png">
                                         {% endif %}
-                                        <div class="cycle-caption"></div>
+                                        <!--div class="cycle-caption"></div-->
                                     </figure>
                                     <div class="cycle-controles">
-                                        <a href="#" class="cycle-prev">
-                                            <span class="glyphicon glyphicon-chevron-left"></span>
-                                        </a>
-                                        <a href="#" class="cycle-next">
-                                            <span class="glyphicon glyphicon-chevron-right"></span>
-                                        </a>
+                                        <a id="prev2" href="#"><span class="cycle-prev glyphicon glyphicon-chevron-left"></span></a>
+                                        <a id="next2" href=""><span class="cycle-next glyphicon glyphicon-chevron-right"></span></a>
                                     </div>
                                 </div>
                                 <div id="panel-opciones" class="row no-print">
