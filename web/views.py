@@ -41,7 +41,7 @@ def images_destacados():
 			if cImgD > 0:
 				cDImg = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=pD)).count()
 				if cDImg > 0:
-					objImg = Imagen.objects.get(Producto=pO)
+					objImg = Imagen.objects.get(Producto=pD)
 					#img = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=pD))[:1]
 					contar = contar + 1
 					destacados = {
