@@ -39,15 +39,18 @@ def images_destacados():
 		else:
 			cImgD = Imagen.objects.filter(Producto=pD).count()
 			if cImgD > 0:
-				img = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=pD))[:1]
-				contar = contar + 1
-				destacados = {
-					'Codigo':pD.pk,
-					'Descripcion':pD.Descripcion,
-					'Precio': intcomma(pD.Precio),
-					'Imagen': img[0].Imagen
-				}
-				listaDestacados.append(destacados)
+				cDImg = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=pD)).count()
+				if cDImg > 0:
+					objImg = Imagen.objects.get(Producto=pO)
+					#img = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=pD))[:1]
+					contar = contar + 1
+					destacados = {
+						'Codigo':pD.pk,
+						'Descripcion':pD.Descripcion,
+						'Precio': intcomma(pD.Precio),
+						'Imagen': img[0].Imagen
+					}
+					listaDestacados.append(destacados)
 				
 	return listaDestacados
 
@@ -65,7 +68,7 @@ def images_ofertas():
 				cDImg = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=pO)).count()
 				if cDImg > 0:
 					#img = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=pO))[:1]
-					#contar = contar + 1
+					contar = contar + 1
 					objImg = Imagen.objects.get(Producto=pO)
 					ofertas = {
 						'Codigo':pO.pk,
@@ -92,7 +95,7 @@ def images_novedades():
 				if cDImg > 0:
 					objImg = Imagen.objects.get(Producto=pN)
 					#img = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=pN))[:1]
-					#contar = contar + 1
+					contar = contar + 1
 					novedades = {
 						'Codigo':pN.pk,
 						'Descripcion':pN.Descripcion,
