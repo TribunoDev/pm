@@ -48,7 +48,8 @@ def images_destacados():
 						'Codigo':pD.pk,
 						'Descripcion':pD.Descripcion,
 						'Precio': intcomma(pD.Precio),
-						'Imagen': img[0].Imagen
+						'Imagen': objImg.Imagen,
+						#'Imagen': img[0].Imagen
 					}
 					listaDestacados.append(destacados)
 				
