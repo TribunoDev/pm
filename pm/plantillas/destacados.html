@@ -2,6 +2,14 @@
 {% block titulo %}Paper &amp; More - Productos Destacados{% endblock %}
 {% block js %}
 	<script>
+		$('#selectMarcas').on('change', function() {
+			cargarProductos();
+		});
+
+		$('#selectExistencia').on('change', function() {
+			cargarProductos();
+		});
+
 		$('#btnFiltroDestacados').on('click', function(){
 			$.ajax({
 				type: 	'POST',
@@ -17,6 +25,22 @@
 				dataType: 'html'
 			});
 		});
+
+		function cargarProductos() {
+			$.ajax({
+				type: 	'POST',
+				url: 	'/filtro-destacados/',
+				data: 	{
+					'marca': $('select[name="marca"]').val(),
+					'existencia': $('.existencia').val(),
+					'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+				},
+				success: function(data){
+					$('#resultadoFiltro').html(data);
+				},
+				dataType: 'html'
+			});
+		}
 	</script>
 {% endblock %}
 {% block contenido %}
@@ -42,6 +66,14 @@
 				 {% else %}
 				 	<input type="hidden" class="existencia" name="existencia" value="0">
 			   	{% endif %}
+			   	<div class="form-group">
+			   		<input id="precioMin" type="range" step="10" onchange="range1value.value=value" />
+			   		<output id="range1value" ></output>
+			   	</div>
+			   	<div class="form-group">
+			   		<input id="precioMax" type="range" step="10" onchange="range2value.value=value" />
+			   		<output id="range2value" ></output>
+			   	</div>
 			  <button id="btnFiltroDestacados" type="button" class="btn btn-info btn-sm btnFiltro">Mostrar</button>
 			</form>
 		</div>

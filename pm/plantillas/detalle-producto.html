@@ -104,11 +104,12 @@
                                 <div class="row hidden-xs">
                                     <figure class="img-thumbnail">
                                         {% if cantidad > 0 %}
-                                            {% for imagen in imagenes %}
+                                            <img src="{{MEDIA_URL}}{{imagen.Imagen}}" alt="{{detalle.Descripcion}}" />
+                                            <!--{% for imagen in imagenes %}
                                                 {% if forloop.first %}
                                                    <img src="{{MEDIA_URL}}{{imagen.Imagen}}" alt="{{detalle.Descripcion}}" /> 
                                                 {% endif %}
-                                            {% endfor %}
+                                            {% endfor %}-->
                                         {% else %}
                                             <img src="{{STATIC_URL}}img/sin_imagen.png">
                                         {% endif %}
@@ -220,6 +221,7 @@
             </div><!-- /.modal -->
         </article>
         <article id="contenido-lateral" class="hidden-xs col-sm-4 col-md-3 contenido-lateral no-print" >
+        {% load thumbnail %}
             <div class="row producto-filtro-lateral">
                 <div class="row">
                     <h2 class="titulo">Novedades</h2>
@@ -230,11 +232,12 @@
                             <div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
                             <div class="row">
                                 <figure class="s2 demo">
-                                    <img src="{{MEDIA_URL}}{{item.Imagen}}" >
+                                    <!--img src="{{MEDIA_URL}}{{item.Imagen}}" -->
+                                    {% thumbnail item.Imagen 100x80 upscale as thumb %}
+                                <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}">
                                 </figure>
                                 <div class="contenido-lateral-precio">
                                     <div class="row">
-                                        {% load humanize %}
                                         <h3 ><span class="label label-success">L. {{item.Precio}}</span></h3>
                                     </div>
                                     <div class="row producto-caja-btn">
@@ -261,7 +264,9 @@
                         <div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
                         <div class="row">
                             <figure class="s2 demo">
-                                <img src="{{MEDIA_URL}}{{item.Imagen}}" >
+                                <!--img src="{{MEDIA_URL}}{{item.Imagen}}" -->
+                                {% thumbnail item.Imagen 100x80 upscale as thumb %}
+                                <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}">
                             </figure>
                             <div class="contenido-lateral-precio ">
                                 <div class="row">
@@ -291,7 +296,9 @@
                         <div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
                         <div class="row">
                             <figure class="s2 demo">
-                                <img src="{{MEDIA_URL}}{{item.Imagen}}" >
+                                <!--img src="{{MEDIA_URL}}{{item.Imagen}}" -->
+                                {% thumbnail item.Imagen 100x80 upscale as thumb %}
+                                <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}">
                             </figure>
                             <div class="contenido-lateral-precio ">
                                 <div class="row">

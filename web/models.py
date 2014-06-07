@@ -50,6 +50,7 @@ class Producto(models.Model):
 
 class Imagen(models.Model):
 	Producto = models.ForeignKey(Producto)
+	Imagen = models.ImageField(upload_to='thumbnail', verbose_name=u'Imagen del Producto')
 	class Meta:
 		verbose_name_plural=u'Imagen para producto'
 	def __unicode__(self):
@@ -58,6 +59,10 @@ class Imagen(models.Model):
 class Detalle_Imagen(models.Model):
 	Producto = models.ForeignKey(Imagen)
 	Imagen = models.ImageField(upload_to='img_detalle')
+	class Meta:
+		verbose_name_plural=u'Imagenes del Producto'
+	def __unicode__(self):
+		return str(self.Imagen)
 
 class Estado(models.Model):
 	Estado = models.CharField(max_length=45, help_text='Describe el estado del carrito', verbose_name=u'Estado de Carrito')

@@ -2,6 +2,40 @@
 {% block titulo %}Ofertas{% endblock %}
 {% block js %}
 	<script>
+		$.ajax({
+			type: 'POST',
+			url: '/obtener-precios/',
+			data: {
+				'productos':'1',
+				'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+			},
+			success: function(data){
+				$('#precioMin').attr('value', data.precioMenor);
+				$('#precioMin').attr('min', data.precioMenor);
+				$('#precioMin').attr('max', data.mitad);
+				$('#precioMax').attr('max', data.precioMayor);
+				$('#precioMax').attr('min', data.mitad);
+				$('#precioMax').attr('value', data.precioMayor);
+			},
+			dataType: 'JsON'
+		});
+
+		$('#precioMin').on('change', function() {
+			cargarProductos();
+		});
+
+		$('#precioMax').on('change', function() {
+			cargarProductos();
+		});
+
+		$('#selectMarcas').on('change', function() {
+			cargarProductos();
+		});
+
+		$('#selectExistencia').on('change', function() {
+			cargarProductos();
+		});
+
 		$('#btnFiltroOferta').on('click', function(){
 			$.ajax({
 				type: 	'POST',
@@ -17,6 +51,24 @@
 				dataType: 'html'
 			});
 		});
+
+		function cargarProductos() {
+			$.ajax({
+				type: 	'POST',
+				url: 	'/filtro-oferta/',
+				data: 	{
+					'marca': $('select[name="marca"]').val(),
+					'existencia': $('.existencia').val(),
+					'precioMinimo': $('#precioMin').val(),
+					'precioMaximo': $('#precioMax').val(),
+					'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+				},
+				success: function(data){
+					$('#resultadoFiltro').html(data);
+				},
+				dataType: 'html'
+			});
+		}
 	</script>
 {% endblock %}
 {% block contenido %}
@@ -42,6 +94,14 @@
 				 {% else %}
 				 	<input type="hidden" class="existencia" name="existencia" value="0">
 			   	{% endif %}
+			   	<div class="form-group">
+			   		<input id="precioMin" type="range" step="10" onchange="range1value.value=value" />
+			   		<output id="range1value" ></output>
+			   	</div>
+			   	<div class="form-group">
+			   		<input id="precioMax" type="range" step="10" onchange="range2value.value=value" />
+			   		<output id="range2value" ></output>
+			   	</div>
 			  <button id="btnFiltroOferta" type="button" class="btn btn-info btn-sm btnFiltro">Mostrar</button>
 			</form>
 		</div>

@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from django.db.models import Q, Sum, Count
+from django.db.models import Q, Sum, Count, Max, Min
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from web.models import *
@@ -62,19 +62,23 @@ def images_ofertas():
 		else:
 			cImgO = Imagen.objects.filter(Producto=pO).count()
 			if cImgO > 0:
-				img = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=pO))[:1]
-				contar = contar + 1
-				ofertas = {
-					'Codigo':pO.pk,
-					'Descripcion':pO.Descripcion,
-					'Precio': intcomma(pO.Precio),
-					'Imagen': img[0].Imagen
-				}
-				listaOfertas.append(ofertas)
+				cDImg = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=pO)).count()
+				if cDImg > 0:
+					#img = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=pO))[:1]
+					#contar = contar + 1
+					objImg = Imagen.objects.get(Producto=pO)
+					ofertas = {
+						'Codigo':pO.pk,
+						'Descripcion':pO.Descripcion,
+						'Precio': intcomma(pO.Precio),
+						'Imagen': objImg.Imagen
+						#'Imagen': img[0].Imagen
+					}
+					listaOfertas.append(ofertas)
 	return listaOfertas
 
 def images_novedades():
-	fecha = date.today() - timedelta(days=60)
+	fecha = date.today() - timedelta(days=200)
 	listaNovedades=[]
 	pNovedades = Producto.objects.filter(Fecha__gte=fecha).order_by('?')
 	contar = 0
@@ -84,15 +88,19 @@ def images_novedades():
 		else:
 			cImgN = Imagen.objects.filter(Producto=pN).count()
 			if cImgN > 0:
-				img = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=pN))[:1]
-				contar = contar + 1
-				novedades = {
-					'Codigo':pN.pk,
-					'Descripcion':pN.Descripcion,
-					'Precio': intcomma(pN.Precio),
-					'Imagen': img[0].Imagen
-				}
-				listaNovedades.append(novedades)
+				cDImg = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=pN)).count()
+				if cDImg > 0:
+					objImg = Imagen.objects.get(Producto=pN)
+					#img = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=pN))[:1]
+					#contar = contar + 1
+					novedades = {
+						'Codigo':pN.pk,
+						'Descripcion':pN.Descripcion,
+						'Precio': intcomma(pN.Precio),
+						'Imagen': objImg.Imagen
+						#'Imagen': img[0].Imagen
+					}
+					listaNovedades.append(novedades)
 	return listaNovedades
 
 def cargar_imagenes():
@@ -303,13 +311,15 @@ def marca_producto(request, id_marca):
 def destacados(request):
 	diccionario={}
 	destacados=[]
-	allImages = Detalle_Imagen.objects.all().order_by('Imagen')
+	#allImages = Detalle_Imagen.objects.all().order_by('Imagen')
 	productos = Producto.objects.filter(Destacado__exact=True)[:12]
 	for producto in productos:
 		if Imagen.objects.filter(Producto=producto).count() > 0:
-			allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
-			archImg = allImages[0]
-			archImg = archImg.Imagen
+			# allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
+			# archImg = allImages[0]
+			# archImg = archImg.Imagen
+			objeto = Imagen.objects.get(Producto=producto)
+			archImg = objeto.Imagen
 		else:
 			archImg = "img_detalle/sin_imagen.png"
 		infoProducto = {
@@ -328,13 +338,15 @@ def destacados(request):
 def ofertas(request):
 	diccionario={}
 	ofertas=[]
-	allImages = Detalle_Imagen.objects.all().order_by('Imagen')
+	#allImages = Detalle_Imagen.objects.all().order_by('Imagen')
 	productos = Producto.objects.filter(Oferta__exact=True)[:12]
 	for producto in productos:
 		if Imagen.objects.filter(Producto=producto).count() > 0:
-			allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
-			archImg = allImages[0]
-			archImg = archImg.Imagen
+			#allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
+			#archImg = allImages[0]
+			#archImg = archImg.Imagen
+			objeto = Imagen.objects.get(Producto=producto)
+			archImg = objeto.Imagen
 		else:
 			archImg = "img_detalle/sin_imagen.png"
 		infoProducto = {
@@ -356,9 +368,11 @@ def novedades(request):
 	productos = Producto.objects.filter(Fecha__gte=fecha).order_by('?')[:12]
 	for producto in productos:
 		if Imagen.objects.filter(Producto=producto).count() > 0:
-			allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
-			archImg = allImages[0]
-			archImg = archImg.Imagen
+			# allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
+			# archImg = allImages[0]
+			# archImg = archImg.Imagen
+			objeto = Imagen.objects.get(Producto=producto)
+			archImg = objeto.Imagen
 		else:
 			archImg = "img_detalle/sin_imagen.png"
 		infoProducto = {
@@ -456,6 +470,7 @@ def detalle_producto(request, id_producto):
 	detalle = get_object_or_404(Producto, Codigo=id_producto)
 	diccionario['cantidad'] = Imagen.objects.filter(Producto=detalle).count()
 	if Imagen.objects.filter(Producto=detalle).count() > 0:
+		diccionario['imagen'] = Imagen.objects.get(Producto=detalle)
 		diccionario['imagenes'] = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=detalle)).order_by('Imagen')
 	 
 	diccionario['detalle']=detalle
@@ -1853,29 +1868,32 @@ def filtro_oferta(request):
 	if request.is_ajax() and request.method == 'POST':
 		m = request.POST['marca']
 		e = request.POST['existencia']
+		pM = request.POST['precioMaximo']
+		pm = request.POST['precioMinimo']
+
 
 		if Marca.objects.filter(id=m).count() > 0:
 			marca = Marca.objects.get(id=m)
 			marca = " "+marca.Marca+" "
 
-		productos = Producto.objects.filter(Oferta__exact=True).order_by('Descripcion')
+		productos = Producto.objects.filter(Oferta__exact=True, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
 		if m == '0' and e == '0':
-			productos = Producto.objects.filter(Oferta__exact=True).order_by('Descripcion')
+			productos = Producto.objects.filter(Oferta__exact=True, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
 
 		elif m == '0' and e == '1':
-			productos = Producto.objects.filter(Oferta__exact=True, Existencia__gt=0).order_by('Descripcion')
+			productos = Producto.objects.filter(Oferta__exact=True, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
 		
 		elif m == '0' and e == '2':
-			productos = Producto.objects.filter(Oferta__exact=True, Existencia__lte=0).order_by('Descripcion')
+			productos = Producto.objects.filter(Oferta__exact=True, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
 
 		elif m != '0' and e == '0':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Oferta__exact=True).order_by('Descripcion')
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Oferta__exact=True, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
 
 		elif m != '0' and e == '1':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Oferta__exact=True, Existencia__gt=0).order_by('Descripcion')
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Oferta__exact=True, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
 		
 		elif m != '0' and e == '2':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Oferta__exact=True, Existencia__lte=0).order_by('Descripcion')
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Oferta__exact=True, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
 
 		diccionario['totalProductos']=productos.count()
 
@@ -2027,6 +2045,29 @@ def info_usuario(request):
 		return render_to_response('ajax/info-usuario.html',{'usuario':usuario, 'perfil':perfil}, context_instance=RequestContext(request))
 	else:
 		raise Http404
+
+def obtener_precios(request):
+	diccionario={}
+	if request.is_ajax() and request.method == 'POST':
+		productos = 0
+		tipoProd = request.POST['productos']
+		if tipoProd == '1':
+			productos = Producto.objects.filter(Oferta__exact=True)
+		precioMin = productos.aggregate(precio=Min('Precio'))
+		precioMax = productos.aggregate(precio=Max('Precio'))
+		#valorMax = float(precioMax['precio']) / 2
+		precioMenor = float(precioMin['precio'])
+		precioMayor = float(precioMax['precio'])
+		rango = precioMayor - precioMenor
+		mitadrango = rango / 2
+		mitad = precioMenor + mitadrango
+		diccionario['precioMenor'] = precioMenor
+		diccionario['precioMayor'] = precioMayor
+		diccionario['mitad'] = mitad
+		return HttpResponse(json.dumps(diccionario), content_type='application/json')
+	else:
+		raise Http404
+
 
 #Vista que retorna la cantidad de productos y mostrarlo en la pestaña "Carrito" del menu
 def item_carrito(request):
