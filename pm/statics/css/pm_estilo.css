@@ -455,6 +455,25 @@ header .container{
 	font-weight: bold;
 }
 
+#group-range{
+			padding-top: 5px;
+}
+#group-range label{
+	font-weight: normal;
+}
+#precioMin{
+	margin-bottom: 10px;
+}
+#selectMarcas{
+	margin-bottom: 5px;
+}
+.filtro-top{
+	margin-top: 7px;
+}
+.filtro-marcas label, .filtro-marcas output{
+	color:#7F7F7F;;
+}
+
 @media screen and (max-width: 1024px){
 	header .container{
 		padding-right: 0;
@@ -491,12 +510,12 @@ header .container{
 	}
 
 	#myTab{
-		font-size: 12px;
+		font-size: 13px;
 	}
 
 	.thumbnail h3{
-		font-size: 12px;
-		line-height: 11px;
+		font-size: 13px;
+		line-height: 12px;
 	}
 
 	.thumbnail .caption{

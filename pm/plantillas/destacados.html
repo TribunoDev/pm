@@ -1,29 +1,50 @@
 {% extends 'base.html' %}
+{% load thumbnail %}
 {% block titulo %}Paper &amp; More - Productos Destacados{% endblock %}
 {% block js %}
 	<script>
+		$.ajax({
+			type: 'POST',
+			url: '/obtener-precios/',
+			data: {
+				'productos':'2',
+				'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+			},
+			success: function(data){
+				$('.precioMin').attr('value', data.precioMenor);
+				$('.precioMin').attr('min', data.precioMenor);
+				$('.precioMin').attr('max', data.mitad);
+				$('.precioMax').attr('max', data.precioMayor);
+				$('.precioMax').attr('min', data.mitad);
+				$('.precioMax').attr('value', data.precioMayor);
+			},
+			dataType: 'JsON'
+		});
+
+		function cargarValor2() {
+			$('.range2value').val("L. " + conComas($('.precioMax').val()) + ".00");
+		}
+
+		function cargarValor1() {
+			$('.range1value').val("L. " + conComas($('.precioMin').val()) + ".00");
+		}
+
+		$('.precioMin').on('change', function() {
+			cargarProductos();
+			cargarValor1();
+		});
+
+		$('.precioMax').on('change', function() {
+			cargarProductos();
+			cargarValor2();
+		});
+
 		$('#selectMarcas').on('change', function() {
 			cargarProductos();
 		});
 
 		$('#selectExistencia').on('change', function() {
 			cargarProductos();
-		});
-
-		$('#btnFiltroDestacados').on('click', function(){
-			$.ajax({
-				type: 	'POST',
-				url: 	'/filtro-destacados/',
-				data: 	{
-					'marca': $('select[name="marca"]').val(),
-					'existencia': $('.existencia').val(),
-					'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
-				},
-				success: function(data){
-					$('#resultadoFiltro').html(data);
-				},
-				dataType: 'html'
-			});
 		});
 
 		function cargarProductos() {
@@ -33,6 +54,8 @@
 				data: 	{
 					'marca': $('select[name="marca"]').val(),
 					'existencia': $('.existencia').val(),
+					'precioMinimo': $('.precioMin').val(),
+					'precioMaximo': $('.precioMax').val(),
 					'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
 				},
 				success: function(data){
@@ -41,40 +64,67 @@
 				dataType: 'html'
 			});
 		}
+
+		function conComas(valor) {
+		    var nums = new Array();
+		    var simb = ","; //Éste es el separador
+		    valor = valor.toString();
+		    valor = valor.replace(/\D/g, "");   //Ésta expresión regular solo permitira ingresar números
+		    nums = valor.split(""); //Se vacia el valor en un arreglo
+		    var long = nums.length - 1; // Se saca la longitud del arreglo
+		    var patron = 3; //Indica cada cuanto se ponen las comas
+		    var prox = 2; // Indica en que lugar se debe insertar la siguiente coma
+		    var res = "";
+		 
+		    while (long > prox) {
+		        nums.splice((long - prox),0,simb); //Se agrega la coma
+		        prox += patron; //Se incrementa la posición próxima para colocar la coma
+		    }
+		 
+		    for (var i = 0; i <= nums.length-1; i++) {
+		        res += nums[i]; //Se crea la nueva cadena para devolver el valor formateado
+		    }
+		 
+		    return res;
+		}
 	</script>
 {% endblock %}
 {% block contenido %}
 		<div class="row filtro-marcas">
 			<form class="form-inline" role="form">
-			  	<div class="form-group">
-				    <select name="marca" id="selectMarcas" class="filtroSelect form-control" required>
-						<option value="0">TODAS LAS MARCAS...</option>
-				  		{% for marca in listaMarcas %}
-			    			<option value="{{marca.pk}}">{{marca.Marca}}</option>
-				  		{% endfor %}
-			    	</select>
-		    	</div>
-
-				{% if existencia1 > 0  and existencia2 > 0 %}
-		    	<div class="form-group">
-			    	<select name="existencia" id="selectExistencia" class="filtroSelect existencia form-control" required>
-						<option value="0">TODOS...</option>
-			    		<option value="1">CON EXISTENCIAS</option>
-			    		<option value="2">SIN EXISTENCIAS</option>
-			    	</select>
-				  </div>
-				 {% else %}
-				 	<input type="hidden" class="existencia" name="existencia" value="0">
-			   	{% endif %}
-			   	<div class="form-group">
-			   		<input id="precioMin" type="range" step="10" onchange="range1value.value=value" />
-			   		<output id="range1value" ></output>
-			   	</div>
-			   	<div class="form-group">
-			   		<input id="precioMax" type="range" step="10" onchange="range2value.value=value" />
-			   		<output id="range2value" ></output>
-			   	</div>
-			  <button id="btnFiltroDestacados" type="button" class="btn btn-info btn-sm btnFiltro">Mostrar</button>
+			  	<div class="col-sm-12">
+					<div class="filtro-top col-xs-12 col-sm-6 col-md-3 col-lg-3">
+					    <select name="marca" id="selectMarcas" class="filtroSelect form-control" required>
+							<option value="0">TODAS LAS MARCAS...</option>
+					  		{% for marca in listaMarcas %}
+				    			<option value="{{marca.pk}}">{{marca.Marca}}</option>
+					  		{% endfor %}
+				    	</select>
+			    	</div>
+					{% if existencia1 > 0  and existencia2 > 0 %}
+					<div class="filtro-top col-xs-12 col-sm-6 col-md-3 col-lg-3">
+				    	<select name="existencia" id="selectExistencia" class="filtroSelect existencia form-control" required>
+							<option value="0">TODOS...</option>
+				    		<option value="1">CON EXISTENCIAS</option>
+				    		<option value="2">SIN EXISTENCIAS</option>
+				    	</select>
+					 </div>
+					 {% else %}
+					 	<input type="hidden" class="existencia" name="existencia" value="0">
+				   	{% endif %}
+				</div>
+				<div class="col-sm-12">
+				   	<div class="filtro-top col-xs-12 col-md-3 col-lg-3">
+				   		<label>Precio Mínimo:</label>
+				   		<input class="range precioMin" type="range" step="1"/>
+				   		<output class="range1value" ></output>
+				   	</div>
+				   	<div class="filtro-top col-xs-12 col-md-3 col-lg-3">
+				   		<label>Precio Máximo:</label>
+				   		<input class="range precioMax" type="range" step="1" />
+				   		<output class="range2value" ></output>
+				   	</div>
+				</div>
 			</form>
 		</div>
 		<div class="row">
@@ -91,7 +141,8 @@
 				                <img src="{{STATIC_URL}}img/img_oferta.png" class="img_oferta">
 				            {% endif %}
 								<a href="/detalle-producto/{{elemento.Codigo}}">
-									<img src="{{MEDIA_URL}}{{elemento.Imagen}}" class="img-thumbnail">
+									{% thumbnail elemento.Imagen 236x180 upscale as thumb %}
+                					<img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}" class="img-thumbnail">
 								</a>
 				      			<div class="caption">
 				        			<h3 class="nombre-producto">{{elemento.Descripcion|truncatewords:10}}</h3>
@@ -165,11 +216,11 @@
 							<div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
 							<div class="row">
 								<figure id="s2" class="s2 demo">
-		                            <img src="{{MEDIA_URL}}{{item.Imagen}}" >          
+		                            {% thumbnail item.Imagen 100x80 upscale as thumb %}
+                                    <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}">          
 	                            </figure>
 								<div class="contenido-lateral-precio">
 									<div class="row">
-										{% load humanize %}
 										<h3 ><span class="label label-success">L. {{item.Precio}}</span></h3>
 									</div>
 									<div class="row producto-caja-btn">
@@ -196,11 +247,11 @@
 							<div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
 							<div class="row">
 								<figure id="s2" class="s2 demo">
-		                            <img src="{{MEDIA_URL}}{{item.Imagen}}" >
+		                            {% thumbnail item.Imagen 100x80 upscale as thumb %}
+                                    <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}">
 	                            </figure>
 								<div class="contenido-lateral-precio">
 									<div class="row">
-										{% load humanize %}
 										<h3 ><span class="label label-success">L. {{item.Precio}}</span></h3>
 									</div>
 									<div class="row producto-caja-btn">
