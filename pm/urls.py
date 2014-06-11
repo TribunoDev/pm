@@ -85,6 +85,8 @@ urlpatterns = patterns('',
     url(r'^verificar-email/$', 'web.views.verificar_email', name='verificar_email'),
     url(r'^verificar-rnp/$', 'web.views.verificar_rnp', name='verificar_rnp'),
 
+    url(r'^pruebaSlide/$', 'web.views.pruebaSlide', name='pruebaSlide'),
+
     #---URL'S AJAX
 
     # url(r'^pm/', include('pm.foo.urls')),

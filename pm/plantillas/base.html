@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	{% block metadata %}{% endblock %}
 	<title>{% block titulo %}{% endblock %}</title>
+	<link href="{{STATIC_URL}}css/prueba/styles.min.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap.css">
 	<!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -120,7 +121,7 @@
     ================================================== -->
 
    
-    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+    <!--div id="myCarousel" class="carousel slide" data-ride="carousel">
     	<div class="carousel-inner">
     		{% for item in banner %}
     			<div class="item">
@@ -137,7 +138,7 @@
       	</div>
       	<a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="icon icon-flechitaizquierda"></span></a>
     	<a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="icon icon-flechitaderecha"></span></a>
-    </div><!-- /.carousel -->
+    </div><! /.carousel -->
 
     <!--CONTENIDO -->
     <section class="contenedor container">
@@ -302,6 +303,7 @@
 		</div>
 	</footer>
 	<script type="text/javascript" src="{{STATIC_URL}}js/jquery-1.10.2.min.js"></script>
+	<script src="{{STATIC_URL}}js/prueba/jquery.min.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/carousel.min.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/jquery.cycle2.min.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js"></script>
@@ -313,6 +315,7 @@
 	<script type="text/javascript" src="{{STATIC_URL}}js/jquery.touchSwipe.min.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/lightview.min.js"></script>
 	<script type="text/javascript" src="{{STATIC_URL}}js/spinners.min.js"></script>
+	<script src="{{STATIC_URL}}js/prueba/zozo.min.js"></script> 
 	<div id="fb-root"></div>
 	{% block js %}{% endblock js %}
 	<script type="text/javascript" src="{{STATIC_URL}}js/script.js"></script>

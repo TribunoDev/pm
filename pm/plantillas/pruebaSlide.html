@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block titulo %}Prueba Slide{% endblock %}
+{% block style %}
+	
+	<style>
+    
+</style>
+{% endblock  %}
+{% block contenido %}
+	<div class="row">
+            <div class="col-md-12">
+                <div>
+                    <div class="z-slider-wrapper z-shadows" style="display: block; width: 1138px;">
+                    <article id="demo-accordion-01" class="z-demo-accordion transition z-accordion horizontal blue z-grouped z-bordered z-shadows" data-role="z-accordion" data-options="{&quot;active&quot;: 2,&quot;responsive&quot;: true,&quot;orientation&quot;: &quot;horizontal&quot;,  &quot;theme&quot;: &quot;silver&quot;, &quot;shadows&quot;: true,&quot;bordered&quot;: true, &quot;slider&quot;: true, &quot;rounded&quot;: false, &quot;width&quot;: 1600, &quot;height&quot;:420, &quot;dotNav&quot;:true, &quot;containerHeight&quot;: 320, &quot;headerSize&quot;:68, &quot;animation&quot;: {&quot;duration&quot;:400, &quot;easing&quot;: &quot;easeInOutQuart&quot;}, &quot;showIcons&quot;: true,&quot;headerFontSize&quot;: 1.6, &quot;autoplay&quot;: {&quot;interval&quot;:6000}}" role="tablist" style="width: 1138px; height: 298px;">
+                        <!--section class="z-section z-first" aria-hidden="true" aria-expanded="false" aria-selected="false" style="overflow: hidden; left: 0px; width: 946.54px;">
+                            <h3 class="z-header" tabindex="-1" accesskey="w" aria-controls="demo-accordion-01-1" role="tab" style="outline: none; font-size: 1.1380000000000001em; height: 49.365px; line-height: 48.365px; width: 298px;"><span class="z-title" style="height: 48.365px; line-height: 48.365px;">Heart Beach</span><span class="z-arrow" style="top:none"></span></h3>
+                            <div class="z-content" id="demo-accordion-01-1" role="tabpanel" aria-hidden="true" aria-expanded="false" style="height: 100%; margin: 0px; left: 48.365px; width: auto;"><div class="z-auto-g">
+                                <img src="{{STATIC_URL}}img/prueba/slide1.jpg" style="margin: 0px;">
+                            </div></div>
+                        </section>
+                        <section class="z-section" aria-hidden="true" aria-expanded="false" aria-selected="false" style="overflow: hidden; left: 48.365px; width: 946.54px;">
+                            <h3 class="z-header" aria-controls="demo-accordion-01-2" role="tab" tabindex="-1" style="outline: none; font-size: 1.1380000000000001em; height: 49.365px; line-height: 48.365px; width: 298px;"><span class="z-title" style="height: 48.365px; line-height: 48.365px;">Palm Leaf</span><span class="z-arrow" style="top:none"></span></h3>
+                            <div class="z-content" id="demo-accordion-01-2" role="tabpanel" aria-hidden="true" aria-expanded="false" style="height: 100%; margin: 0px; left: 48.365px; width: auto;"><div class="z-auto-g">
+                                <img src="{{STATIC_URL}}img/prueba/slide2.jpg" style="margin: 0px;">
+                            </div></div>
+                        </section>
+                        <section class="z-section" aria-hidden="true" aria-expanded="false" aria-selected="false" style="overflow: hidden; left: 96.73px; width: 946.54px;">
+                            <h3 class="z-header" aria-controls="demo-accordion-01-3" role="tab" tabindex="-1" style="outline: none; font-size: 1.1380000000000001em; height: 49.365px; line-height: 48.365px; width: 298px;"><span class="z-title" style="height: 48.365px; line-height: 48.365px;">Ocean Sunset</span><span class="z-arrow" style="top:none"></span></h3>
+                            <div class="z-content" id="demo-accordion-01-3" role="tabpanel" aria-hidden="true" aria-expanded="false" style="height: 100%; margin: 0px; left: 48.365px; width: auto;"><div class="z-auto-g">
+                                <img src="{{STATIC_URL}}img/prueba/slide3.jpg" style="margin: 0px;">
+                            </div></div>
+                        </section>
+                        <section class="z-section z-active" aria-hidden="false" aria-expanded="true" aria-selected="true" style="overflow: hidden; left: 145.095px; width: 946.54px;">
+                            <h3 class="z-header" aria-controls="demo-accordion-01-4" role="tab" tabindex="-1" style="outline: none; font-size: 1.1380000000000001em; height: 49.365px; line-height: 48.365px; width: 298px;"><span class="z-title" style="height: 48.365px; line-height: 48.365px;">View from a Cave</span><span class="z-arrow" style="top:none"></span></h3>
+                            <div class="z-content" id="demo-accordion-01-4" role="tabpanel" aria-hidden="false" aria-expanded="true" style="height: 100%; margin: 0px; left: 48.365px; width: auto;"><div class="z-auto-g">
+                                <img src="{{STATIC_URL}}img/prueba/slide4.jpg" style="margin: 0px;">
+                            </div></div>
+                        </section>
+                        <section class="z-section z-last" aria-hidden="true" aria-expanded="false" aria-selected="false" style="overflow: hidden; left: 1089.635px; width: 946.54px;">
+                            <h3 class="z-header" aria-controls="demo-accordion-01-5" role="tab" tabindex="-1" style="outline: none; font-size: 1.1380000000000001em; height: 49.365px; line-height: 48.365px; width: 298px;"><span class="z-title" style="height: 48.365px; line-height: 48.365px;">Beach House</span><span class="z-arrow" style="top:none"></span></h3>
+                            <div class="z-content" id="demo-accordion-01-5" role="tabpanel" aria-hidden="true" aria-expanded="false" style="height: 100%; margin: 0px; left: 48.365px; width: auto;"><div class="z-auto-g">
+                                <img src="{{STATIC_URL}}img/prueba/slide5.jpg" style="margin: 0px;">
+                            </div></div>
+                        </section-->
+                        {% for item in banner %}
+                        	<section class="z-section ">
+	                            <h3 class="z-header"><span class="z-title">{{item.nombre_banner}}</span><span class="z-arrow"></span></h3>
+	                            <div class="z-content" id="demo-accordion-01-1"><div class="z-auto-g">
+	                                <img src="{{MEDIA_URL}}{{item.imagen_pc}}" style="margin: 0px;">
+	                            </div></div>
+	                        </section>
+			    			<!--div class="item">
+			    				{% if item.url %}
+			    					<a href="{{item.url}}" target="_blank">
+			    				{% else %}
+			    					<a>
+			    				{% endif %}
+				          			<img src="{{MEDIA_URL}}{{item.imagen_pc}}" class="visible-sm visible-md visible-lg"  alt="First slide" />
+				              		<img  src="{{MEDIA_URL}}{{item.imagen_movil}}" class="visible-xs" alt="First slide" />
+				          		</a>
+				        	</div-->
+			    		{% endfor %}
+                        
+                    </article>
+                </div>
+            </div>
+        </div>
+{% endblock %}

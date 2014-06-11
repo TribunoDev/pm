@@ -2229,3 +2229,13 @@ def verificar_usuario(request):
 		return HttpResponse(json.dumps({'tUser':tUser}), content_type='application/json')
 	else:
 		raise Http404
+
+def pruebaSlide(request):
+	diccionario={}
+	diccionario['accesos']=AccesosDirectos.objects.all()
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['banner']=Jumbotron.objects.all()
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+	return render_to_response('pruebaSlide.html', diccionario,context_instance=RequestContext(request))
