@@ -101,7 +101,8 @@
       {% if item.Imagen %}
         <div class="row">
           <a href="{{item.Url}}">
-            <img src="{{MEDIA_URL}}{{item.Imagen}}" alt="acceso directo" class="img-rounded"/>
+            {% thumbnail item.Imagen 273x182 upscale as thumb %}
+            <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}" class="img-rounded">
           </a>
         </div>
       {% endif %}

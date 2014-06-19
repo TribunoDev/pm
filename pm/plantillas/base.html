@@ -273,7 +273,7 @@
 	</div><!-- /.modal -->
 	{% csrf_token %}
 	<footer class="no-print">
-		<div class="container">
+		<div class="container hidden-xs">
 			<div class="col col-xs-3 col-sm-3 col-md-3 text-center">
 				<figure id="ico-twitter" class="col col-xs-6 col-6 col-md-6 text-right">
 					<a href="https://twitter.com/papermore" target="_blank">
@@ -304,6 +304,39 @@
 				<figure class="col col-xs-12 col-sm-12 col-md-12">
 					<img src="{{STATIC_URL}}img/impuesto.png" alt="ISV">
 				</figure>
+			</div>
+		</div>
+		<div class="container visible-xs">
+			<div class="col col-xs-6 text-center">
+				<figure id="ico-twitter" class="col col-xs-6 col-6 col-md-6 text-right">
+					<a href="https://twitter.com/papermore" target="_blank">
+						<img src="{{STATIC_URL}}img/t_logo.png" alt="twitter">
+					</a>
+				</figure>
+				<figure id="ico-facebook" class="col col-xs-6 col-sm-6 col-md-6 text-left">
+					<a href="https://www.facebook.com/paperandmore.hn" target="_blank">
+						<img src="{{STATIC_URL}}img/f_logo.png" alt="facebook">
+					</a>
+				</figure>
+			</div>
+			<div  id="img-isv" class="col col-xs-6 text-center">
+				<figure class="col col-xs-12 col-sm-12 col-md-12">
+					<img src="{{STATIC_URL}}img/impuesto.png" alt="ISV">
+				</figure>
+			</div>
+			<div id="enlaces" class="col col-xs-12">
+				<p class="text-center">
+					<a href="/ofertas/">Promociones y Ofertas</a> |
+					<a href="/destacados/">Destacados</a> |
+					<a href="/novedades/">Novedades</a> |
+					<a href="/marcas/">Marcas</a> |
+					<a href="/contactanos/">Contactanos</a> |
+					<a href="#" data-toggle="modal" data-target="#myModalEmpleos">Empleos</a> |
+					<a href="#" data-toggle="modal" data-target="#myModalRecomendacion">Recomendar a un amigo</a> |
+					<a href="#">Privacidad y Seguridad</a> |
+					<a href="#" data-toggle="modal" data-target="#myModalHorarioServicio">Horarios de Servicio</a> |
+					<a href="/faq/">FAQ</a> |
+				</p>
 			</div>
 		</div>
 	</footer>

@@ -278,6 +278,7 @@ header .container{
 	font-weight: bold;
 }
 
+
 .espacio{
 	height: 10px;
 }
@@ -498,9 +499,30 @@ header .container{
 	#logos{
 		margin-top: 1.5%;
 	}
+
+	.z-dot-nav{
+		display: none;
+	}
 }
 
 @media screen and (max-width: 480px){
+	footer #img-isv{
+		margin-bottom: 10px;
+	}
+
+	footer #enlaces{
+		margin-bottom: 30px;
+	}
+
+	footer #enlaces a{
+		font-size: 16px;
+		background-color: #0099CC;
+		border-radius: 4px;
+		display: inline-block;
+		padding: 5px;
+		margin-bottom: 7px;
+		text-decoration: none;
+	}
 
 	section.container{
 		margin: 0;
