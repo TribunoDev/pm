@@ -63,16 +63,19 @@
 {% endblock %}
 
 {% block contenido %}
+{% load thumbnail %}
 <div class="row">
             <div class="col-md-12">
                 <div>
                     <div class="z-slider-wrapper z-shadows" style="display: block; width: 1138px;">
-                    <article id="demo-accordion-01" class="z-demo-accordion transition z-accordion horizontal blue z-grouped z-bordered z-shadows" data-role="z-accordion" data-options="{&quot;active&quot;: 2,&quot;responsive&quot;: true,&quot;orientation&quot;: &quot;horizontal&quot;,  &quot;theme&quot;: &quot;silver&quot;, &quot;shadows&quot;: true,&quot;bordered&quot;: true, &quot;slider&quot;: true, &quot;rounded&quot;: false, &quot;width&quot;: 1600, &quot;height&quot;:420, &quot;dotNav&quot;:true, &quot;containerHeight&quot;: 320, &quot;headerSize&quot;:68, &quot;animation&quot;: {&quot;duration&quot;:400, &quot;easing&quot;: &quot;easeInOutQuart&quot;}, &quot;showIcons&quot;: true,&quot;headerFontSize&quot;: 1.6, &quot;autoplay&quot;: {&quot;interval&quot;:6000}}" role="tablist" style="width: 1138px; height: 298px;">
+                    <article id="demo-accordion-01" class="z-demo-accordion transition z-accordion horizontal blue z-grouped z-bordered z-shadows" data-role="z-accordion" data-options="{&quot;active&quot;: 2,&quot;responsive&quot;: true,&quot;orientation&quot;: &quot;horizontal&quot;,  &quot;theme&quot;: &quot;silver&quot;, &quot;shadows&quot;: true,&quot;bordered&quot;: true, &quot;slider&quot;: true, &quot;rounded&quot;: false, &quot;width&quot;: 1600, &quot;height&quot;:500, &quot;dotNav&quot;:true, &quot;containerHeight&quot;: 320, &quot;headerSize&quot;:68, &quot;animation&quot;: {&quot;duration&quot;:400, &quot;easing&quot;: &quot;easeInOutQuart&quot;}, &quot;showIcons&quot;: true,&quot;headerFontSize&quot;: 1.6, &quot;autoplay&quot;: {&quot;interval&quot;:6000}}" role="tablist" style="width: 1138px; height: 298px;">
                         {% for item in banner %}
                           <section class="z-section ">
                               <h3 class="z-header"><span class="z-title">{{item.nombre_banner}}</span><span class="z-arrow"></span></h3>
                               <div class="z-content" id="demo-accordion-01-1"><div class="z-auto-g">
-                                  <img src="{{MEDIA_URL}}{{item.imagen_pc}}" style="margin: 0px;">
+                                {% thumbnail item.imagen_pc 882x368 upscale as thumb %}
+                                <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}" class="img-thumbnail">
+                                  <!--img src="{{MEDIA_URL}}{{item.imagen_pc}}" style="margin: 0px;"-->
                               </div></div>
                           </section>
                         {% endfor %}
@@ -80,6 +83,7 @@
                 </div>
             </div>
         </div>
+</div>
 
   <div class="row">
     <article id="caja-contenido" class="col-xs-12 col-sm-8 col-md-9">
