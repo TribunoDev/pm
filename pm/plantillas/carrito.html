@@ -1,10 +1,8 @@
 {% extends 'base.html' %}
+{% load thumbnail %}
 {% block titulo %}Paper &amp; More - Datos del carrito{%  endblock %}
 {% block js %}
 	<script>
-		$(document).on('ready', function(){
-			
-		});
 	</script>
 {% endblock %}
 {% block contenido %}
@@ -38,11 +36,11 @@
 						<div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
 						<div class="row">
 							<figure id="s2" class="s2 demo">
-	                            <img src="{{MEDIA_URL}}{{item.Imagen}}" >
+	                            {% thumbnail item.Imagen 100x80 upscale as thumb %}
+                                <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}" class="img-rounded">
                             </figure>
 							<div class="contenido-lateral-precio">
 								<div class="row">
-									{% load humanize %}
 									<h3 ><span class="label label-success">L. {{item.Precio}}</span></h3>
 								</div>
 								<div class="row producto-caja-btn">
@@ -69,7 +67,8 @@
 							<div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
 							<div class="row">
 								<figure id="s2" class="s2 demo">
-		                            <img src="{{MEDIA_URL}}{{item.Imagen}}" >
+		                            {% thumbnail item.Imagen 100x80 upscale as thumb %}
+                                	<img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}" class="img-rounded">
 	                            </figure>
 								<div class="contenido-lateral-precio">
 									<div class="row">
@@ -99,7 +98,8 @@
 						<div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
 						<div class="row">
 							<figure id="s2" class="s2 demo">
-	                            <img src="{{MEDIA_URL}}{{item.Imagen}}" >
+	                            {% thumbnail item.Imagen 100x80 upscale as thumb %}
+                                <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}" class="img-rounded">
                             </figure>
 							<div class="contenido-lateral-precio">
 								<div class="row">

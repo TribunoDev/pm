@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load thumbnail %}
 {% block titulo %}Paper &amp; More - Perfil de Usuario{% endblock %}
 
 {% block js %}
@@ -60,7 +60,8 @@
 						<div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
 						<div class="row">
 							<figure id="s2" class="s2 demo">
-	                            <img src="{{MEDIA_URL}}{{item.Imagen}}" >
+	                            {% thumbnail item.Imagen 100x80 upscale as thumb %}
+                                <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}" class="img-rounded">
                             </figure>
 							<div class="contenido-lateral-precio">
 								<div class="row">
@@ -94,7 +95,8 @@
 						<div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
 						<div class="row">
 							<figure id="s2" class="s2 demo">
-	                            <img src="{{MEDIA_URL}}{{item.Imagen}}" >
+	                            {% thumbnail item.Imagen 100x80 upscale as thumb %}
+                                <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}" class="img-rounded">
                             </figure>
 							<div class="contenido-lateral-precio">
 								<div class="row">
@@ -128,7 +130,8 @@
 						<div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
 						<div class="row">
 							<figure id="s2" class="s2 demo">
-	                            <img src="{{MEDIA_URL}}{{item.Imagen}}" >
+	                            {% thumbnail item.Imagen 100x80 upscale as thumb %}
+                                <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}" class="img-rounded">
                             </figure>
 							<div class="contenido-lateral-precio">
 								<div class="row">

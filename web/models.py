@@ -1,3 +1,4 @@
+#!/usr/bin/python
 #encoding:utf-8
 from django.db import models
 from django.contrib.auth.models import User
@@ -43,6 +44,7 @@ class Producto(models.Model):
 	Fecha = models.DateField(auto_now_add=True, blank=True, null=True)
 	Comentarios=models.TextField(help_text='Ingrese especificaciones del producto', verbose_name=u'Comentarios')
 	Notas=models.CharField(max_length=200, help_text='Ingrese la marca del producto', verbose_name=u'Notas')
+	Activo=models.BooleanField(verbose_name=u'Activo')
 	class Meta:
 		verbose_name_plural=u'Producto'
 	def __unicode__(self):
@@ -293,3 +295,10 @@ class AccesosDirectos(models.Model):
 		verbose_name_plural=u'Acceso Directo'
 	def __unicode__(self):
 		return self.Nombre
+
+class FactorDiasNovedades(models.Model):
+	Dias = models.BigIntegerField(help_text='Rango de días para abarcar productos en novedades')
+	class Meta:
+		verbose_name_plural=u'Factor Días Novedades'
+	def __unicode__(self):
+		return str(self.Dias) + ("días").decode("utf-8")

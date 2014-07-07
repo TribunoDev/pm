@@ -1,0 +1,126 @@
+<!--DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Sitio en Construcción</title>
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap.css">
+	<link href="{{STATIC_URL}}css/prueba/timeTo.css" rel="stylesheet" type="text/css">
+	<style>
+		#countdown-3{
+			margin-top: 20%;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="text-center row">
+			<div class="row" id="countdown-3"></div>
+		</div>
+	</div>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="{{STATIC_URL}}js/prueba/jquery.timeTo.min.js"></script> 
+	<script>
+		$('#countdown-3').timeTo({
+            timeTo: new Date(new Date('Jul 20 2014 00:00:00 GMT-0600 (CST)')),
+            displayDays: 2,
+            theme: "black",
+            displayCaptions: true,
+            fontSize: 48,
+            captionSize: 14
+        });
+	</script>
+</body>
+</html-->
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Sitio en Construcción</title>
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap.css">
+	<link href="{{STATIC_URL}}css/prueba/style.css" rel="stylesheet" type="text/css">
+	<style>
+
+		.countdown-area, .heading, .social{
+			background-color: rgba(44, 62, 80,0.5);
+			color: #FFFBF0;
+			border-radius: 3px;
+		}
+		.social{
+			color: white;
+			font-size: 20px;
+			padding: 7px 0;
+			margin-left: 0;
+			margin-right: 0;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+	<div class="row">
+		<div class="col-lg-10 col-centered">
+			<div class="main_content">
+				<div class="logo">
+					<a><img src="{{STATIC_URL}}img/logo-paper.jpg" alt="logo"></a>
+				</div>
+				<div class="heading">
+					 ESTAREMOS LANZANDO UN NUEVO SITIO MUY PRONTO!
+				</div>
+				<div class="col-lg-12 countdown-area">
+					<ul id="countdown" class="countdown-list list-inline">
+						<li>
+						<div class="time_text">
+							<span id="days" class="rotate">00</span>
+						</div>
+						<div class="sub_text ">
+							 Días
+						</div>
+						</li>
+						<li>
+						<div class="time_text">
+							<span id="hours">00</span>
+						</div>
+						<div class="sub_text">
+							 Horas
+						</div>
+						</li>
+						<li>
+						<div class="time_text">
+							<span id="minutes">00</span>
+						</div>
+						<div class="sub_text">
+							 Minutos
+						</div>
+						</li>
+						<li>
+						<div class="time_text">
+							<span id="seconds">00</span>
+						</div>
+						<div class="sub_text">
+							 Segundos
+						</div>
+						</li>
+					</ul>
+				</div>
+				<div class="col row social text-center">
+					<div class="col-lg-12">
+						Síguenos en las redes sociales.
+					</div>
+					<div class="col-lg-12">
+						<a href="https://twitter.com/papermore" target="_blank">
+						<img src="{{STATIC_URL}}img/t_logo.png" alt="twitter">
+					</a>
+					<a href="https://www.facebook.com/paperandmore.hn" target="_blank">
+						<img src="{{STATIC_URL}}img/f_logo.png" alt="facebook">
+					</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="{{STATIC_URL}}js/prueba/countdown.js"></script> 
+	<script src="{{STATIC_URL}}js/prueba/main.js"></script> 
+</body>
+</html>

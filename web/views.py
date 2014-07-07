@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 from django.db.models import Q, Sum, Count, Max, Min
 from django.contrib.auth.models import User
+from django.contrib.admin.models import LogEntry
 from django.core.urlresolvers import reverse
 from web.models import *
 from django.shortcuts import render_to_response, get_object_or_404
@@ -17,6 +18,9 @@ import suds
 from suds.client import Client
 from datetime import datetime, timedelta, date
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger, InvalidPage
+import csv
+import reportlab
+from reportlab.pdfgen import canvas
 
 centinela = False
 
@@ -82,6 +86,7 @@ def images_ofertas():
 	return listaOfertas
 
 def images_novedades():
+	
 	fecha = date.today() - timedelta(days=100)
 	listaNovedades=[]
 	pNovedades = Producto.objects.filter(Fecha__gte=fecha).order_by('?')
@@ -137,7 +142,8 @@ def inicio(request):
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
-	return render_to_response('index.html',diccionario, context_instance=RequestContext(request))
+	#return render_to_response('index.html',diccionario, context_instance=RequestContext(request))
+	return render_to_response('contador.html',diccionario, context_instance=RequestContext(request))
 
 #Vista que retorna la ventana de inicio de sesion
 def ingresar(request):
@@ -253,7 +259,7 @@ def marca_producto(request, id_marca):
 			objImg = Imagen.objects.get(Producto=producto)
 			archImg = objImg.Imagen
 		else:
-			archImg = "img_detalle/sin_imagen.png"
+			archImg = "img_detalle/sin_imagen.jpg"
 		infoProducto = {
 			'Codigo': producto.Codigo,
 			'Descripcion': producto.Descripcion,
@@ -327,7 +333,7 @@ def destacados(request):
 			objeto = Imagen.objects.get(Producto=producto)
 			archImg = objeto.Imagen
 		else:
-			archImg = "img_detalle/sin_imagen.png"
+			archImg = "img_detalle/sin_imagen.jpg"
 		infoProducto = {
 			'Codigo': producto.Codigo,
 			'Descripcion': producto.Descripcion,
@@ -354,7 +360,7 @@ def ofertas(request):
 			objeto = Imagen.objects.get(Producto=producto)
 			archImg = objeto.Imagen
 		else:
-			archImg = "img_detalle/sin_imagen.png"
+			archImg = "img_detalle/sin_imagen.jpg"
 		infoProducto = {
 			'Codigo': producto.Codigo,
 			'Descripcion': producto.Descripcion,
@@ -380,7 +386,7 @@ def novedades(request):
 			objeto = Imagen.objects.get(Producto=producto)
 			archImg = objeto.Imagen
 		else:
-			archImg = "img_detalle/sin_imagen.png"
+			archImg = "img_detalle/sin_imagen.jpg"
 		infoProducto = {
 			'Codigo': producto.Codigo,
 			'Descripcion': producto.Descripcion,
@@ -412,7 +418,7 @@ def ver_subcategoria(request, id_subcat):
 			objImg = Imagen.objects.get(Producto=producto)
 			archImg = objImg.Imagen
 		else:
-			archImg = "img_detalle/sin_imagen.png"
+			archImg = "img_detalle/sin_imagen.jpg"
 		infoProducto = {
 			'Codigo': producto.Codigo,
 			'Descripcion': producto.Descripcion,
@@ -516,7 +522,7 @@ def buscar(request):
 			objImg = Imagen.objects.get(Producto=producto)
 			archImg = objImg.Imagen
 		else:
-			archImg = "img_detalle/sin_imagen.png"
+			archImg = "img_detalle/sin_imagen.jpg"
 		infoProducto = {
 			'Codigo': producto.Codigo,
 			'Descripcion': producto.Descripcion,
@@ -667,7 +673,7 @@ def productos_ofertas(request):
 			objImg = Imagen.objects.get(Producto=producto)
 			archImg = objImg.Imagen
 		else:
-			archImg = "img_detalle/sin_imagen.png"
+			archImg = "img_detalle/sin_imagen.jpg"
 
 		infoProducto = {
 		'Codigo': producto.Codigo,
@@ -742,7 +748,7 @@ def productos_destacados(request):
 			objImg = Imagen.objects.get(Producto=producto)
 			archImg = objImg.Imagen
 		else:
-			archImg = "img_detalle/sin_imagen.png"
+			archImg = "img_detalle/sin_imagen.jpg"
 
 		infoProducto = {
 		'Codigo': producto.Codigo,
@@ -1071,9 +1077,9 @@ def procesar_pago(request):
 				msg.content_subtype='html'
 				msg.send()
 
-			if res.responseCode=='05':
+			elif res.responseCode=='05':
 				template='transaccion-denegada.html'
-			if res.responseCode=='NA':
+			elif res.responseCode=='NA':
 				template='sin-sistema.html'
 				diccionario['resp']=res
 		except suds.WebFault, e:
@@ -1503,7 +1509,7 @@ def productos_novedades(request):
 			objImg = Imagen.objects.get(Producto=producto)
 			archImg = objImg.Imagen
 		else:
-			archImg = "img_detalle/sin_imagen.png"
+			archImg = "img_detalle/sin_imagen.jpg"
 
 		infoProducto = {
 		'Codigo': producto.Codigo,
@@ -1686,7 +1692,7 @@ def filtro_destacados(request):
 				objImg = Imagen.objects.get(Producto=producto)
 				archImg = objImg.Imagen
 			else:
-				archImg = "img_detalle/sin_imagen.png"
+				archImg = "img_detalle/sin_imagen.jpg"
 			infoProducto = {
 				'Codigo': producto.Codigo,
 				'Descripcion': producto.Descripcion,
@@ -1765,7 +1771,7 @@ def filtro_marca_subcategoria(request):
 				objImg = Imagen.objects.get(Producto=producto)
 				archImg = objImg.Imagen
 			else:
-				archImg = "img_detalle/sin_imagen.png"
+				archImg = "img_detalle/sin_imagen.jpg"
 			infoProducto = {
 				'Codigo': producto.Codigo,
 				'Descripcion': producto.Descripcion,
@@ -1849,7 +1855,7 @@ def filtro_novedades(request):
 				objImg = Imagen.objects.get(Producto=producto)
 				archImg = objImg.Imagen
 			else:
-				archImg = "img_detalle/sin_imagen.png"
+				archImg = "img_detalle/sin_imagen.jpg"
 			infoProducto = {
 				'Codigo': producto.Codigo,
 				'Descripcion': producto.Descripcion,
@@ -1932,7 +1938,7 @@ def filtro_oferta(request):
 				objImg = Imagen.objects.get(Producto=producto)
 				archImg = objImg.Imagen
 			else:
-				archImg = "img_detalle/sin_imagen.png"
+				archImg = "img_detalle/sin_imagen.jpg"
 			infoProducto = {
 				'Codigo': producto.Codigo,
 				'Descripcion': producto.Descripcion,
@@ -2016,7 +2022,7 @@ def filtro_subcategoria_marca(request):
 				objImg = Imagen.objects.get(Producto=producto)
 				archImg = objImg.Imagen
 			else:
-				archImg = "img_detalle/sin_imagen.png"
+				archImg = "img_detalle/sin_imagen.jpg"
 			infoProducto = {
 				'Codigo': producto.Codigo,
 				'Descripcion': producto.Descripcion,
@@ -2102,7 +2108,7 @@ def obtener_precios(request):
 		mitad = precioMenor + mitadrango
 		diccionario['precioMenor'] = round(precioMenor)
 		diccionario['precioMayor'] = round(precioMayor + 1)
-		diccionario['mitad'] = int(mitad)
+		diccionario['mitad'] = int(mitad - 1)
 		return HttpResponse(json.dumps(diccionario), content_type='application/json')
 	else:
 		raise Http404
@@ -2172,7 +2178,7 @@ def items_en_carrito(request):
 					objImg = Imagen.objects.get(Producto=producto)
 					archImg = objImg.Imagen
 				else:
-					archImg = "img_detalle/sin_imagen.png"
+					archImg = "img_detalle/sin_imagen.jpg"
 				detalle = {
 					'id': item.pk,
 					'Carrito': carrito,
@@ -2239,3 +2245,31 @@ def pruebaSlide(request):
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
 	return render_to_response('pruebaSlide.html', diccionario,context_instance=RequestContext(request))
+
+def reportes(request):
+	diccionario = {}
+	lista = []
+	lista2 = []
+	diccionario['productos_ofertas'] = Producto.objects.filter(Oferta__exact=True).order_by('Descripcion')
+	diccionario['productos_destacados'] = Producto.objects.filter(Destacado__exact=True).order_by('Descripcion')
+	#response = HttpResponse(content_type='text/csv')
+	#response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+	#csv.writer(diccionario)
+	#writer.writerow(['Descripcion'])
+	return render_to_response('reportes.html', diccionario, context_instance=RequestContext(request))
+
+def generar_reporte(request):
+	response = HttpResponse(content_type='text/csv')
+	response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+	productos = Producto.objects.filter(Oferta__exact=True).order_by('Descripcion')
+
+	writer = csv.writer(response)
+	writer.writerow(['Productos en Ofertas'])
+	for item in productos:
+		writer.writerow([item.Descripcion])
+
+	writer.writerow([' '])
+	writer.writerow(['Productos Destacados'])
+	for item in Producto.objects.filter(Destacado__exact=True).order_by('Descripcion'):
+		writer.writerow([item.Descripcion])		
+	return response
