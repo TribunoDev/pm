@@ -86,7 +86,7 @@ def images_ofertas():
 def images_novedades():
 	if FactorDiasNovedades.objects.count() > 0:
 		qDias = FactorDiasNovedades.objects.all()[:1]
-		dias = qDias.Dias
+		dias = qDias[0].Dias
 	else:
 		dias = 90
 
