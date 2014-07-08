@@ -148,7 +148,7 @@
 									<a href="/detalle-producto/{{elemento.Codigo}}">
 										<!--img src="{{MEDIA_URL}}{{elemento.Imagen}}" class="img-thumbnail"-->
 										{% thumbnail elemento.Imagen 236x180 upscale as thumb %}
-                						<img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}" class="img-presentacion img-rounded">
+                						<img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}" class="img-thumbnail">
 									</a>
 							      	<div class="caption">
 							        	<h3 class="nombre-producto">{{elemento.Descripcion|truncatewords:10}}</h3>
@@ -229,7 +229,7 @@
 							<div class="row">
 								<figure id="s2" class="s2 demo">
 									{% thumbnail item.Imagen 100x80 upscale as thumb %}
-                                    <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}">	
+                                <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}" class="img-rounded">	
 	                            </figure>
 								<div class="contenido-lateral-precio">
 									<div class="row">
@@ -264,7 +264,7 @@
 							<div class="row">
 								<figure id="s2" class="s2 demo">
 		                            {% thumbnail item.Imagen 100x80 upscale as thumb %}
-                                    <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}">
+                                	<img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}" class="img-rounded">
 	                            </figure>
 								<div class="contenido-lateral-precio">
 									<div class="row">
@@ -299,7 +299,7 @@
                         <div class="row">
                             <figure id="s2" class="s2 demo">
                                 {% thumbnail item.Imagen 100x80 upscale as thumb %}
-                                <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}">
+                                <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}" class="img-rounded">
                             </figure>
                             <div class="contenido-lateral-precio ">
                                 <div class="row">                                   

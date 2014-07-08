@@ -17,7 +17,7 @@
 		                    {% endif %}
 							<a href="/detalle-producto/{{elemento.Codigo}}">
 								{% thumbnail elemento.Imagen 236x180 upscale as thumb %}
-                				<img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}" class="img-presentacion img-rounded">
+                				<img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}" class="img-thumbnail">
 							</a>
 				      		<div class="caption">
 				      			{% load humanize %}
