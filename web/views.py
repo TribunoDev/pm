@@ -19,8 +19,6 @@ from suds.client import Client
 from datetime import datetime, timedelta, date
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger, InvalidPage
 import csv
-import reportlab
-from reportlab.pdfgen import canvas
 
 centinela = False
 
