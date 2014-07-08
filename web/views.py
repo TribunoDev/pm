@@ -84,8 +84,13 @@ def images_ofertas():
 	return listaOfertas
 
 def images_novedades():
-	qDias = FactorDiasNovedades.objects.all()[:1]
-	fecha = date.today() - timedelta(days=qDias[0].Dias)
+	if FactorDiasNovedades.objects.count() > 0:
+		qDias = FactorDiasNovedades.objects.all()[:1]
+		dias = qDias.Dias
+	else:
+		dias = 90
+
+	fecha = date.today() - timedelta(days=dias)
 	listaNovedades=[]
 	pNovedades = Producto.objects.filter(Fecha__gte=fecha).order_by('?')
 	contar = 0
