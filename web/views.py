@@ -84,8 +84,8 @@ def images_ofertas():
 	return listaOfertas
 
 def images_novedades():
-	
-	fecha = date.today() - timedelta(days=100)
+	qDias = FactorDiasNovedades.objects.all()[:1]
+	fecha = date.today() - timedelta(days=qDias[0].Dias)
 	listaNovedades=[]
 	pNovedades = Producto.objects.filter(Fecha__gte=fecha).order_by('?')
 	contar = 0
@@ -140,8 +140,8 @@ def inicio(request):
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
-	#return render_to_response('index.html',diccionario, context_instance=RequestContext(request))
-	return render_to_response('contador.html',diccionario, context_instance=RequestContext(request))
+	return render_to_response('index.html',diccionario, context_instance=RequestContext(request))
+	#return render_to_response('contador.html',diccionario, context_instance=RequestContext(request))
 
 #Vista que retorna la ventana de inicio de sesion
 def ingresar(request):
