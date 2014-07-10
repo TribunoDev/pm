@@ -55,7 +55,7 @@ class Producto(models.Model):
 		return self.Descripcion
 
 class Imagen(models.Model):
-	Producto = models.ForeignKey(Producto)
+	Producto = models.OneToOneField(Producto)
 	Imagen = models.ImageField(upload_to='thumbnail', verbose_name=u'Imagen del Producto')
 	class Meta:
 		verbose_name_plural=u'Imagen para producto'
