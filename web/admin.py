@@ -18,9 +18,9 @@ class ImageArchive(admin.TabularInline):
 	extra = 1
 
 class ImageAdmin(admin.ModelAdmin):
+	search_fields = ['Producto__Codigo', 'Producto__Descripcion']
+	ordering = ['Producto__Descripcion']
 	inlines = [ImageArchive,]
-	search_fields = ['Descripcion']
-	ordering = ['Producto']
 
 class ProductoAdmin(admin.ModelAdmin):
 	search_fields = ['Descripcion', 'Codigo']
