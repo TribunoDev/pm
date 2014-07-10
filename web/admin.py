@@ -19,7 +19,8 @@ class ImageArchive(admin.TabularInline):
 
 class ImageAdmin(admin.ModelAdmin):
 	inlines = [ImageArchive,]
-
+	search_fields = ['Producto']
+	ordering = ['Producto']
 
 class ProductoAdmin(admin.ModelAdmin):
 	search_fields = ['Descripcion', 'Codigo']
@@ -30,7 +31,7 @@ class SubcategoriaAdmin(admin.ModelAdmin):
 	search_fields = ['CodigoSubcategoria']
 	ordering = ['Subcategoria']
 	list_display = ('Subcategoria','CodigoSubcategoria')
-
+	
 class Editor(admin.ModelAdmin):
 	class Media:
 		js = ('../static/js/tiny_mce/tiny_mce.js', '../static/js/editores/textareas.js')

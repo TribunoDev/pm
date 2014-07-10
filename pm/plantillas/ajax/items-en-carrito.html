@@ -1,3 +1,4 @@
+{% load thumbnail %}
 <div class="row titulo-items hidden-xs">
 	<div class="col col-sm-8"><label>Producto</label></div>
 	<div class="col col-sm-4">
@@ -11,7 +12,8 @@
 	<div  class="item-carrito">
 		<div class="col col-sm-8">
 			<figure class="col col-xs-3 col-sm-3">
-                <a href="/detalle-producto/{{item.Producto.pk}}"><img src="{{MEDIA_URL}}{{item.Imagen}}" class="img-thumbnail"></a>
+				{% thumbnail item.Imagen 236x180 upscale as thumb %}
+                <a href="/detalle-producto/{{item.Producto.pk}}"><!--img src="{{MEDIA_URL}}{{item.Imagen}}" class="img-thumbnail"--><img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}" class="img-thumbnail"></a>
 			</figure>
 			<div class="item-descripcion col col-xs-9 col-sm-9">
 				<a href="/detalle-producto/{{item.Producto.pk}}"><h3>{{item.Producto.Descripcion|safe}}</h3></a>

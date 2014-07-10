@@ -4,6 +4,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_delete, pre_save
 from django.dispatch.dispatcher import receiver
+from easy_thumbnails.files import get_thumbnailer
+
 
 class Detalle_Perfil(models.Model):
 	RNP=models.CharField(max_length=20, help_text='RNP del Usuario', verbose_name=u'RNP')
@@ -62,6 +64,13 @@ class Imagen(models.Model):
 @receiver(pre_delete, sender=Imagen)
 def Imagen_delete(sender, instance, **kwargs):
 	instance.Imagen.delete(False)
+
+@receiver(pre_save, sender=Imagen)
+def delete_old_Imagen(sender, instance, *args, **kwargs):
+	if instance.pk:
+		existing_Imagen = Imagen.objects.get(pk=instance.pk)
+		if instance.Imagen and existing_Imagen.Imagen != instance.Imagen:
+			existing_Imagen.Imagen.delete(False)
 
 class Detalle_Imagen(models.Model):
 	Producto = models.ForeignKey(Imagen)

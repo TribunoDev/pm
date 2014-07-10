@@ -146,7 +146,6 @@
 				                	<img src="{{STATIC_URL}}img/img_oferta.png" class="img_oferta">
 				            	{% endif %}
 									<a href="/detalle-producto/{{elemento.Codigo}}">
-										<!--img src="{{MEDIA_URL}}{{elemento.Imagen}}" class="img-thumbnail"-->
 										{% thumbnail elemento.Imagen 236x180 upscale as thumb %}
                 						<img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}" class="img-thumbnail">
 									</a>
@@ -225,9 +224,8 @@
 							<div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
 							<div class="row">
 								<figure class="s2 demo">
-	                                <!--img src="{{MEDIA_URL}}{{item.Imagen}}" alt="{{item.Descripcion}}"-->
 	                                {% thumbnail item.Imagen 100x80 upscale as thumb %}
-                                    <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}">
+                                    <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}" class="img-rounded" >
 	                            </figure>
 								<div class="contenido-lateral-precio">
 									<div class="row">
@@ -258,7 +256,7 @@
 						<div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
 						<div class="row">
 							<figure id="s2" class="s2 demo">
-                                <img src="{{MEDIA_URL}}{{item.Imagen}}" alt="{{item.Descripcion}}">
+                                <img src="{{MEDIA_URL}}{{item.Imagen}}" alt="{{item.Descripcion}}" class="img-rounded" >
                             </figure>
 							<div class="contenido-lateral-precio">
 								<div class="row">

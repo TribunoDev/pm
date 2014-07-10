@@ -1559,7 +1559,7 @@ def productos_novedades(request):
 	diccionario['existencia1']=Producto.objects.filter(Fecha__gte=fecha1, Existencia__gt=0).count()
 	diccionario['existencia2']=Producto.objects.filter(Fecha__gte=fecha1, Existencia__lte=0).count()
 	diccionario['destacados'] = images_destacados()
-	diccionario['novedades'] = images_novedades()
+	diccionario['ofertas'] = images_ofertas()
 	diccionario['detalle_img'] = Detalle_Imagen.objects.all()
 	diccionario['productos'] = novedades
 	if not request.user.is_anonymous():

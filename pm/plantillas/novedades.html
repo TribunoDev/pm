@@ -211,16 +211,16 @@
 			<article id="contenido-lateral" class="hidden-xs col-sm-4 col-md-3 contenido-lateral" >
 			<div class="row producto-filtro-lateral">
 				<div class="row">
-					<h2 class="titulo">Novedades</h2>
+					<h2 class="titulo">Ofertas</h2>
 				</div>
 				<div  class="cuerpo-contenido row">
-					{% for item in novedades %}
+					{% for item in ofertas %}
 						<article class="producto-elemento row">
 							<div class="detalle-codigo row"><p><strong>Código:</strong> {{item.Codigo}}</p></div>
 							<div class="row">
 								<figure class="s2 demo">
 		                            {% thumbnail item.Imagen 100x80 upscale as thumb %}
-                                    <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}">
+                                    <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}" class="img-rounded">
 	                            </figure>
 								<div class="contenido-lateral-precio">
 									<div class="row">
@@ -251,7 +251,7 @@
 						<div class="row">
 							<figure id="s2" class="s2 demo">
 	                            {% thumbnail item.Imagen 100x80 upscale as thumb %}
-                                <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}">
+                                <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}" class="img-rounded">
                             </figure>
 							<div class="contenido-lateral-precio">
 								<div class="row">
