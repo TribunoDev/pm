@@ -135,7 +135,6 @@ INSTALLED_APPS = (
     'web',
     'pedidos',
     'mathfilters',
-    'easy_thumbnails',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
