@@ -253,14 +253,24 @@ class FAQ(models.Model):
 class Jumbotron(models.Model):
 	nombre_banner = models.CharField(max_length=100, verbose_name=u'Nombre Imagen')
 	imagen_pc = models.ImageField(upload_to='jumbotron/pc', verbose_name=u'Imagen PC', blank=True, null=True)
-	imagen_tablet = models.ImageField(upload_to='jumbotron/tablet', verbose_name=u'Imagen Tablet', blank=True, null=True)
-	imagen_movil = models.ImageField(upload_to='jumbotron/movil', verbose_name=u'Imagen movil', blank=True, null=True)
+	#imagen_tablet = models.ImageField(upload_to='jumbotron/tablet', verbose_name=u'Imagen Tablet', blank=True, null=True)
+	#imagen_movil = models.ImageField(upload_to='jumbotron/movil', verbose_name=u'Imagen movil', blank=True, null=True)
 	url = models.URLField(max_length=1000, verbose_name=u'URL', blank=True, null=True)
 	class Meta:
 		verbose_name=u'Jumbotron'
 		verbose_name_plural=u'Jumbotron'
 	def __unicode__(self):
 		return self.nombre_banner
+@receiver(pre_delete, sender=Jumbotron)
+def Jumbotron_delete(sender, instance, **kwargs):
+	instance.imagen_pc.delete(False)
+
+@receiver(pre_save, sender=Jumbotron)
+def delete_old_Jumbotron(sender, instance, *args, **kwargs):
+	if instance.pk:
+		existing_Imagen = Jumbotron.objects.get(pk=instance.pk)
+		if instance.imagen_pc and existing_Imagen.imagen_pc != instance.imagen_pc:
+			existing_Imagen.imagen_pc.delete(False)
 
 class EncuestaVentas(models.Model):
 	nombre = models.CharField(max_length=100, verbose_name=u'Nombre', blank=True, null=True)

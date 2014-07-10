@@ -2137,8 +2137,8 @@ def obtener_precios_parametros(request):
 		rango = precioMayor - precioMenor
 		mitadrango = rango / 2
 		mitad = precioMenor + mitadrango
-		diccionario['precioMenor'] = round(precioMenor)
-		diccionario['precioMayor'] = round(precioMayor + 1)
+		diccionario['precioMenor'] = round(precioMenor - 100)
+		diccionario['precioMayor'] = round(precioMayor + 100)
 		diccionario['mitad'] = int(mitad)
 		return HttpResponse(json.dumps(diccionario), content_type='application/json')
 	else:
