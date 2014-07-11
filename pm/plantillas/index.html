@@ -73,9 +73,15 @@
                           <section class="z-section ">
                               <h3 class="z-header"><span class="z-title">{{item.nombre_banner}}</span><span class="z-arrow"></span></h3>
                               <div class="z-content" id="demo-accordion-01-1"><div class="z-auto-g">
-                                {% thumbnail item.imagen_pc 882x368 upscale as thumb %}
-                                <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}" class="img-thumbnail">
-                                  <!--img src="{{MEDIA_URL}}{{item.imagen_pc}}" style="margin: 0px;"-->
+                                {% if item.url %}
+                                <a href="{{item.url}}">
+                                  {% thumbnail item.imagen_pc 882x368 upscale as thumb %}
+                                  <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}">
+                                </a>
+                                {% else %}
+                                  {% thumbnail item.imagen_pc 882x368 upscale as thumb %}
+                                  <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}">
+                                {% endif %}
                               </div></div>
                           </section>
                         {% endfor %}

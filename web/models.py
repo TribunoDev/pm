@@ -89,6 +89,7 @@ def delete_old_Detalle_Imagen(sender, instance, *args, **kwargs):
 	if instance.pk:
 		existing_Imagen = Detalle_Imagen.objects.get(pk=instance.pk)
 		if instance.Imagen and existing_Imagen.Imagen != instance.Imagen:
+			easy_thumbnails.delete_thumbnails(existing_Imagen.Imagen)
 			existing_Imagen.Imagen.delete(False)
 
 class Estado(models.Model):
@@ -151,7 +152,7 @@ class Direccion_Orden(models.Model):
 	class Meta:
 		verbose_name_plural=u'Dirección para orden de compra'
 	def __unicode__(self):
-		return self.Direccion +' '+ self.Ciudad +', '+ self.Region +', '+ self.Pais.Pais
+		return self.Direccion +' '+ self.Ciudad.Ciudad +', '+ self.Region.Region +', '+ self.Pais.Pais
 
 class Orden_Estado(models.Model):
 	Estado=models.CharField(max_length=50, help_text='Estado de la orden', verbose_name=u'Estado')
@@ -253,7 +254,7 @@ class FAQ(models.Model):
 class Jumbotron(models.Model):
 	nombre_banner = models.CharField(max_length=100, verbose_name=u'Nombre Imagen')
 	imagen_pc = models.ImageField(upload_to='jumbotron/pc', verbose_name=u'Imagen PC', blank=True, null=True)
-	#imagen_tablet = models.ImageField(upload_to='jumbotron/tablet', verbose_name=u'Imagen Tablet', blank=True, null=True)
+	imagen_info = models.ImageField(upload_to='jumbotron/info', verbose_name=u'Imagen Info', blank=True, null=True)
 	#imagen_movil = models.ImageField(upload_to='jumbotron/movil', verbose_name=u'Imagen movil', blank=True, null=True)
 	url = models.URLField(max_length=1000, verbose_name=u'URL', blank=True, null=True)
 	class Meta:
@@ -293,7 +294,7 @@ class EncuestaVentas(models.Model):
 	class Meta:
 		verbose_name_plural=u'Encuesta Ventas'
 	def __unicode__(self):
-		return self.fecha
+		return str(self.fecha)
 
 class EncuestaSoporte(models.Model):
 	nombre = models.CharField(max_length=100, verbose_name=u'Nombre', blank=True, null=True)
@@ -320,7 +321,7 @@ class EncuestaSoporte(models.Model):
 	class Meta:
 		verbose_name_plural=u'Encuesta Soporte'
 	def __unicode__(self):
-		return self.fecha
+		return str(self.fecha)
 
 class AccesosDirectos(models.Model):
 	Nombre = models.CharField(max_length=50, verbose_name=u'Nombre del Acceso')
