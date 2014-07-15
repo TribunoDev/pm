@@ -1606,12 +1606,20 @@ def cargar_region(request):
 
 #Vista que genera los item de la pestaña productos en el menu principal
 def catalogo_productos(request):
+	lista = []
 	if request.is_ajax():
 		diccionario={}
-		diccionario['categorias']=Categoria.objects.order_by('Categoria')
+		#diccionario['categorias']=Categoria.objects.order_by('Categoria')
 		s=SubCategoria.objects.order_by('Subcategoria')
 		producto = Producto.objects.all()
-		diccionario['total']=s.annotate(existencia=Count('producto')).order_by('Subcategoria')
+		subcat=s.annotate(existencia=Count('producto')).order_by('Subcategoria')
+		for item in subcat:
+			if item.existencia > 0:
+				icat = Categoria.objects.get(CodigoCategoria=item.Categoria.CodigoCategoria)
+				if icat not in lista:
+					lista.append(icat)
+		diccionario['subcategoria'] = subcat
+		diccionario['categorias']=lista
 		return render_to_response('ajax/categorias-productos.html', diccionario, context_instance=RequestContext(request))
 	else:
 		raise Http404
