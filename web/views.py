@@ -1619,7 +1619,7 @@ def catalogo_productos(request):
 				if icat not in lista:
 					lista.append(icat)
 		diccionario['subcategoria'] = subcat
-		diccionario['categorias']=lista
+		diccionario['categorias']=sorted(lista, reverse = True)
 		return render_to_response('ajax/categorias-productos.html', diccionario, context_instance=RequestContext(request))
 	else:
 		raise Http404
