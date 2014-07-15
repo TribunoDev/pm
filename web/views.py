@@ -1613,13 +1613,14 @@ def catalogo_productos(request):
 		s=SubCategoria.objects.order_by('Subcategoria')
 		producto = Producto.objects.all()
 		subcat=s.annotate(existencia=Count('producto')).order_by('Subcategoria')
-		for item in subcat:
+		subcat2=s.annotate(existencia=Count('producto')).order_by('Categoria__Categoria')
+		for item in subcat2:
 			if item.existencia > 0:
 				icat = Categoria.objects.get(CodigoCategoria=item.Categoria.CodigoCategoria)
 				if icat not in lista:
 					lista.append(icat)
 		diccionario['subcategoria'] = subcat
-		diccionario['categorias']=sorted(lista, reverse = True)
+		diccionario['categorias']=lista
 		return render_to_response('ajax/categorias-productos.html', diccionario, context_instance=RequestContext(request))
 	else:
 		raise Http404
