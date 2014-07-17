@@ -17,18 +17,49 @@
 		</div>
 		<div class="row">
 			<h4>Productos en Oferta</h4>
-			{% for item in productos_ofertas %}
-				<label>{{item.Descripcion}}</label><br>
-			{% endfor %}
+			<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Codigo</th>
+					<th>Producto</th>
+					<th>Fecha</th>
+					<th>Dias en oferta</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in productos_ofertas %}
+				<tr>
+					<td>{{item.Codigo}}</td>
+					<td>{{item.Descripcion}}</td>
+					<td>Desde el {{item.FechaDesde}}</td>
+					<td>{{item.Diferencia}}</td>
+				</tr>
+				{% endfor %}
+			</tbody>	
+			</table>
 		</div>
 		<div class="row">
 			<h4>Productos Destacados</h4>
-			{% for item in productos_destacados %}
-				<label>{{item.Descripcion}}</label><br>
-			{% endfor %}
-		</div>
-		<div id="btn" class="row">
-			<a href="/reporte/">Crear Reporte</a>
+			<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Codigo</th>
+					<th>Producto</th>
+					<th>Fecha</th>
+					<th>Dias en destacado</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in productos_destacados %}
+				<tr>
+					<td>{{item.Codigo}}</td>
+					<td>{{item.Descripcion}}</td>
+					<td>Desde el {{item.FechaDesde}}</td>
+					<td>{{item.Diferencia}}</td>
+				</tr>
+				{% endfor %}
+			</tbody>	
+			</table>
 		</div>
 	</div>
 {% endblock %}

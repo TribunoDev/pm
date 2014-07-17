@@ -1567,6 +1567,14 @@ def productos_novedades(request):
 		diccionario['centinela']=True
 	return render_to_response('novedades.html', diccionario, context_instance=RequestContext(request))
 
+def verifica_estado_equipo(request):
+	diccionario = {}
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+	return render_to_response('verifica-estado-equipo.html', diccionario,context_instance=RequestContext(request))
+
+
 ##---------> VISTAS AJAX <----------####
 
 #Vista que actualiza la cantidad de productos en cada item del carrito
@@ -2248,40 +2256,32 @@ def verificar_usuario(request):
 	else:
 		raise Http404
 
-def pruebaSlide(request):
-	diccionario={}
-	diccionario['accesos']=AccesosDirectos.objects.all()
-	diccionario['marcas']=Marca.objects.all()
-	diccionario['banner']=Jumbotron.objects.all()
-	if not request.user.is_anonymous():
-		diccionario['usuario']=request.user
-		diccionario['centinela']=True
-	return render_to_response('pruebaSlide.html', diccionario,context_instance=RequestContext(request))
-
 def reportes(request):
 	diccionario = {}
-	lista = []
-	lista2 = []
-	diccionario['productos_ofertas'] = Producto.objects.filter(Oferta__exact=True).order_by('Descripcion')
-	diccionario['productos_destacados'] = Producto.objects.filter(Destacado__exact=True).order_by('Descripcion')
-	#response = HttpResponse(content_type='text/csv')
-	#response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
-	#csv.writer(diccionario)
-	#writer.writerow(['Descripcion'])
+	historialOferta = {}
+	historialDestacado = {}
+	listaOfertas = []
+	listaDestacados = [] 
+	for item in ReporteOfertaDestacado.objects.filter(Producto__Oferta__exact=True).order_by('Producto__Descripcion'):
+		dif = date.today() - item.Fecha
+		historialOferta = {
+			'Codigo': item.Producto.Codigo,
+			'Descripcion': item.Producto.Descripcion,
+			'FechaDesde': item.Fecha,
+			'Diferencia': dif.days,
+		}
+		listaOfertas.append(historialOferta)
+
+	for item in ReporteOfertaDestacado.objects.filter(Producto__Destacado__exact=True).order_by('Producto__Descripcion'):
+		dif = date.today() - item.Fecha
+		historialDestacado = {
+			'Codigo': item.Producto.Codigo,
+			'Descripcion': item.Producto.Descripcion,
+			'FechaDesde': item.Fecha,
+			'Diferencia': dif.days,
+		}
+		listaDestacados.append(historialDestacado)
+
+	diccionario['productos_ofertas'] = listaOfertas
+	diccionario['productos_destacados'] = listaDestacados
 	return render_to_response('reportes.html', diccionario, context_instance=RequestContext(request))
-
-def generar_reporte(request):
-	response = HttpResponse(content_type='text/csv')
-	response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
-	productos = Producto.objects.filter(Oferta__exact=True).order_by('Descripcion')
-
-	writer = csv.writer(response)
-	writer.writerow(['Productos en Ofertas'])
-	for item in productos:
-		writer.writerow([item.Descripcion])
-
-	writer.writerow([' '])
-	writer.writerow(['Productos Destacados'])
-	for item in Producto.objects.filter(Destacado__exact=True).order_by('Descripcion'):
-		writer.writerow([item.Descripcion])		
-	return response

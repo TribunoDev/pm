@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     url(r'^actualizar-cantidad/$', 'web.views.actualizar_cantidad', name='actualizar_cantidad'),
     url(r'^actualizar-contrasena/$', 'web.views.actualizar_contrasena', name='actualizar_contrasena'),
     url(r'^actualizar-perfil/$', 'web.views.actualizar_perfil', name='actualizar_perfil'),
+    url(r'^apps/SoftTech/$', 'web.views.verifica_estado_equipo', name='verifica_estado_equipo'),
     url(r'^buscar/$', 'web.views.buscar', name='buscar'),
     url(r'^agregar-carrito/$', 'web.views.agregar_carrito', name='agregar_carrito'),
     url(r'^catalogo-productos/$', 'web.views.catalogo_productos', name='catalogo_productos'),
@@ -55,7 +56,6 @@ urlpatterns = patterns('',
     url(r'^reportes/$', 'web.views.reportes', name='reportes'),
     url(r'^salir/$', logout,{'template_name': 'cerrar-sesion.html',}, name='logout'),
     url(r'^servicio-flete/$', 'web.views.servicio_flete', name='servicio_flete'),
-
     url(r'^resultado-encuesta-ventas/$', 'web.views.guardarEncuestaVentas', name='guardarEncuestaVentas'),
     url(r'^resultado-encuesta-soporte/$', 'web.views.guardarEncuestaSoporte', name='guardarEncuestaSoporte'),
 
@@ -82,12 +82,9 @@ urlpatterns = patterns('',
     url(r'^obtener-info-usuario/$', 'web.views.info_usuario', name='info_usuario'),
     url(r'^obtener-precios/$', 'web.views.obtener_precios', name='obtener_precios'),
     url(r'^obtener-precios-parametros/$', 'web.views.obtener_precios_parametros', name='obtener_precios_parametros'),
-    url(r'^reporte/$', 'web.views.generar_reporte', name='generar_reporte'),
     url(r'^verificar-usuario/$', 'web.views.verificar_usuario', name='verificar_usuario'),
     url(r'^verificar-email/$', 'web.views.verificar_email', name='verificar_email'),
     url(r'^verificar-rnp/$', 'web.views.verificar_rnp', name='verificar_rnp'),
-
-    url(r'^pruebaSlide/$', 'web.views.pruebaSlide', name='pruebaSlide'),
 
     #---URL'S AJAX
 

@@ -2,7 +2,7 @@
 #encoding:utf-8
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import pre_delete, pre_save
+from django.db.models.signals import *
 from django.dispatch.dispatcher import receiver
 from easy_thumbnails.files import get_thumbnailer
 
@@ -53,6 +53,19 @@ class Producto(models.Model):
 		verbose_name_plural=u'Producto'
 	def __unicode__(self):
 		return self.Descripcion
+@receiver(post_save, sender=Producto)
+def delete_old_ReporteOferta(sender, instance, **kwargs):
+	if ReporteOfertaDestacado.objects.filter(Producto=instance).count() > 0:
+		hist = ReporteOfertaDestacado.objects.get(Producto=instance)
+		hist.delete()
+		print "Registro eliminado"
+	historial = ReporteOfertaDestacado(Producto = instance)
+	if instance.Oferta and instance.Destacado:
+		historial.save()
+	elif instance.Oferta and instance.Destacado == False:
+		historial.save()
+	elif instance.Oferta == False and instance.Destacado:
+		historial.save()
 
 class Imagen(models.Model):
 	Producto = models.OneToOneField(Producto)
@@ -91,6 +104,14 @@ def delete_old_Detalle_Imagen(sender, instance, *args, **kwargs):
 		if instance.Imagen and existing_Imagen.Imagen != instance.Imagen:
 			easy_thumbnails.delete_thumbnails(existing_Imagen.Imagen)
 			existing_Imagen.Imagen.delete(False)
+
+class ReporteOfertaDestacado(models.Model):
+	Producto = models.OneToOneField(Producto)
+	Fecha = models.DateField(auto_now_add=True)
+	class Meta:
+		verbose_name_plural=u'Reporte Productos en Ofeta y Destacado'
+	def __unicode__(self):
+		return str(self.Producto.Descripcion) + " - " + str(self.Fecha)
 
 class Estado(models.Model):
 	Estado = models.CharField(max_length=45, help_text='Describe el estado del carrito', verbose_name=u'Estado de Carrito')
