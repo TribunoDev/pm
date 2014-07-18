@@ -219,8 +219,4 @@ pm.db
 pm/settings.py
 pm/settings.py
 pm/settings.py
-pm/carga/img_detalle
-pm/carga/img_marcas
-pm/carga/jumbotron
-pm/carga/accesos
-pm/carga/thumbnail
+pm/carga
