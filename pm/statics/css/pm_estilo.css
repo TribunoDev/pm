@@ -298,6 +298,11 @@ header .container{
 	text-align: center;
 }
 
+.thumbnail .img-thumbnail{
+	background-color: #F2F2F2;
+	border-color: #F2F2F2;
+}
+
 .img-presentacion{
 	border: 1px solid #EFEFEF;
 	padding: 4px 4px;
