@@ -345,13 +345,14 @@ class EncuestaSoporte(models.Model):
 		return str(self.fecha)
 
 class AccesosDirectos(models.Model):
+	Index = models.IntegerField(help_text='Posición en el orden de vista', unique=True)
 	Nombre = models.CharField(max_length=50, verbose_name=u'Nombre del Acceso')
 	Imagen = models.ImageField(upload_to='accesos', verbose_name=u'Imagen', help_text='Imagen del acceso directo', blank=True, null=True)
 	Url = models.URLField(max_length=100, blank=True, null=True)
 	class Meta:
 		verbose_name_plural=u'Acceso Directo'
 	def __unicode__(self):
-		return self.Nombre
+		return str(self.Index) + " " + self.Nombre
 
 class FactorDiasNovedades(models.Model):
 	Dias = models.BigIntegerField(help_text='Rango de días para abarcar productos en novedades')

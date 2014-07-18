@@ -139,7 +139,7 @@ def producto_imagen(request):
 #Vista que retorna la pagina de inicio
 def inicio(request):
 	diccionario={}
-	diccionario['accesos']=AccesosDirectos.objects.all()
+	diccionario['accesos']=AccesosDirectos.objects.all().order_by('Index')
 	diccionario['marcas']=Marca.objects.all()
 	diccionario['banner']=Jumbotron.objects.all()
 	if not request.user.is_anonymous():

@@ -75,12 +75,10 @@
                               <div class="z-content" id="demo-accordion-01-1"><div class="z-auto-g">
                                 {% if item.url %}
                                 <a href="{{item.url}}">
-                                  {% thumbnail item.imagen_pc 882x368 upscale as thumb %}
-                                  <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}">
+                                  <img src="{{MEDIA_URL}}{{ item.imagen_pc }}">
                                 </a>
                                 {% else %}
-                                  {% thumbnail item.imagen_pc 882x368 upscale as thumb %}
-                                  <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.heigth }}">
+                                  <img src="{{MEDIA_URL}}{{ item.imagen_pc }}">
                                 {% endif %}
                               </div></div>
                           </section>
