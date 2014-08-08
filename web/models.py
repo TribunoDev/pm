@@ -196,7 +196,6 @@ class Orden(models.Model):
 class Marca(models.Model):
 	Marca = models.CharField(max_length=50, help_text='Nombre de la marca', verbose_name=u'Marca')
 	Logotipo = models.ImageField(upload_to='img_marcas', verbose_name=u'Logotipo')
-	Slug = models.SlugField(max_length=100, unique=True, null=True, blank=True)
 	class Meta:
 		verbose_name_plural=u'Marca de Producto'
 	def __unicode__(self):
