@@ -15,10 +15,25 @@
 	<input type="hidden" id="centinela_marca" value="0">
 	<h2 class="titulo">Productos sin Imagenes [ {{total}} ]</h2>
 	<article class="col-sm-12">
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Producto</th>
+				<th>Existencias</th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for producto in productos %}
+			<tr>
+				<td>{{producto.Descripcion}}</td>
+				<td>{{producto.Existencia}}</td>
+			</tr>
+		{% endfor %}
+			
+		</tbody>
+	</table>
 		<ul class="list-group">
-			{% for producto in productos %}
-				<li class="list-group-item">{{producto.Descripcion}}</li>
-			{% endfor %}
+			
 		</ul>
 	</article>
 {% endblock contenido %}
