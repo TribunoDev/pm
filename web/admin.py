@@ -31,6 +31,9 @@ class SubcategoriaAdmin(admin.ModelAdmin):
 	search_fields = ['CodigoSubcategoria']
 	ordering = ['Subcategoria']
 	list_display = ('Subcategoria','CodigoSubcategoria')
+
+class AdminMarcas(admin.ModelAdmin):
+	prepopulated_fields = { 'Slug':['Marca',] }
 	
 class Editor(admin.ModelAdmin):
 	class Media:
@@ -46,7 +49,7 @@ admin.site.register(Detalle_Carrito)
 admin.site.register(Direccion_Orden)
 admin.site.register(Pais)
 admin.site.register(Region)
-admin.site.register(Marca)
+admin.site.register(Marca, AdminMarcas)
 admin.site.register(Detalle_Perfil)
 admin.site.register(Imagen, ImageAdmin)
 admin.site.register(Servicio_Flete)

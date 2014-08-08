@@ -58,6 +58,7 @@
 										<label class="col-sm-3 control-label">Numero de CVV:</label>
 									   <div class="col-sm-3">
 									      <input type="text" class="form-control" name="CVV" id="CVV" placeholder="">
+									      <a href="#" data-toggle="modal" data-target="#mycvv">¿Qué es el CVV?</a>
 									    </div>
 									</div>
 									<div class="form-group">
@@ -238,4 +239,20 @@
 			</div>			
 		</article>
 	</div>
+	<div id="mycvv" class="modal fade">
+  		<div class="modal-dialog">
+    		<div class="modal-content">
+      			<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        			<h4 class="modal-title">¿Qué es el CVV?</h4>
+      			</div>
+      			<div class="modal-body text-center">
+        			<img src="{{STATIC_URL}}img/cvv.jpg" alt="">
+      			</div>
+      			<div class="modal-footer">
+        			<button type="button" class="btn btn-default" data-dismiss="modal">Cerrrar</button>
+      			</div>
+    		</div><!-- /.modal-content -->
+  		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 {% endblock %}

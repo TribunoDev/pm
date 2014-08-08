@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import *
 from django.dispatch.dispatcher import receiver
 from easy_thumbnails.files import get_thumbnailer
+from django.template import defaultfilters
 
 
 class Detalle_Perfil(models.Model):
@@ -195,10 +196,15 @@ class Orden(models.Model):
 class Marca(models.Model):
 	Marca = models.CharField(max_length=50, help_text='Nombre de la marca', verbose_name=u'Marca')
 	Logotipo = models.ImageField(upload_to='img_marcas', verbose_name=u'Logotipo')
+	Slug = models.SlugField(max_length=100, unique=True, null=True, blank=True)
 	class Meta:
 		verbose_name_plural=u'Marca de Producto'
 	def __unicode__(self):
 		return self.Marca
+
+	def save(self, *args, **kwargs):
+		self.Slug = defaultfilters.slugify(self.Marca)
+		super(Marca, self).save(*args, **kwargs)
 
 class Precio_Combustible(models.Model):
 	Precio=models.DecimalField(max_digits=5, decimal_places=2, unique=True, help_text='Precio real en L. del combustible por galón ', verbose_name=u'Precio')

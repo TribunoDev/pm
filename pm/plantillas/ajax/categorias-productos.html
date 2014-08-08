@@ -3,11 +3,11 @@
 		<ul class="dropdown-menu" id="subcategorias-productos">
 			{% for dato in subcategoria %}
 					{% if dato.Categoria == categoria %}
-						{% if dato.existencia > 0 %}
+						
 						<li "dropdown-submenu" id="subcat-item">
 						<a href="/productos/categoria/subcategoria/{{dato.id}}" data-id="{{dato.id}}" tabindex="-1">{{dato.Subcategoria|upper}} <span id="tag-existencia" class="badge">{{dato.existencia}}</span></a>
 						</li>
-						{% endif %}
+						
 	        		{% endif %}
 			{% endfor %}
 		</ul>

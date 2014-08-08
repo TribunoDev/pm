@@ -33,7 +33,7 @@ def intcomma(n):
 
 def images_destacados():
 	listaDestacados = []
-	pDestacados = Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')
+	pDestacados = Producto.objects.filter(Destacado__exact=True, Oferta__exact=False, Activo__exact=True).order_by('?')
 	contar = 0
 	for pD in pDestacados:
 		if contar == 2:
@@ -60,7 +60,7 @@ def images_destacados():
 def images_ofertas():
 	dOfertas = {}
 	listaOfertas=[]
-	pOfertas = Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')
+	pOfertas = Producto.objects.filter(Destacado__exact=False, Oferta__exact=True, Activo__exact=True).order_by('?')
 	contar = 0
 	for pO in pOfertas:
 		if contar == 2:
@@ -92,7 +92,7 @@ def images_novedades():
 
 	fecha = date.today() - timedelta(days=dias)
 	listaNovedades=[]
-	pNovedades = Producto.objects.filter(Fecha__gte=fecha).order_by('?')
+	pNovedades = Producto.objects.filter(Fecha__gte=fecha, Activo__exact=True).order_by('?')
 	contar = 0
 	for pN in pNovedades:
 		if contar == 2:
@@ -129,7 +129,7 @@ def cargar_imagenes():
 def producto_imagen(request):
 	lista=[]
 	total = 0
-	productos = Producto.objects.all().order_by('Descripcion')
+	productos = Producto.objects.filter(Activo__exact=True).order_by('Descripcion')
 	for elemento in productos:
 		if not Imagen.objects.filter(Producto=elemento).exists():
 			lista.append(elemento)
@@ -251,8 +251,8 @@ def marca_producto(request, id_marca):
 	pMarcas=[]
 	marca=get_object_or_404(Marca, pk=id_marca)
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['totalProductos'] = Producto.objects.filter(Descripcion__icontains=" "+marca.Marca+" ").count()
-	productos = Producto.objects.filter(Descripcion__icontains=" "+marca.Marca+" ")
+	diccionario['totalProductos'] = Producto.objects.filter(Descripcion__icontains=" "+marca.Marca+" ", Activo__exact=True).count()
+	productos = Producto.objects.filter(Descripcion__icontains=" "+marca.Marca+" ", Activo__exact=True)
 	allImages = Detalle_Imagen.objects.all().order_by('Imagen')
 	for producto in productos:
 		if Imagen.objects.filter(Producto=producto).count() > 0:
@@ -274,7 +274,7 @@ def marca_producto(request, id_marca):
 
 	subCat = SubCategoria.objects.all()
 	for sC in subCat:
-		contarProdSub = Producto.objects.filter(Descripcion__icontains=" "+marca.Marca+"", Subcategoria=sC.pk).count()
+		contarProdSub = Producto.objects.filter(Descripcion__icontains=" "+marca.Marca+"", Subcategoria=sC.pk, Activo__exact=True).count()
 		if contarProdSub > 0:
 			subcategorias = {
 				'CodigoSubcategoria': sC.CodigoSubcategoria,
@@ -327,7 +327,7 @@ def destacados(request):
 	diccionario={}
 	destacados=[]
 	#allImages = Detalle_Imagen.objects.all().order_by('Imagen')
-	productos = Producto.objects.filter(Destacado__exact=True)[:12]
+	productos = Producto.objects.filter(Destacado__exact=True, Activo__exact=True)[:12]
 	for producto in productos:
 		if Imagen.objects.filter(Producto=producto).count() > 0:
 			# allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
@@ -354,7 +354,7 @@ def ofertas(request):
 	diccionario={}
 	ofertas=[]
 	#allImages = Detalle_Imagen.objects.all().order_by('Imagen')
-	productos = Producto.objects.filter(Oferta__exact=True)[:12]
+	productos = Producto.objects.filter(Oferta__exact=True, Activo__exact=True)[:12]
 	for producto in productos:
 		if Imagen.objects.filter(Producto=producto).count() > 0:
 			#allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
@@ -380,7 +380,7 @@ def novedades(request):
 	diccionario={}
 	novedades=[]
 	fecha = date.today() - timedelta(days=60)
-	productos = Producto.objects.filter(Fecha__gte=fecha).order_by('?')[:12]
+	productos = Producto.objects.filter(Fecha__gte=fecha, Activo__exact=True).order_by('?')[:12]
 	for producto in productos:
 		if Imagen.objects.filter(Producto=producto).count() > 0:
 			# allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
@@ -411,8 +411,8 @@ def ver_subcategoria(request, id_subcat):
 	listaNovedades = []
 	subcat = get_object_or_404(SubCategoria, pk=id_subcat)
 	diccionario['datos']=subcat
-	diccionario['totalProductos']=Producto.objects.filter(Subcategoria=subcat).count()
-	productos = Producto.objects.filter(Subcategoria=subcat).order_by('Descripcion')
+	diccionario['totalProductos']=Producto.objects.filter(Subcategoria=subcat, Activo__exact=True).count()
+	productos = Producto.objects.filter(Subcategoria=subcat, Activo__exact=True).order_by('Descripcion')
 	for producto in productos:
 		if Imagen.objects.filter(Producto=producto).count() > 0:
 			#allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
@@ -460,7 +460,7 @@ def ver_subcategoria(request, id_subcat):
 	listaMarcas = []
 	if Marca.objects.all().count() > 0:
 		for marca in Marca.objects.all():
-			cP = Producto.objects.filter(Subcategoria=subcat, Descripcion__icontains=" "+marca.Marca+" ").count()
+			cP = Producto.objects.filter(Subcategoria=subcat, Descripcion__icontains=" "+marca.Marca+" ", Activo__exact=True).count()
 			if cP > 0:
 				listaMarcas.append(marca)
 
@@ -515,8 +515,8 @@ def buscar(request):
 
 	buscar = request.GET.get("txtBuscar")
 	pagina = request.GET.get("pagina")
-	diccionario['totalProductos'] = Producto.objects.filter(Descripcion__icontains=buscar).count()
-	resultado = Producto.objects.filter(Descripcion__icontains=buscar)
+	diccionario['totalProductos'] = Producto.objects.filter(Descripcion__icontains=buscar, Activo__exact=True).count()
+	resultado = Producto.objects.filter(Descripcion__icontains=buscar, Activo__exact=True)
 	for producto in resultado:
 		if Imagen.objects.filter(Producto=producto).count() > 0:
 			# allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
@@ -666,9 +666,9 @@ def productos_ofertas(request):
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
 	diccionario['marcas']=Marca.objects.all()
-	pOfertas = Producto.objects.filter(Oferta__exact=True)
-	diccionario['totalProductos'] = Producto.objects.filter(Oferta__exact=True).count()
-	for producto in Producto.objects.filter(Oferta__exact=True):
+	pOfertas = Producto.objects.filter(Oferta__exact=True, Activo__exact=True)
+	diccionario['totalProductos'] = Producto.objects.filter(Oferta__exact=True, Activo__exact=True).count()
+	for producto in Producto.objects.filter(Oferta__exact=True, Activo__exact=True):
 		if Imagen.objects.filter(Producto=producto).count() > 0:
 			#allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
 			#archImg=allImages[0]
@@ -716,13 +716,13 @@ def productos_ofertas(request):
 	listaMarcas = []
 	if Marca.objects.all().count() > 0:
 		for marca in Marca.objects.all():
-			cP = Producto.objects.filter(Oferta__exact=True, Descripcion__icontains=" "+marca.Marca+" ").count()
+			cP = Producto.objects.filter(Oferta__exact=True, Descripcion__icontains=" "+marca.Marca+" ", Activo__exact=True).count()
 			if cP > 0:
 				listaMarcas.append(marca)
 	diccionario['listaMarcas']=listaMarcas
 
-	diccionario['existencia1']=Producto.objects.filter(Oferta__exact=True, Existencia__gt=0).count()
-	diccionario['existencia2']=Producto.objects.filter(Oferta__exact=True, Existencia__lte=0).count()
+	diccionario['existencia1']=Producto.objects.filter(Oferta__exact=True, Existencia__gt=0, Activo__exact=True).count()
+	diccionario['existencia2']=Producto.objects.filter(Oferta__exact=True, Existencia__lte=0, Activo__exact=True).count()
 
 	diccionario['destacados'] = images_destacados()
 	diccionario['novedades'] = images_novedades()
@@ -741,9 +741,9 @@ def productos_destacados(request):
 		diccionario['centinela']=True
 
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['totalProductos'] = Producto.objects.filter(Destacado__exact=True).count()
+	diccionario['totalProductos'] = Producto.objects.filter(Destacado__exact=True, Activo__exact=True).count()
 
-	for producto in Producto.objects.filter(Destacado__exact=True).order_by('Descripcion'):
+	for producto in Producto.objects.filter(Destacado__exact=True, Activo__exact=True).order_by('Descripcion'):
 		if Imagen.objects.filter(Producto=producto).count() > 0:
 			# allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
 			# archImg=allImages[0]
@@ -791,12 +791,12 @@ def productos_destacados(request):
 	listaMarcas = []
 	if Marca.objects.all().count() > 0:
 		for marca in Marca.objects.all():
-			cP = Producto.objects.filter(Destacado__exact=True, Descripcion__icontains=" "+marca.Marca+" ").count()
+			cP = Producto.objects.filter(Destacado__exact=True, Descripcion__icontains=" "+marca.Marca+" ", Activo__exact=True).count()
 			if cP > 0:
 				listaMarcas.append(marca)
 	diccionario['listaMarcas']=listaMarcas
-	diccionario['existencia1']=Producto.objects.filter(Destacado__exact=True, Existencia__gt=0).count()
-	diccionario['existencia2']=Producto.objects.filter(Destacado__exact=True, Existencia__lte=0).count()
+	diccionario['existencia1']=Producto.objects.filter(Destacado__exact=True, Existencia__gt=0, Activo__exact=True).count()
+	diccionario['existencia2']=Producto.objects.filter(Destacado__exact=True, Existencia__lte=0, Activo__exact=True).count()
 	diccionario['ofertas'] = images_ofertas()
 	diccionario['novedades'] = images_novedades()
 	diccionario['detalle_img'] = cargar_imagenes()
@@ -807,8 +807,8 @@ def productos_destacados(request):
 def servicio_flete(request):
 	diccionario={}
 	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= Producto.objects.filter(Destacado__exact=True, Oferta__exact=False).order_by('?')[:2]
-	diccionario['ofertas']= Producto.objects.filter(Destacado__exact=False, Oferta__exact=True).order_by('?')[:2]
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas'] = images_ofertas()
 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
 	if not request.user.is_anonymous():
 		diccionario['usuario']=request.user
@@ -1501,7 +1501,7 @@ def productos_novedades(request):
 	centinela = False
 	fecha1 = date.today() - timedelta(days=100)
 	diccionario['marcas']=Marca.objects.all()
-	pNovedades = Producto.objects.filter(Fecha__gte=fecha1).order_by('Descripcion')
+	pNovedades = Producto.objects.filter(Fecha__gte=fecha1, Activo__exact=True).order_by('Descripcion')
 	diccionario['totalProductos'] = pNovedades.count()
 
 	for producto in pNovedades:
@@ -1552,12 +1552,12 @@ def productos_novedades(request):
 	listaMarcas = []
 	if Marca.objects.all().count() > 0:
 		for marca in Marca.objects.all():
-			cP = Producto.objects.filter(Fecha__gte=fecha1, Descripcion__icontains=" "+marca.Marca+" ").count()
+			cP = Producto.objects.filter(Fecha__gte=fecha1, Descripcion__icontains=" "+marca.Marca+" ", Activo__exact=True).count()
 			if cP > 0:
 				listaMarcas.append(marca)
 	diccionario['listaMarcas']=listaMarcas
-	diccionario['existencia1']=Producto.objects.filter(Fecha__gte=fecha1, Existencia__gt=0).count()
-	diccionario['existencia2']=Producto.objects.filter(Fecha__gte=fecha1, Existencia__lte=0).count()
+	diccionario['existencia1']=Producto.objects.filter(Fecha__gte=fecha1, Existencia__gt=0, Activo__exact=True).count()
+	diccionario['existencia2']=Producto.objects.filter(Fecha__gte=fecha1, Existencia__lte=0, Activo__exact=True).count()
 	diccionario['destacados'] = images_destacados()
 	diccionario['ofertas'] = images_ofertas()
 	diccionario['detalle_img'] = Detalle_Imagen.objects.all()
@@ -1574,6 +1574,43 @@ def verifica_estado_equipo(request):
 		diccionario['centinela']=True
 	return render_to_response('verifica-estado-equipo.html', diccionario,context_instance=RequestContext(request))
 
+def reportes(request):
+	diccionario = {}
+	historialOferta = {}
+	historialDestacado = {}
+	listaOfertas = []
+	listaDestacados = [] 
+	for item in ReporteOfertaDestacado.objects.filter(Producto__Oferta__exact=True).order_by('Producto__Descripcion'):
+		dif = date.today() - item.Fecha
+		historialOferta = {
+			'Codigo': item.Producto.Codigo,
+			'Descripcion': item.Producto.Descripcion,
+			'FechaDesde': item.Fecha,
+			'Diferencia': dif.days,
+		}
+		listaOfertas.append(historialOferta)
+
+	for item in ReporteOfertaDestacado.objects.filter(Producto__Destacado__exact=True).order_by('Producto__Descripcion'):
+		dif = date.today() - item.Fecha
+		historialDestacado = {
+			'Codigo': item.Producto.Codigo,
+			'Descripcion': item.Producto.Descripcion,
+			'FechaDesde': item.Fecha,
+			'Diferencia': dif.days,
+		}
+		listaDestacados.append(historialDestacado)
+
+	diccionario['productos_ofertas'] = listaOfertas
+	diccionario['productos_destacados'] = listaDestacados
+	return render_to_response('reportes.html', diccionario, context_instance=RequestContext(request))
+
+def administrador(request):
+	diccionario = {}
+	if request.user.is_authenticated():
+		return render_to_response('administrador.html', diccionario, context_instance=RequestContext(request))
+	else:
+		raise Http404
+	
 
 ##---------> VISTAS AJAX <----------####
 
@@ -1615,20 +1652,45 @@ def cargar_region(request):
 #Vista que genera los item de la pestaña productos en el menu principal
 def catalogo_productos(request):
 	lista = []
+	listasub = []
+	misub  = {}
 	if request.is_ajax():
 		diccionario={}
 		#diccionario['categorias']=Categoria.objects.order_by('Categoria')
+		producto = Producto.objects.filter(Activo__exact=True)
+
 		s=SubCategoria.objects.order_by('Subcategoria')
-		producto = Producto.objects.all()
-		subcat=s.annotate(existencia=Count('producto')).order_by('Subcategoria')
-		subcat2=s.annotate(existencia=Count('producto')).order_by('Categoria__Categoria')
-		for item in subcat2:
-			if item.existencia > 0:
+		for item in s:
+			if Producto.objects.filter(Subcategoria=item, Activo__exact=True).count() > 0:
+				total = Producto.objects.filter(Subcategoria=item, Activo__exact=True).count()
+				misub = {
+						'id': item.id,
+						'CodigoSubcategoria': item.CodigoSubcategoria,
+						'Subcategoria': item.Subcategoria,
+						'Categoria': item.Categoria,
+						'existencia':Producto.objects.filter(Subcategoria=item, Activo__exact=True).count()
+					}
+				if misub not in listasub:
+					listasub.append(misub)
+
+		for item in SubCategoria.objects.order_by('Subcategoria').order_by('Categoria__Categoria'):
+			if Producto.objects.filter(Subcategoria=item, Activo__exact=True).count() > 0:
 				icat = Categoria.objects.get(CodigoCategoria=item.Categoria.CodigoCategoria)
 				if icat not in lista:
 					lista.append(icat)
-		diccionario['subcategoria'] = subcat
+
+
+		#subcat=s.annotate(existencia=Count('producto')).filter(existencia__Activo__exact=True).order_by('Subcategoria')
+		#subcat2=s.annotate(existencia=Count('producto')).filter(existencia__Activo__exact=True).order_by('Categoria__Categoria')
+		#for item in subcat2:
+		#	if item.existencia > 0:
+		#		icat = Categoria.objects.get(CodigoCategoria=item.Categoria.CodigoCategoria)
+		#		if icat not in lista:
+		#			lista.append(icat)
+		diccionario['subcategoria'] = listasub
 		diccionario['categorias']=lista
+		print listasub
+		print lista
 		return render_to_response('ajax/categorias-productos.html', diccionario, context_instance=RequestContext(request))
 	else:
 		raise Http404
@@ -1683,24 +1745,24 @@ def filtro_destacados(request):
 			marca = Marca.objects.get(id=m)
 			marca = " "+marca.Marca+" "
 
-		productos = Producto.objects.filter(Destacado__exact=True, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+		productos = Producto.objects.filter(Destacado__exact=True, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 		if m == '0' and e == '0':
-			productos = Producto.objects.filter(Destacado__exact=True, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Destacado__exact=True, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 
 		elif m == '0' and e == '1':
-			productos = Producto.objects.filter(Destacado__exact=True, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Destacado__exact=True, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM,Activo__exact=True).order_by('Descripcion')
 		
 		elif m == '0' and e == '2':
-			productos = Producto.objects.filter(Destacado__exact=True, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Destacado__exact=True, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 
 		elif m != '0' and e == '0':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Destacado__exact=True, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Destacado__exact=True, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 
 		elif m != '0' and e == '1':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Destacado__exact=True, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Destacado__exact=True, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 		
 		elif m != '0' and e == '2':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Destacado__exact=True, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Destacado__exact=True, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 
 		diccionario['totalProductos']=productos.count()
 
@@ -1764,23 +1826,23 @@ def filtro_marca_subcategoria(request):
 		pm = request.POST['precioMinimo']
 		marca = " "+m+" "
 		
-		productos = Producto.objects.filter(Descripcion__icontains=marca, Precio__gte=pm, Precio__lte=pM)
+		productos = Producto.objects.filter(Descripcion__icontains=marca, Precio__gte=pm, Precio__lte=pM, Activo__exact=True)
 		if s == 'all' and e == 0:
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Precio__gte=pm, Precio__lte=pM)
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Precio__gte=pm, Precio__lte=pM, Activo__exact=True)
 		elif s == 'all' and e == '1':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM)
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM, Activo__exact=True)
 		elif s == 'all' and e == '2':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM)
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM, Activo__exact=True)
 		
 		sub = SubCategoria.objects.filter(Subcategoria=s)
 		if sub.count() > 0:
 			sub = SubCategoria.objects.get(Subcategoria=s)
 			if s != 'all' and e == '0':
-				productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Precio__gte=pm, Precio__lte=pM)
+				productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Precio__gte=pm, Precio__lte=pM, Activo__exact=True)
 			elif s != 'all' and e == '1':
-				productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM)
+				productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM, Activo__exact=True)
 			elif s != 'all' and e == '2':
-				productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM)
+				productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM, Activo__exact=True)
 		
 		diccionario['totalProductos'] = productos.count()
 		for producto in productos:
@@ -1847,24 +1909,24 @@ def filtro_novedades(request):
 			marca = Marca.objects.get(id=m)
 			marca = " "+marca.Marca+" "
 
-		productos = Producto.objects.filter(Fecha__gte=fecha1, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+		productos = Producto.objects.filter(Fecha__gte=fecha1, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 		if m == '0' and e == '0':
-			productos = Producto.objects.filter(Fecha__gte=fecha1, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Fecha__gte=fecha1, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 
 		elif m == '0' and e == '1':
-			productos = Producto.objects.filter(Fecha__gte=fecha1, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Fecha__gte=fecha1, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 		
 		elif m == '0' and e == '2':
-			productos = Producto.objects.filter(Fecha__gte=fecha1, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Fecha__gte=fecha1, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 
 		elif m != '0' and e == '0':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Fecha__gte=fecha1, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Fecha__gte=fecha1, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 
 		elif m != '0' and e == '1':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Fecha__gte=fecha1, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Fecha__gte=fecha1, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 		
 		elif m != '0' and e == '2':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Fecha__gte=fecha1, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Fecha__gte=fecha1, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 
 		diccionario['totalProductos']=productos.count()
 
@@ -1929,24 +1991,24 @@ def filtro_oferta(request):
 			marca = Marca.objects.get(id=m)
 			marca = " "+marca.Marca+" "
 
-		productos = Producto.objects.filter(Oferta__exact=True, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+		productos = Producto.objects.filter(Oferta__exact=True, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 		if m == '0' and e == '0':
-			productos = Producto.objects.filter(Oferta__exact=True, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Oferta__exact=True, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 
 		elif m == '0' and e == '1':
-			productos = Producto.objects.filter(Oferta__exact=True, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Oferta__exact=True, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 		
 		elif m == '0' and e == '2':
-			productos = Producto.objects.filter(Oferta__exact=True, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Oferta__exact=True, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 
 		elif m != '0' and e == '0':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Oferta__exact=True, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Oferta__exact=True, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 
 		elif m != '0' and e == '1':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Oferta__exact=True, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Oferta__exact=True, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 		
 		elif m != '0' and e == '2':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Oferta__exact=True, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Oferta__exact=True, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 
 		diccionario['totalProductos']=productos.count()
 
@@ -2013,24 +2075,24 @@ def filtro_subcategoria_marca(request):
 			marca = " "+marca.Marca+" "
 
 		sub = SubCategoria.objects.get(Subcategoria=s)
-		productos = Producto.objects.filter(Subcategoria=sub, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+		productos = Producto.objects.filter(Subcategoria=sub, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 		if m == '0' and e == '0':
-			productos = Producto.objects.filter(Subcategoria=sub, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Subcategoria=sub, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 
 		elif m == '0' and e == '1':
-			productos = Producto.objects.filter(Subcategoria=sub, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Subcategoria=sub, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 		
 		elif m == '0' and e == '2':
-			productos = Producto.objects.filter(Subcategoria=sub, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Subcategoria=sub, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 		
 		elif m != '0' and e == '0':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 
 		elif m != '0' and e == '1':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 		
 		elif m != '0' and e == '2':
-			productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM).order_by('Descripcion')
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
 
 		diccionario['totalProductos']=productos.count()
 
@@ -2111,12 +2173,12 @@ def obtener_precios(request):
 		productos = 0
 		tipoProd = request.POST['productos']
 		if tipoProd == '1':
-			productos = Producto.objects.filter(Oferta__exact=True)
+			productos = Producto.objects.filter(Oferta__exact=True, Activo__exact=True)
 		elif tipoProd == '2':
-			productos = Producto.objects.filter(Destacado__exact=True)
+			productos = Producto.objects.filter(Destacado__exact=True, Activo__exact=True)
 		elif tipoProd == '3':
 			fecha1 = date.today() - timedelta(days=100)
-			productos = Producto.objects.filter(Fecha__gte=fecha1)
+			productos = Producto.objects.filter(Fecha__gte=fecha1, Activo__exact=True)
 
 		precioMin = productos.aggregate(precio=Min('Precio'))
 		precioMax = productos.aggregate(precio=Max('Precio'))
@@ -2126,7 +2188,7 @@ def obtener_precios(request):
 		rango = precioMayor - precioMenor
 		mitadrango = rango / 2
 		mitad = precioMenor + mitadrango
-		diccionario['precioMenor'] = round(precioMenor)
+		diccionario['precioMenor'] = round(precioMenor - 1)
 		diccionario['precioMayor'] = round(precioMayor + 1)
 		diccionario['mitad'] = int(mitad - 1)
 		return HttpResponse(json.dumps(diccionario), content_type='application/json')
@@ -2141,10 +2203,10 @@ def obtener_precios_parametros(request):
 		tipoProd2 = request.POST['parametro']
 		if tipoProd == '1':
 			marca = " "+tipoProd2+" "
-			productos = Producto.objects.filter(Descripcion__icontains=marca)
+			productos = Producto.objects.filter(Descripcion__icontains=marca, Activo__exact=True)
 		elif tipoProd == '2':
 			sub = SubCategoria.objects.get(Subcategoria=tipoProd2)
-			productos = Producto.objects.filter(Subcategoria=sub)
+			productos = Producto.objects.filter(Subcategoria=sub, Activo__exact=True)
 
 		precioMin = productos.aggregate(precio=Min('Precio'))
 		precioMax = productos.aggregate(precio=Max('Precio'))
@@ -2256,32 +2318,3 @@ def verificar_usuario(request):
 	else:
 		raise Http404
 
-def reportes(request):
-	diccionario = {}
-	historialOferta = {}
-	historialDestacado = {}
-	listaOfertas = []
-	listaDestacados = [] 
-	for item in ReporteOfertaDestacado.objects.filter(Producto__Oferta__exact=True).order_by('Producto__Descripcion'):
-		dif = date.today() - item.Fecha
-		historialOferta = {
-			'Codigo': item.Producto.Codigo,
-			'Descripcion': item.Producto.Descripcion,
-			'FechaDesde': item.Fecha,
-			'Diferencia': dif.days,
-		}
-		listaOfertas.append(historialOferta)
-
-	for item in ReporteOfertaDestacado.objects.filter(Producto__Destacado__exact=True).order_by('Producto__Descripcion'):
-		dif = date.today() - item.Fecha
-		historialDestacado = {
-			'Codigo': item.Producto.Codigo,
-			'Descripcion': item.Producto.Descripcion,
-			'FechaDesde': item.Fecha,
-			'Diferencia': dif.days,
-		}
-		listaDestacados.append(historialDestacado)
-
-	diccionario['productos_ofertas'] = listaOfertas
-	diccionario['productos_destacados'] = listaDestacados
-	return render_to_response('reportes.html', diccionario, context_instance=RequestContext(request))
