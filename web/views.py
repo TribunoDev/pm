@@ -1689,8 +1689,6 @@ def catalogo_productos(request):
 		#			lista.append(icat)
 		diccionario['subcategoria'] = listasub
 		diccionario['categorias']=lista
-		print listasub
-		print lista
 		return render_to_response('ajax/categorias-productos.html', diccionario, context_instance=RequestContext(request))
 	else:
 		raise Http404
