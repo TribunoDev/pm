@@ -2211,10 +2211,14 @@ def obtener_precios_parametros(request):
 		#valorMax = float(precioMax['precio']) / 2
 		precioMenor = float(precioMin['precio'])
 		precioMayor = float(precioMax['precio'])
+
+		precioMenor = precioMenor - 100
+		if precioMenor < 0:
+			precioMenor = 0
 		rango = precioMayor - precioMenor
 		mitadrango = rango / 2
 		mitad = precioMenor + mitadrango
-		diccionario['precioMenor'] = round(precioMenor - 100)
+		diccionario['precioMenor'] = round(precioMenor)
 		diccionario['precioMayor'] = round(precioMayor + 100)
 		diccionario['mitad'] = int(mitad)
 		return HttpResponse(json.dumps(diccionario), content_type='application/json')

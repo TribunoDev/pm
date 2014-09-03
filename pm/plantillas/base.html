@@ -284,6 +284,23 @@
 	   		</div><!-- /.modal-content -->
 	  	</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
+
+	<div class="modal fade" id="myModalContruccion">
+	  	<div class="modal-dialog">
+	    	<div class="modal-content">
+	      		<div class="modal-header">
+	        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	        		<h4 class="modal-title">Aviso</h4>
+	      		</div>
+	      		<div class="modal-body">
+	      			<figure>
+	      				<img src="{{STATIC_URL}}img/imagen.jpeg" alt="Horario" class="img-responsive">
+	      			</figure>
+	      		</div>
+	      		
+	   		</div><!-- /.modal-content -->
+	  	</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 	{% csrf_token %}
 	<footer class="no-print">
 		<div class="container hidden-xs">
@@ -373,13 +390,11 @@
 	{% block js %}{% endblock js %}
 	<script type="text/javascript" src="{{STATIC_URL}}js/script.js"></script>
 	<!--Start of Zopim Live Chat Script-->
+	<!--Start of Zopim Live Chat Script-->
 	<script type="text/javascript">
 	window.$zopim||(function(d,s){var z=$zopim=function(c){z._.push(c)},$=z.s=
-	d.createElement(s),e=d.getElementsByTagName(s)[0];z.set=function(o){z.set.
-	_.push(o)};z._=[];z.set._=[];$.async=!0;$.setAttribute('charset','utf-8');
-	$.src='//v2.zopim.com/?25OgKCZ2LQ0Hy9SxLlro2eaI8dRrf0LX';z.t=+new Date;$.
-	type='text/javascript';e.parentNode.insertBefore($,e)})(document,'script');
-	</script>
-	<!--End of Zopim Live Chat Script-->	
+		d.createElement(s),e=d.getElementsByTagName(s)[0];z.set=function(o){z.set._.push(o)};z._=[];z.set._=[];$.async=!0;$.setAttribute('charset','utf-8');$.src='//v2.zopim.com/?2ObtMWHRULmsJlTtrJsrHkuhEfMGt3DH';z.t=+new Date;$.type='text/javascript';e.parentNode.insertBefore($,e)})(document,'script');
+		</script>
+		<!--End of Zopim Live Chat Script-->	
 </body>
 </html>
