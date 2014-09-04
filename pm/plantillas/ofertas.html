@@ -98,6 +98,7 @@
 		<div class="row filtro-marcas">
 			<form class="form-inline row" role="form">
 				<div class="col-sm-12">
+					{% if totalProductos > 0 %}
 					<div class="filtro-top col-xs-12 col-sm-6 col-md-3 col-lg-3">
 					    <select name="marca" id="selectMarcas" class="filtroSelect form-control" required>
 							<option value="0">TODAS LAS MARCAS...</option>
@@ -106,6 +107,7 @@
 					  		{% endfor %}
 				    	</select>
 			    	</div>
+			    	{% endif %}
 					{% if existencia1 > 0  and existencia2 > 0 %}
 					<div class="filtro-top col-xs-12 col-sm-6 col-md-3 col-lg-3">
 				    	<select name="existencia" id="selectExistencia" class="filtroSelect existencia form-control" required>
@@ -118,6 +120,7 @@
 					 	<input type="hidden" class="existencia" name="existencia" value="0">
 				   	{% endif %}
 				</div>
+				{% if contar > 0 %}
 				<div class="col-sm-12">
 				   	<div class="filtro-top col-xs-12 col-md-3 col-lg-3">
 				   		<label>Precio Mínimo:</label>
@@ -130,6 +133,7 @@
 				   		<output id="range2value" ></output>
 				   	</div>
 				</div>
+				{% endif %}
 			</form>
 		</div>
 		<div class="row">
@@ -166,6 +170,10 @@
 				      				</div>
 				    			</div>
 					 		 </div>
+					 	{% empty %}
+					 		<div class="alert alert-warning">
+								<h3>No hay productos en Promoción u Ofertas.</h3>
+							</div>
 						{% endfor %}
 					</article>
 					{% if totalProductos > 18 %}

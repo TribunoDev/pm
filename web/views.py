@@ -2177,18 +2177,19 @@ def obtener_precios(request):
 		elif tipoProd == '3':
 			fecha1 = date.today() - timedelta(days=100)
 			productos = Producto.objects.filter(Fecha__gte=fecha1, Activo__exact=True)
-
-		precioMin = productos.aggregate(precio=Min('Precio'))
-		precioMax = productos.aggregate(precio=Max('Precio'))
-		#valorMax = float(precioMax['precio']) / 2
-		precioMenor = float(precioMin['precio'])
-		precioMayor = float(precioMax['precio'])
-		rango = precioMayor - precioMenor
-		mitadrango = rango / 2
-		mitad = precioMenor + mitadrango
-		diccionario['precioMenor'] = round(precioMenor - 1)
-		diccionario['precioMayor'] = round(precioMayor + 1)
-		diccionario['mitad'] = int(mitad - 1)
+		contar = productos.count()
+		if contar > 0:
+			precioMin = productos.aggregate(precio=Min('Precio'))
+			precioMax = productos.aggregate(precio=Max('Precio'))
+			#valorMax = float(precioMax['precio']) / 2
+			precioMenor = float(precioMin['precio'])
+			precioMayor = float(precioMax['precio'])
+			rango = precioMayor - precioMenor
+			mitadrango = rango / 2
+			mitad = precioMenor + mitadrango
+			diccionario['precioMenor'] = round(precioMenor - 1)
+			diccionario['precioMayor'] = round(precioMayor + 1)
+			diccionario['mitad'] = int(mitad - 1)
 		return HttpResponse(json.dumps(diccionario), content_type='application/json')
 	else:
 		raise Http404
