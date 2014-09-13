@@ -2206,7 +2206,7 @@ def obtener_precios_parametros(request):
 			marca = " "+tipoProd2+" "
 			productos = Producto.objects.filter(Descripcion__icontains=marca, Activo__exact=True)
 		elif tipoProd == '2':
-			sub = SubCategoria.objects.get(id=idSub,CodigoSubcategoria=codigoSub, Subcategoria=tipoProd2)
+			sub = SubCategoria.objects.get(pk=idSub)
 			productos = Producto.objects.filter(Subcategoria=sub, Activo__exact=True)
 
 		precioMin = productos.aggregate(precio=Min('Precio'))
