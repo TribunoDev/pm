@@ -165,6 +165,10 @@
 				      				</div>
 				    			</div>
 					 		 </div>
+					 	{% empty %}
+					 		<div class="alert alert-warning">
+								<h3>No hay productos en novedad por los momentos.</h3>
+							</div>
 						{% endfor %}
 					</article>
 					{% if totalProductos > 18 %}
