@@ -2200,13 +2200,11 @@ def obtener_precios_parametros(request):
 		productos = 0
 		tipoProd = request.POST['productos']
 		tipoProd2 = request.POST['parametro']
-		codigoSub = request.POST['parametro2']
-		idSub = request.POST['parametro3']
 		if tipoProd == '1':
 			marca = " "+tipoProd2+" "
 			productos = Producto.objects.filter(Descripcion__icontains=marca, Activo__exact=True)
 		elif tipoProd == '2':
-			sub = SubCategoria.objects.get(pk=idSub)
+			sub = SubCategoria.objects.get(pk=tipoProd2)
 			productos = Producto.objects.filter(Subcategoria=sub, Activo__exact=True)
 
 		precioMin = productos.aggregate(precio=Min('Precio'))

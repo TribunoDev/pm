@@ -12,9 +12,7 @@
 			url: '/obtener-precios-parametros/',
 			data: {
 				'productos':'2',
-				'parametro': $('input[name="subcategoria"]').val(),
-				'parametro2': $('input[name="codSub"]').val(),
-				'parametro3': $('input[name="idSub"]').val(),
+				'parametro': $('input[name="idSub"]').val(),
 				'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
 			},
 			success: function(data){
