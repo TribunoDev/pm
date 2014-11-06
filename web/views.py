@@ -2187,7 +2187,10 @@ def obtener_precios(request):
 			rango = precioMayor - precioMenor
 			mitadrango = rango / 2
 			mitad = precioMenor + mitadrango
-			diccionario['precioMenor'] = round(precioMenor - 1)
+			precioMenor = round(precioMenor - 1)
+			if precioMenor < 0:
+				precioMenor = 0
+			diccionario['precioMenor'] = precioMenor
 			diccionario['precioMayor'] = round(precioMayor + 1)
 			diccionario['mitad'] = int(mitad - 1)
 		return HttpResponse(json.dumps(diccionario), content_type='application/json')
@@ -2320,4 +2323,3 @@ def verificar_usuario(request):
 		return HttpResponse(json.dumps({'tUser':tUser}), content_type='application/json')
 	else:
 		raise Http404
-

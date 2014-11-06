@@ -33,13 +33,13 @@
 			<div class="row">
 				<div class="col col-xs-12 col-sm-6 col-md-6">
 					<div class="form-group">
-						<input type="text" class="form-control input-lg" id="RNP" name="RNP" placeholder="Ingrese su ID" tabindex="3" required>
+						<input type="text" class="form-control input-lg" id="RNP" name="RNP" placeholder="Ingrese su ID (Numeros sin espacio)" tabindex="3" pattern="^[0-9]{1,15}$" required>
 					    <span id="verificaRNP"></span>
 					</div>
 				</div>
 				<div class="col col-xs-12 col-sm-6 col-md-6">
 					<div class="form-group">
-						<input type="text" class="form-control input-lg" id="username" name="username" placeholder="Nombre de usuario" tabindex="4" required>
+						<input type="text" class="form-control input-lg" id="username" name="username" placeholder="Nombre de usuario (Sin espacios)" maxlength="30" pattern="^[A-Za-z0-9_]{1,15}$" tabindex="4" required>
 				      	<span id="verificaUser"></span>
 					</div>
 				</div>
