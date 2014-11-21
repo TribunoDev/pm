@@ -20,8 +20,8 @@ from datetime import datetime, timedelta, date
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger, InvalidPage
 import csv
 
-#import ho.pisa as pisa
-from xhtml2pdf import pisa
+import ho.pisa as pisa
+#from xhtml2pdf import pisa
 import cStringIO as StringIO
 import cgi
 from django.template.loader import render_to_string
