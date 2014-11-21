@@ -93,6 +93,14 @@
 		 
 		    return res;
 		}
+
+		$('#btnReporte').on('click', function(e) {
+			e.preventDefault();
+			var url = $(this).attr('href');
+			var sub = $('input[name="subcategoria"]').val();
+			url = url + '?sub='+sub;
+			window.open(url, '_blank');
+		});
 	</script>
 {% endblock %}
 
@@ -215,6 +223,9 @@
 						</ul>
 					</article>
 					{% endif %}
+					<div class="text-center">
+						<a href="/reporte/producto/" class="btn btn-default" id="btnReporte">Reporte</a>
+					</div>
 				</div>
 			</article>
 			<article id="contenido-lateral" class="hidden-xs col-sm-4 col-md-3 contenido-lateral" >

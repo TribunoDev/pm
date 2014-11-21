@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style>
+		#codigo{
+			margin-left: 5pt;
+		}
+		#detalle{
+			text-align: left;
+			width: 400pt;
+			font-size: 18px;
+			padding-left: 5pt;
+			vertical-align: top;
+		}
+		#detalle div, #detalle p{
+			margin: 0;
+		}
+		#linea{
+			border-top: 1px #000 solid;
+			margin-bottom: 5pt;
+			padding-bottom: 2pt;
+			padding-top: 2pt;
+		}
+		#imagen{
+			width: 200pt;
+			
+		}
+		#titulo{
+			text-align: center;
+		}
+		table{
+			text-align: left;
+		}
+	</style>
+</head>
+<body>
+<div id="titulo">
+	<img id="logo" src="https://www.pm.hn/pm/statics/img/logo-paper.jpg" style="zoom:40%;">
+	<h3>{{sub}}</h3>
+</div>
+<table>
+{% for producto in productos %}
+	<tr id="linea">
+		<td id="imagen">
+			<img src="{{ producto.Imagen.path }}" style="zoom:100%;">
+		</td>
+		<td id="detalle">
+			<div>
+				Codigo de Producto:<label id="codigo">{{ producto.Codigo }}</label>
+			</div>
+			<div>
+				{{ producto.Descripcion }}
+			</div>
+			<div>
+				Precio: <label>L. {{ producto.Precio }}</label>
+			</div>
+			<div>
+				Existencias: <label>{{ producto.Existencia }}</label>
+			</div>
+			<div>
+				<p>{{ producto.Comentario }}</p>
+			</div>
+		</td>
+	</tr>
+	<br>
+{% endfor %}
+{% for producto in prod2 %}
+	<tr id="linea">
+		<td id="imagen">
+			<img src="https://www.pm.hn/pm/statics/img/sin_imagen.jpg" style="zoom:100%;">
+		</td>
+		<td id="detalle">
+			<div>
+				Codigo de Producto: <label>{{ producto.Codigo }}</label>
+			</div>
+			<div>
+				{{ producto.Descripcion }}
+			</div>
+			<div>
+				Precio: <label>L. {{ producto.Precio }}</label>
+			</div>
+			<div>
+				Existencias: <label>{{ producto.Existencia }}</label>
+			</div>
+			<div>
+				<p>{{ producto.Comentario }}</p>
+			</div>
+		</td>
+	</tr>
+	<br>
+{% endfor %}
+</table>
+</body>
+</html>

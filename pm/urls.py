@@ -68,6 +68,8 @@ urlpatterns = patterns('',
     url(r'^user/password/done/$', password_reset_complete,{'template_name': 'registration/password_reset_complete.html'},name='password_reset_complete'),
     #
 
+
+    url(r'^reporte/producto/$', 'web.views.reporteProductos', name='reporteProductos'),
     #URL'S AJAX---
     url(r'^cargar-ciudad/$', 'web.views.cargar_ciudad', name='cargar_ciudad'),
     url(r'^cargar-region/$', 'web.views.cargar_region', name='cargar_region'),

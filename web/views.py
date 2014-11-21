@@ -20,6 +20,12 @@ from datetime import datetime, timedelta, date
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger, InvalidPage
 import csv
 
+#import ho.pisa as pisa
+from xhtml2pdf import pisa
+import cStringIO as StringIO
+import cgi
+from django.template.loader import render_to_string
+
 centinela = False
 
 def intcomma(n):
@@ -30,6 +36,52 @@ def intcomma(n):
   	m = len(n)
   
   	return sign + (','.join([n[0:m%3]] + [n[i:i+3] for i in range(m%3, m, 3)])).lstrip(',') + dec
+
+
+def generar_pdf(html):
+	# Función para generar el archivo PDF y devolverlo mediante HttpResponse
+	result = StringIO.StringIO()
+	pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("UTF-8")), result)
+	if not pdf.err:
+		return HttpResponse(result.getvalue(), mimetype='application/pdf')
+	return HttpResponse('Error al generar el PDF: %s' % cgi.escape(html))
+
+def reporteProductos(request):
+	diccionario = {}
+	listaProducto = []
+	listaProd2 = []
+	sub = request.GET.get('sub')
+	sub = SubCategoria.objects.get(Subcategoria=sub)
+	prod = Imagen.objects.filter(Producto__Subcategoria=sub, Producto__Activo=True)
+	for item in prod:
+		producto = {
+			'Codigo':item.Producto.pk,
+			'Descripcion':item.Producto.Descripcion,
+			'Precio': intcomma(item.Producto.Precio),
+			'Comentario': item.Producto.Comentarios,
+			'Existencia': item.Producto.Existencia,
+			'Imagen': item.Imagen
+		}
+		listaProducto.append(producto)
+	flat = Imagen.objects.filter(Producto__Subcategoria=sub, Producto__Activo=True).values_list('Producto__Codigo', flat=True)
+	prod2 = Producto.objects.filter(Subcategoria=sub, Activo=True).exclude(Codigo__in=flat)
+	for p in prod2:
+		producto = {
+			'Codigo':p.pk,
+			'Descripcion':p.Descripcion,
+			'Precio': intcomma(p.Precio),
+			'Existencia': p.Existencia,
+			'Comentario': p.Comentarios,
+		}
+		listaProd2.append(producto)
+	diccionario['prod2']=listaProd2
+	diccionario['logo'] = 'static/img/logo-paper.jpg'
+	diccionario['productos']=listaProducto
+	diccionario['pagesize'] = 'A4'
+	diccionario['sub'] = sub
+	html = render_to_string('reportePdf.html', diccionario, context_instance=RequestContext(request))
+	return generar_pdf(html)
+
 
 def images_destacados():
 	listaDestacados = []
