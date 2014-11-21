@@ -33,54 +33,31 @@ def intcomma(n):
 
 def images_destacados():
 	listaDestacados = []
-	pDestacados = Producto.objects.filter(Destacado__exact=True, Oferta__exact=False, Activo__exact=True).order_by('?')
-	contar = 0
-	for pD in pDestacados:
-		if contar == 2:
-			break
-		else:
-			cImgD = Imagen.objects.filter(Producto=pD).count()
-			if cImgD > 0:
-				cDImg = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=pD)).count()
-				if cDImg > 0:
-					objImg = Imagen.objects.get(Producto=pD)
-					#img = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=pD))[:1]
-					contar = contar + 1
-					destacados = {
-						'Codigo':pD.pk,
-						'Descripcion':pD.Descripcion,
-						'Precio': intcomma(pD.Precio),
-						'Imagen': objImg.Imagen,
-						#'Imagen': img[0].Imagen
-					}
-					listaDestacados.append(destacados)
-				
+	flat = Producto.objects.filter(Destacado=True, Oferta=False, Activo=True).values_list('Codigo', flat=True)
+	cDImg = Imagen.objects.filter(Producto__Codigo__in=flat).order_by('?')[:2]
+	for item in cDImg:
+		destacados = {
+			'Codigo':item.Producto.pk,
+			'Descripcion':item.Producto.Descripcion,
+			'Precio': intcomma(item.Producto.Precio),
+			'Imagen': item.Imagen,
+		}
+		listaDestacados.append(destacados)
 	return listaDestacados
 
 def images_ofertas():
 	dOfertas = {}
 	listaOfertas=[]
-	pOfertas = Producto.objects.filter(Destacado__exact=False, Oferta__exact=True, Activo__exact=True).order_by('?')
-	contar = 0
-	for pO in pOfertas:
-		if contar == 2:
-			break
-		else:
-			cImgO = Imagen.objects.filter(Producto=pO).count()
-			if cImgO > 0:
-				cDImg = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=pO)).count()
-				if cDImg > 0:
-					#img = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=pO))[:1]
-					contar = contar + 1
-					objImg = Imagen.objects.get(Producto=pO)
-					ofertas = {
-						'Codigo':pO.pk,
-						'Descripcion':pO.Descripcion,
-						'Precio': intcomma(pO.Precio),
-						'Imagen': objImg.Imagen
-						#'Imagen': img[0].Imagen
-					}
-					listaOfertas.append(ofertas)
+	flat = Producto.objects.filter(Destacado=False, Oferta=True, Activo=True).values_list('Codigo', flat=True)
+	cDImg = Imagen.objects.filter(Producto__Codigo__in=flat).order_by('?')[:2]
+	for item in cDImg:
+		ofertas = {
+			'Codigo':item.Producto.pk,
+			'Descripcion':item.Producto.Descripcion,
+			'Precio': intcomma(item.Producto.Precio),
+			'Imagen': item.Imagen
+		}
+		listaOfertas.append(ofertas)
 	return listaOfertas
 
 def images_novedades():
@@ -92,37 +69,26 @@ def images_novedades():
 
 	fecha = date.today() - timedelta(days=dias)
 	listaNovedades=[]
-	pNovedades = Producto.objects.filter(Fecha__gte=fecha, Activo__exact=True).order_by('?')
-	contar = 0
-	for pN in pNovedades:
-		if contar == 2:
-			break
-		else:
-			cImgN = Imagen.objects.filter(Producto=pN).count()
-			if cImgN > 0:
-				cDImg = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=pN)).count()
-				if cDImg > 0:
-					objImg = Imagen.objects.get(Producto=pN)
-					#img = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=pN))[:1]
-					contar = contar + 1
-					novedades = {
-						'Codigo':pN.pk,
-						'Descripcion':pN.Descripcion,
-						'Precio': intcomma(pN.Precio),
-						'Imagen': objImg.Imagen
-						#'Imagen': img[0].Imagen
-					}
-					listaNovedades.append(novedades)
+	flat = Producto.objects.filter(Fecha__gte=fecha, Activo__exact=True).values_list('Codigo', flat=True)
+	cDImg = Imagen.objects.filter(Producto__Codigo__in=flat).order_by('?')[:2]
+	for item in cDImg:
+		novedades = {
+			'Codigo':item.Producto.pk,
+			'Descripcion':item.Producto.Descripcion,
+			'Precio': intcomma(item.Producto.Precio),
+			'Imagen': item.Imagen
+		}
+		listaNovedades.append(novedades)
 	return listaNovedades
 
-def cargar_imagenes():
-	listaImages = []
+# def cargar_imagenes():
+# 	listaImages = []
 
-	if Imagen.objects.all().count() > 0:
-		for item in Imagen.objects.all():
-			for elemento in Detalle_Imagen.objects.filter(Producto=item):
-				listaImages.append(elemento)
-	return listaImages
+# 	if Imagen.objects.all().count() > 0:
+# 		for item in Imagen.objects.all():
+# 			for elemento in Detalle_Imagen.objects.filter(Producto=item):
+# 				listaImages.append(elemento)
+# 	return listaImages
 
 #Vista que devuelve los productos que no tienen imagen
 @login_required(login_url='/ingresar/')
@@ -146,7 +112,6 @@ def inicio(request):
 		diccionario['usuario']=request.user
 		diccionario['centinela']=True
 	return render_to_response('index.html',diccionario, context_instance=RequestContext(request))
-	#return render_to_response('contador.html',diccionario, context_instance=RequestContext(request))
 
 #Vista que retorna la ventana de inicio de sesion
 def ingresar(request):
@@ -228,9 +193,6 @@ def registrar(request):
 		frmUser = SignUpForm()
 		return render_to_response('registro.html', context_instance=RequestContext(request))
 
-def registrado(request):
- 	return render_to_response('registrado.html', context_instance=RequestContext(request))
-
 #Vista que devuelve las marcas de los productos
 def marcas(request):
 	diccionario={}
@@ -256,9 +218,6 @@ def marca_producto(request, id_marca):
 	allImages = Detalle_Imagen.objects.all().order_by('Imagen')
 	for producto in productos:
 		if Imagen.objects.filter(Producto=producto).count() > 0:
-			# allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
-			# archImg = allImages[0]
-			# archImg = archImg.Imagen
 			objImg = Imagen.objects.get(Producto=producto)
 			archImg = objImg.Imagen
 		else:
@@ -326,13 +285,9 @@ def marca_producto(request, id_marca):
 def destacados(request):
 	diccionario={}
 	destacados=[]
-	#allImages = Detalle_Imagen.objects.all().order_by('Imagen')
 	productos = Producto.objects.filter(Destacado__exact=True, Activo__exact=True)[:12]
 	for producto in productos:
 		if Imagen.objects.filter(Producto=producto).count() > 0:
-			# allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
-			# archImg = allImages[0]
-			# archImg = archImg.Imagen
 			objeto = Imagen.objects.get(Producto=producto)
 			archImg = objeto.Imagen
 		else:
@@ -353,13 +308,9 @@ def destacados(request):
 def ofertas(request):
 	diccionario={}
 	ofertas=[]
-	#allImages = Detalle_Imagen.objects.all().order_by('Imagen')
 	productos = Producto.objects.filter(Oferta__exact=True, Activo__exact=True)[:12]
 	for producto in productos:
 		if Imagen.objects.filter(Producto=producto).count() > 0:
-			#allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
-			#archImg = allImages[0]
-			#archImg = archImg.Imagen
 			objeto = Imagen.objects.get(Producto=producto)
 			archImg = objeto.Imagen
 		else:
@@ -383,9 +334,6 @@ def novedades(request):
 	productos = Producto.objects.filter(Fecha__gte=fecha, Activo__exact=True).order_by('?')[:12]
 	for producto in productos:
 		if Imagen.objects.filter(Producto=producto).count() > 0:
-			# allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
-			# archImg = allImages[0]
-			# archImg = archImg.Imagen
 			objeto = Imagen.objects.get(Producto=producto)
 			archImg = objeto.Imagen
 		else:
@@ -415,9 +363,6 @@ def ver_subcategoria(request, id_subcat):
 	productos = Producto.objects.filter(Subcategoria=subcat, Activo__exact=True).order_by('Descripcion')
 	for producto in productos:
 		if Imagen.objects.filter(Producto=producto).count() > 0:
-			#allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
-			#archImg = allImages[0]
-			#archImg = archImg.Imagen
 			objImg = Imagen.objects.get(Producto=producto)
 			archImg = objImg.Imagen
 		else:
@@ -519,9 +464,6 @@ def buscar(request):
 	resultado = Producto.objects.filter(Descripcion__icontains=buscar, Activo__exact=True)
 	for producto in resultado:
 		if Imagen.objects.filter(Producto=producto).count() > 0:
-			# allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
-			# archImg=allImages[0]
-			# archImg=archImg.Imagen
 			objImg = Imagen.objects.get(Producto=producto)
 			archImg = objImg.Imagen
 		else:
@@ -670,9 +612,6 @@ def productos_ofertas(request):
 	diccionario['totalProductos'] = Producto.objects.filter(Oferta__exact=True, Activo__exact=True).count()
 	for producto in Producto.objects.filter(Oferta__exact=True, Activo__exact=True):
 		if Imagen.objects.filter(Producto=producto).count() > 0:
-			#allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
-			#archImg=allImages[0]
-			#archImg=archImg.Imagen
 			objImg = Imagen.objects.get(Producto=producto)
 			archImg = objImg.Imagen
 		else:
@@ -745,9 +684,6 @@ def productos_destacados(request):
 
 	for producto in Producto.objects.filter(Destacado__exact=True, Activo__exact=True).order_by('Descripcion'):
 		if Imagen.objects.filter(Producto=producto).count() > 0:
-			# allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
-			# archImg=allImages[0]
-			# archImg=archImg.Imagen
 			objImg = Imagen.objects.get(Producto=producto)
 			archImg = objImg.Imagen
 		else:
@@ -804,17 +740,17 @@ def productos_destacados(request):
 	return render_to_response('destacados.html', diccionario, context_instance=RequestContext(request))
 
 #Vista que retorna los datos del servicio de flete
-def servicio_flete(request):
-	diccionario={}
-	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= images_destacados()
-	diccionario['ofertas'] = images_ofertas()
-	diccionario['detalle_img']= Detalle_Imagen.objects.all()
-	if not request.user.is_anonymous():
-		diccionario['usuario']=request.user
-		diccionario['centinela']=True
-	diccionario['lugar']=Servicio_Flete.objects.all()
-	return render_to_response('servicio-flete.html', diccionario, context_instance=RequestContext(request))
+# def servicio_flete(request):
+# 	diccionario={}
+# 	diccionario['marcas']=Marca.objects.all()
+# 	diccionario['destacados']= images_destacados()
+# 	diccionario['ofertas'] = images_ofertas()
+# 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+# 	if not request.user.is_anonymous():
+# 		diccionario['usuario']=request.user
+# 		diccionario['centinela']=True
+# 	diccionario['lugar']=Servicio_Flete.objects.all()
+# 	return render_to_response('servicio-flete.html', diccionario, context_instance=RequestContext(request))
 
 #VISTA QUE ENVIA UN EMAIL DESDE LA PAGINA
 def enviar_email(request):
@@ -1273,37 +1209,37 @@ def detalle_compra(request, id_orden):
 	diccionario['Tot']=Tot
 	return render_to_response('detalle-compra.html', diccionario, context_instance=RequestContext(request))
 
-@login_required(login_url='/ingresar/')
-def historial_credito(request):
-	diccionario={}
-	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= images_destacados()
-	diccionario['ofertas']= images_ofertas()
-	diccionario['novedades'] = images_novedades()
-	diccionario['detalle_img']= cargar_imagenes()
-	if not request.user.is_anonymous():
-		diccionario['usuario']=request.user
-		diccionario['centinela']=True
-		diccionario['creditos']=Credito.objects.all().order_by('Fecha')
-	return render_to_response('historial-credito.html', diccionario, context_instance=RequestContext(request))
+# @login_required(login_url='/ingresar/')
+# def historial_credito(request):
+# 	diccionario={}
+# 	diccionario['marcas']=Marca.objects.all()
+# 	diccionario['destacados']= images_destacados()
+# 	diccionario['ofertas']= images_ofertas()
+# 	diccionario['novedades'] = images_novedades()
+# 	diccionario['detalle_img']= cargar_imagenes()
+# 	if not request.user.is_anonymous():
+# 		diccionario['usuario']=request.user
+# 		diccionario['centinela']=True
+# 		diccionario['creditos']=Credito.objects.all().order_by('Fecha')
+# 	return render_to_response('historial-credito.html', diccionario, context_instance=RequestContext(request))
 
 #VISTA QUE RETORNA A LA PLANTILLA DEL DETALLE DE CRÉDITO
-@login_required(login_url='/ingresar/')
-def detalle_credito(request, id_credito):
-	precio=0
-	diccionario={}
-	diccionario['marcas']=Marca.objects.all()
-	diccionario['destacados']= images_destacados()
-	diccionario['ofertas']= images_ofertas()
-	diccionario['novedades'] = images_novedades()
-	diccionario['detalle_img']= cargar_imagenes()
-	if not request.user.is_anonymous():
-		diccionario['usuario']=request.user
-		diccionario['centinela']=True
-	credito = get_object_or_404(Credito, pk=id_credito)
-	diccionario['pagos']=Pagos.objects.filter(Credito=credito)
-	diccionario['credito']=credito
-	return render_to_response('detalle-credito.html', diccionario, context_instance=RequestContext(request))
+# @login_required(login_url='/ingresar/')
+# def detalle_credito(request, id_credito):
+# 	precio=0
+# 	diccionario={}
+# 	diccionario['marcas']=Marca.objects.all()
+# 	diccionario['destacados']= images_destacados()
+# 	diccionario['ofertas']= images_ofertas()
+# 	diccionario['novedades'] = images_novedades()
+# 	diccionario['detalle_img']= cargar_imagenes()
+# 	if not request.user.is_anonymous():
+# 		diccionario['usuario']=request.user
+# 		diccionario['centinela']=True
+# 	credito = get_object_or_404(Credito, pk=id_credito)
+# 	diccionario['pagos']=Pagos.objects.filter(Credito=credito)
+# 	diccionario['credito']=credito
+# 	return render_to_response('detalle-credito.html', diccionario, context_instance=RequestContext(request))
 
 #VISTA QUE RETORNA A LA PLANTILLA DE CONTACTOS
 def contactanos(request):
@@ -1506,9 +1442,6 @@ def productos_novedades(request):
 
 	for producto in pNovedades:
 		if Imagen.objects.filter(Producto=producto).count() > 0:
-			#allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
-			#archImg=allImages[0]
-			#archImg=archImg.Imagen
 			objImg = Imagen.objects.get(Producto=producto)
 			archImg = objImg.Imagen
 		else:
@@ -1766,9 +1699,6 @@ def filtro_destacados(request):
 
 		for producto in productos:
 			if Imagen.objects.filter(Producto=producto).count() > 0:
-				#allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
-				#archImg = allImages[0]
-				#archImg = archImg.Imagen
 				objImg = Imagen.objects.get(Producto=producto)
 				archImg = objImg.Imagen
 			else:
@@ -1845,9 +1775,6 @@ def filtro_marca_subcategoria(request):
 		diccionario['totalProductos'] = productos.count()
 		for producto in productos:
 			if Imagen.objects.filter(Producto=producto).count() > 0:
-				#allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
-				#archImg = allImages[0]
-				#archImg = archImg.Imagen
 				objImg = Imagen.objects.get(Producto=producto)
 				archImg = objImg.Imagen
 			else:
@@ -1930,8 +1857,6 @@ def filtro_novedades(request):
 
 		for producto in productos:
 			if Imagen.objects.filter(Producto=producto).count() > 0:
-				#allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
-				#archImg = allImages[0]
 				objImg = Imagen.objects.get(Producto=producto)
 				archImg = objImg.Imagen
 			else:
@@ -2012,9 +1937,6 @@ def filtro_oferta(request):
 
 		for producto in productos:
 			if Imagen.objects.filter(Producto=producto).count() > 0:
-				#allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
-				#archImg = allImages[0]
-				#archImg = archImg.Imagen
 				objImg = Imagen.objects.get(Producto=producto)
 				archImg = objImg.Imagen
 			else:
@@ -2096,9 +2018,6 @@ def filtro_subcategoria_marca(request):
 
 		for producto in productos:
 			if Imagen.objects.filter(Producto=producto).count() > 0:
-				#allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
-				#archImg = allImages[0]
-				#archImg = archImg.Imagen
 				objImg = Imagen.objects.get(Producto=producto)
 				archImg = objImg.Imagen
 			else:
@@ -2260,9 +2179,6 @@ def items_en_carrito(request):
 			for item in Detalle_Carrito.objects.filter(Carrito=carrito):
 				producto = Producto.objects.get(Codigo=item.Producto.Codigo)
 				if Imagen.objects.filter(Producto=producto).count() > 0:
-					# allImages = Detalle_Imagen.objects.filter(Producto=Imagen.objects.get(Producto=producto))[:1]
-					# archImg = allImages[0]
-					# archImg = archImg.Imagen
 					objImg = Imagen.objects.get(Producto=producto)
 					archImg = objImg.Imagen
 				else:
