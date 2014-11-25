@@ -1262,36 +1262,36 @@ def detalle_compra(request, id_orden):
 	return render_to_response('detalle-compra.html', diccionario, context_instance=RequestContext(request))
 
 # @login_required(login_url='/ingresar/')
-# def historial_credito(request):
-# 	diccionario={}
-# 	diccionario['marcas']=Marca.objects.all()
-# 	diccionario['destacados']= images_destacados()
-# 	diccionario['ofertas']= images_ofertas()
-# 	diccionario['novedades'] = images_novedades()
-# 	diccionario['detalle_img']= cargar_imagenes()
-# 	if not request.user.is_anonymous():
-# 		diccionario['usuario']=request.user
-# 		diccionario['centinela']=True
-# 		diccionario['creditos']=Credito.objects.all().order_by('Fecha')
-# 	return render_to_response('historial-credito.html', diccionario, context_instance=RequestContext(request))
+def historial_credito(request):
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas']= images_ofertas()
+	diccionario['novedades'] = images_novedades()
+	diccionario['detalle_img']= cargar_imagenes()
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+		diccionario['creditos']=Credito.objects.all().order_by('Fecha')
+	return render_to_response('historial-credito.html', diccionario, context_instance=RequestContext(request))
 
 #VISTA QUE RETORNA A LA PLANTILLA DEL DETALLE DE CRÉDITO
-# @login_required(login_url='/ingresar/')
-# def detalle_credito(request, id_credito):
-# 	precio=0
-# 	diccionario={}
-# 	diccionario['marcas']=Marca.objects.all()
-# 	diccionario['destacados']= images_destacados()
-# 	diccionario['ofertas']= images_ofertas()
-# 	diccionario['novedades'] = images_novedades()
-# 	diccionario['detalle_img']= cargar_imagenes()
-# 	if not request.user.is_anonymous():
-# 		diccionario['usuario']=request.user
-# 		diccionario['centinela']=True
-# 	credito = get_object_or_404(Credito, pk=id_credito)
-# 	diccionario['pagos']=Pagos.objects.filter(Credito=credito)
-# 	diccionario['credito']=credito
-# 	return render_to_response('detalle-credito.html', diccionario, context_instance=RequestContext(request))
+@login_required(login_url='/ingresar/')
+def detalle_credito(request, id_credito):
+	precio=0
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas']= images_ofertas()
+	diccionario['novedades'] = images_novedades()
+	diccionario['detalle_img']= cargar_imagenes()
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+	credito = get_object_or_404(Credito, pk=id_credito)
+	diccionario['pagos']=Pagos.objects.filter(Credito=credito)
+	diccionario['credito']=credito
+	return render_to_response('detalle-credito.html', diccionario, context_instance=RequestContext(request))
 
 #VISTA QUE RETORNA A LA PLANTILLA DE CONTACTOS
 def contactanos(request):
