@@ -134,13 +134,13 @@ def images_novedades():
 	return listaNovedades
 
 # def cargar_imagenes():
-# 	listaImages = []
+ 	listaImages = []
 
-# 	if Imagen.objects.all().count() > 0:
-# 		for item in Imagen.objects.all():
-# 			for elemento in Detalle_Imagen.objects.filter(Producto=item):
-# 				listaImages.append(elemento)
-# 	return listaImages
+ 	if Imagen.objects.all().count() > 0:
+ 		for item in Imagen.objects.all():
+ 			for elemento in Detalle_Imagen.objects.filter(Producto=item):
+ 				listaImages.append(elemento)
+ 	return listaImages
 
 #Vista que devuelve los productos que no tienen imagen
 @login_required(login_url='/ingresar/')
