@@ -792,17 +792,17 @@ def productos_destacados(request):
 	return render_to_response('destacados.html', diccionario, context_instance=RequestContext(request))
 
 #Vista que retorna los datos del servicio de flete
-# def servicio_flete(request):
-# 	diccionario={}
-# 	diccionario['marcas']=Marca.objects.all()
-# 	diccionario['destacados']= images_destacados()
-# 	diccionario['ofertas'] = images_ofertas()
-# 	diccionario['detalle_img']= Detalle_Imagen.objects.all()
-# 	if not request.user.is_anonymous():
-# 		diccionario['usuario']=request.user
-# 		diccionario['centinela']=True
-# 	diccionario['lugar']=Servicio_Flete.objects.all()
-# 	return render_to_response('servicio-flete.html', diccionario, context_instance=RequestContext(request))
+def servicio_flete(request):
+	diccionario={}
+	diccionario['marcas']=Marca.objects.all()
+	diccionario['destacados']= images_destacados()
+	diccionario['ofertas'] = images_ofertas()
+	diccionario['detalle_img']= Detalle_Imagen.objects.all()
+	if not request.user.is_anonymous():
+		diccionario['usuario']=request.user
+		diccionario['centinela']=True
+	diccionario['lugar']=Servicio_Flete.objects.all()
+	return render_to_response('servicio-flete.html', diccionario, context_instance=RequestContext(request))
 
 #VISTA QUE ENVIA UN EMAIL DESDE LA PAGINA
 def enviar_email(request):
