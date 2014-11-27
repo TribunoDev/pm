@@ -4,11 +4,18 @@
 	<title></title>
 	<style>
 		@page {
-			margin: 1cm;
-		}
-		#codigo{
-			margin-left: 5pt;
-		}
+	        size: letter portrait;
+	        @frame header_frame {           /* Static Frame */
+	            -pdf-frame-content: header_content;
+	            left: 50pt; width: 462pt; top: 20pt; height: 20pt;
+	        }
+	        @frame content_frame {          /* Content Frame */
+	            left: 50pt; width: 462pt; top: 62pt; height: 632pt;
+	        }
+	    }
+		#header_content{
+	        	text-align: center;
+	        }
 		#detalle{
 			text-align: left;
 			width: 400pt;
@@ -39,9 +46,10 @@
 	</style>
 </head>
 <body>
-	<div id="titulo">
-		<img src="https://www.pm.hn/pm/statics/img/logo-paper.jpg" style="zoom:50%;">
-	</div>
+	<!-- Content for Static Frame 'header_frame' -->
+    <div id="header_content">
+    	<img src="https://www.pm.hn/pm/statics/img/logo-paper.jpg" style="zoom:50%;">
+    </div>
 	<table>
 {% for producto in productos %}
 		<tr id="linea">
