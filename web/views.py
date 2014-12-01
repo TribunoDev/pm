@@ -50,9 +50,56 @@ def reporteProductos(request):
 	diccionario = {}
 	listaProducto = []
 	listaProd2 = []
-	sub = request.GET.get('sub')
-	sub = SubCategoria.objects.get(Subcategoria=sub)
-	prod = Imagen.objects.filter(Producto__Subcategoria=sub, Producto__Activo=True)
+	s = request.GET.get('sub')
+	m = request.GET.get('marca')
+	e = request.GET.get('existencia')
+	pM = request.GET.get('max')
+	pm = request.GET.get('min')
+	marca = ""
+	if Marca.objects.filter(id=m).count() > 0:
+		marca = Marca.objects.get(id=m)
+		marca = " "+marca.Marca+" "
+	sub = SubCategoria.objects.get(Subcategoria=s)
+
+	prod = Imagen.objects.filter(Producto__Subcategoria=sub, Producto__Precio__gte=pm, Producto__Precio__lte=pM, Producto__Activo=True)
+	flat = Imagen.objects.filter(Producto__Subcategoria=sub, Producto__Precio__gte=pm, Producto__Precio__lte=pM, Producto__Activo=True).values_list('Producto__Codigo', flat=True)
+	prod2 = Producto.objects.filter(Subcategoria=sub, Precio__gte=pm, Precio__lte=pM, Activo=True).exclude(Codigo__in=flat)
+
+	if m == '0' and e == '0':
+		prod = Imagen.objects.filter(Producto__Subcategoria=sub, Producto__Precio__gte=pm, Producto__Precio__lte=pM, Producto__Activo=True)
+		flat = Imagen.objects.filter(Producto__Subcategoria=sub, Producto__Precio__gte=pm, Producto__Precio__lte=pM, Producto__Activo=True).values_list('Producto__Codigo', flat=True)
+		prod2 = Producto.objects.filter(Subcategoria=sub, Precio__gte=pm, Precio__lte=pM, Activo=True).exclude(Codigo__in=flat)
+
+	elif m == '0' and e == '1':
+		#productos = Producto.objects.filter(Subcategoria=sub, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
+		prod = Imagen.objects.filter(Producto__Subcategoria=sub,Producto__Existencia__gt=0, Producto__Precio__gte=pm, Producto__Precio__lte=pM, Producto__Activo=True)
+		flat = Imagen.objects.filter(Producto__Subcategoria=sub,Producto__Existencia__gt=0, Producto__Precio__gte=pm, Producto__Precio__lte=pM, Producto__Activo=True).values_list('Producto__Codigo', flat=True)
+		prod2 = Producto.objects.filter(Subcategoria=sub,Existencia__gt=0, Precio__gte=pm, Precio__lte=pM, Activo=True).exclude(Codigo__in=flat)
+		
+	elif m == '0' and e == '2':
+		#productos = Producto.objects.filter(Subcategoria=sub, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
+		prod = Imagen.objects.filter(Producto__Subcategoria=sub,Producto__Existencia__lte=0, Producto__Precio__gte=pm, Producto__Precio__lte=pM, Producto__Activo=True)
+		flat = Imagen.objects.filter(Producto__Subcategoria=sub,Producto__Existencia__lte=0, Producto__Precio__gte=pm, Producto__Precio__lte=pM, Producto__Activo=True).values_list('Producto__Codigo', flat=True)
+		prod2 = Producto.objects.filter(Subcategoria=sub,Existencia__lte=0, Precio__gte=pm, Precio__lte=pM, Activo=True).exclude(Codigo__in=flat)
+		
+	elif m != '0' and e == '0':
+		#productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
+		prod = Imagen.objects.filter(Producto__Descripcion__icontains=marca,Producto__Subcategoria=sub, Producto__Precio__gte=pm, Producto__Precio__lte=pM, Producto__Activo=True)
+		flat = Imagen.objects.filter(Producto__Descripcion__icontains=marca,Producto__Subcategoria=sub, Producto__Precio__gte=pm, Producto__Precio__lte=pM, Producto__Activo=True).values_list('Producto__Codigo', flat=True)
+		prod2 = Producto.objects.filter(Descripcion__icontains=marca,Subcategoria=sub, Precio__gte=pm, Precio__lte=pM, Activo=True).exclude(Codigo__in=flat)
+
+	elif m != '0' and e == '1':
+		#productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__gt=0, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
+		prod = Imagen.objects.filter(Producto__Descripcion__icontains=marca,Producto__Subcategoria=sub,Producto__Existencia__gt=0, Producto__Precio__gte=pm, Producto__Precio__lte=pM, Producto__Activo=True)
+		flat = Imagen.objects.filter(Producto__Descripcion__icontains=marca,Producto__Subcategoria=sub,Producto__Existencia__gt=0, Producto__Precio__gte=pm, Producto__Precio__lte=pM, Producto__Activo=True).values_list('Producto__Codigo', flat=True)
+		prod2 = Producto.objects.filter(Descripcion__icontains=marca,Subcategoria=sub,Existencia__gt=0, Precio__gte=pm, Precio__lte=pM, Activo=True).exclude(Codigo__in=flat)
+		
+	elif m != '0' and e == '2':
+		#productos = Producto.objects.filter(Descripcion__icontains=marca, Subcategoria=sub, Existencia__lte=0, Precio__gte=pm, Precio__lte=pM, Activo__exact=True).order_by('Descripcion')
+		prod = Imagen.objects.filter(Producto__Descripcion__icontains=marca,Producto__Subcategoria=sub,Producto__Existencia__lte=0, Producto__Precio__gte=pm, Producto__Precio__lte=pM, Producto__Activo=True)
+		flat = Imagen.objects.filter(Producto__Descripcion__icontains=marca,Producto__Subcategoria=sub,Producto__Existencia__lte=0, Producto__Precio__gte=pm, Producto__Precio__lte=pM, Producto__Activo=True).values_list('Producto__Codigo', flat=True)
+		prod2 = Producto.objects.filter(Descripcion__icontains=marca,Subcategoria=sub,Existencia__lte=0, Precio__gte=pm, Precio__lte=pM, Activo=True).exclude(Codigo__in=flat)
+
 	for item in prod:
 		producto = {
 			'Codigo':item.Producto.pk,
@@ -63,8 +110,7 @@ def reporteProductos(request):
 			'Imagen': item.Imagen
 		}
 		listaProducto.append(producto)
-	flat = Imagen.objects.filter(Producto__Subcategoria=sub, Producto__Activo=True).values_list('Producto__Codigo', flat=True)
-	prod2 = Producto.objects.filter(Subcategoria=sub, Activo=True).exclude(Codigo__in=flat)
+	
 	for p in prod2:
 		producto = {
 			'Codigo':p.pk,
@@ -78,7 +124,7 @@ def reporteProductos(request):
 	diccionario['logo'] = 'static/img/logo-paper.jpg'
 	diccionario['productos']=listaProducto
 	diccionario['pagesize'] = 'A4'
-	diccionario['sub'] = sub
+	diccionario['sub'] = marca
 	html = render_to_string('reportePDF.html', diccionario, context_instance=RequestContext(request))
 	return generar_pdf(html)
 
