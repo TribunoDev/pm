@@ -79,7 +79,7 @@ def reporteProductos(request):
 	diccionario['productos']=listaProducto
 	diccionario['pagesize'] = 'A4'
 	diccionario['sub'] = sub
-	html = render_to_string('reportePdf.html', diccionario, context_instance=RequestContext(request))
+	html = render_to_string('reportePDF.html', diccionario, context_instance=RequestContext(request))
 	return generar_pdf(html)
 
 

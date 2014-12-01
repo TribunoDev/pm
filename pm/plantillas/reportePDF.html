@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style>
+		@page {
+	        size: letter portrait;
+	        @frame header_frame {           /* Static Frame */
+	            -pdf-frame-content: header_content;
+	            left: 50pt; width: 462pt; top: 20pt; height: 20pt;
+	        }
+	        @frame content_frame {          /* Content Frame */
+	            left: 50pt; width: 462pt; top: 63pt; height: 632pt;
+	        }
+	    }
+		#codigo{
+			font-weight: bold;
+		}
+		#detalle{
+			text-align: left;
+			width: 400pt;
+			font-size: 18px;
+			padding-left: 5pt;
+			vertical-align: top;
+		}
+	    #header_content{
+        	text-align: center;
+        }
+        #image{
+			vertical-align: top;
+		}
+        #linea{
+			border-top: 1px #000 solid;
+			padding-bottom: 2pt;
+			padding-top: 2pt;
+		}
+	</style>
+</head>
+<body>
+<div id="header_content">
+	<img src="https://www.pm.hn/pm/statics/img/logo-paper.jpg" style="zoom:50%;">
+</div>
+<table>
+{% for item in productos %}
+	<tr id="linea">
+		<td id="image">
+			<img src="{{ item.Imagen.path }}" style="zoom:100%;">
+		</td>
+		<td id="detalle">
+			<div>
+				Codigo de Producto:<label id="codigo">{{ item.Codigo }}</label>
+			</div>
+			<div>
+				{{ item.Descripcion }}
+			</div>
+			<div>
+				Precio: <label>L. {{ item.Precio }}</label>
+			</div>
+			<div>
+				Existencias: <label>{{ item.Existencia }}</label>
+			</div>
+			<div>
+				<p>{{ item.Comentario }}</p>
+			</div>
+		</td>
+	</tr>
+{% endfor %}
+{% for p in prod2 %}
+	<tr id="linea">
+		<td id="image">
+			<img src="https://www.pm.hn/pm/statics/img/sin_imagen.jpg" style="zoom:100%;">
+		</td>
+		<td id="detalle">
+			<div>
+				Codigo de Producto:<label id="codigo">{{ p.Codigo }}</label>
+			</div>
+			<div>
+				{{ p.Descripcion }}
+			</div>
+			<div>
+				Precio: <label>L. {{ p.Precio }}</label>
+			</div>
+			<div>
+				Existencias: <label>{{ p.Existencia }}</label>
+			</div>
+			<div>
+				<p>{{ p.Comentario }}</p>
+			</div>
+		</td>
+	</tr>
+{% endfor %}
+</table>
+</body>
+</html>
