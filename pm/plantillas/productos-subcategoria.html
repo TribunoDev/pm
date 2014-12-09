@@ -232,7 +232,7 @@
 					{% endif %}
 
 				</div>
-				{% if totalProductos > 0 %}
+				{% if user.is_authenticated %}
 					<div class="text-center">
 						<a href="/reporte/producto/" class="btn btn-default" id="btnReporte">Reporte</a>
 					</div>

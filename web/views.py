@@ -558,8 +558,8 @@ def buscar(request):
 
 	buscar = request.GET.get("txtBuscar")
 	pagina = request.GET.get("pagina")
-	diccionario['totalProductos'] = Producto.objects.filter(Descripcion__icontains=buscar, Activo__exact=True).count()
-	resultado = Producto.objects.filter(Descripcion__icontains=buscar, Activo__exact=True)
+	diccionario['totalProductos'] = Producto.objects.filter(Q(Codigo=buscar) | Q(Descripcion__icontains=buscar)).count()
+	resultado = Producto.objects.filter(Q(Codigo=buscar) | Q(Descripcion__icontains=buscar))
 	for producto in resultado:
 		if Imagen.objects.filter(Producto=producto).count() > 0:
 			objImg = Imagen.objects.get(Producto=producto)
