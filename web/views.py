@@ -179,7 +179,7 @@ def images_novedades():
 		listaNovedades.append(novedades)
 	return listaNovedades
 
-# def cargar_imagenes():
+def cargar_imagenes():
  	listaImages = []
 
  	if Imagen.objects.all().count() > 0:
