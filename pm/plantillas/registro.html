@@ -13,6 +13,20 @@
         }
     </style>
 {% endblock style %}
+{% block js %}
+  <script>
+    $(document).on('ready', function(){
+    	$("#btnReg").on("click", function(e) {
+    		var pass1 = $('#password').val();
+    		var pass2 = $('#txtPassword2').val();
+    		if (pass1 != pass2) {
+    			e.preventDefault();	
+    			alert("Contraseña no coinciden");
+    		};
+    	});
+    });
+  </script>
+{% endblock %}
 {% block contenido %}
 <div id="Registro" class="row">
 	<div class="col-xs-12 col-sm-8 col-md-8 col-sm-offset-2 col-md-offset-2">
@@ -78,7 +92,7 @@
 			</div>
 			<div class="col col-xs-12 col-sm-6 col-md-6">
 				<div class="form-group">
-					<button type="submit" tabindex="10" class="btn btn-block btn-success">Registrar</button>    
+					<button id="btnReg" type="submit" tabindex="10" class="btn btn-block btn-success">Registrar</button>    
 				</div>
 			</div>
 		</form>
