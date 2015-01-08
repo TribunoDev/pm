@@ -2278,31 +2278,34 @@ def items_en_carrito(request):
 	diccionario={}
 	carrito = 0
 	detalleCarrito = []
+	usuario = False
 	if request.is_ajax():
 		if not request.user.is_anonymous():
 			usuario = request.user
 
-		if Carrito.objects.filter(Usuario=usuario, Estado=1).count() > 0:
-			carrito = Carrito.objects.get(Usuario=usuario, Estado=1)
-			if Detalle_Carrito.objects.filter(Carrito=carrito).count() > 0:
-				for item in Detalle_Carrito.objects.filter(Carrito=carrito):
-					producto = Producto.objects.get(Codigo=item.Producto.Codigo)
-					if Imagen.objects.filter(Producto=producto).count() > 0:
-						objImg = Imagen.objects.get(Producto=producto)
-						archImg = objImg.Imagen
-					else:
-						archImg = "img_detalle/sin_imagen.jpg"
-					detalle = {
-						'id': item.pk,
-						'Carrito': carrito,
-						'Imagen': archImg,
-						'Producto': Producto.objects.get(Codigo=item.Producto.Codigo),
-						'Cantidad': item.Cantidad,
-						'Precio': intcomma(item.Producto.Precio)
-						}
-					detalleCarrito.append(detalle)
-				diccionario['detalle']=detalleCarrito
-				template = 'ajax/items-en-carrito.html'
+			if Carrito.objects.filter(Usuario=usuario, Estado=1).count() > 0:
+				carrito = Carrito.objects.get(Usuario=usuario, Estado=1)
+				if Detalle_Carrito.objects.filter(Carrito=carrito).count() > 0:
+					for item in Detalle_Carrito.objects.filter(Carrito=carrito):
+						producto = Producto.objects.get(Codigo=item.Producto.Codigo)
+						if Imagen.objects.filter(Producto=producto).count() > 0:
+							objImg = Imagen.objects.get(Producto=producto)
+							archImg = objImg.Imagen
+						else:
+							archImg = "img_detalle/sin_imagen.jpg"
+						detalle = {
+							'id': item.pk,
+							'Carrito': carrito,
+							'Imagen': archImg,
+							'Producto': Producto.objects.get(Codigo=item.Producto.Codigo),
+							'Cantidad': item.Cantidad,
+							'Precio': intcomma(item.Producto.Precio)
+							}
+						detalleCarrito.append(detalle)
+					diccionario['detalle']=detalleCarrito
+					template = 'ajax/items-en-carrito.html'
+				else:
+					template = 'ajax/no-hay-items-carrito.html'
 			else:
 				template = 'ajax/no-hay-items-carrito.html'
 		else:
