@@ -1738,14 +1738,23 @@ def datos_carrito(request):
 		estado = Estado.objects.get(id=1)
 		if not request.user.is_anonymous():
 			usuario = request.user
-			carrito = Carrito.objects.get(Usuario=usuario, Estado=estado)
-			detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
-			for item in detalle:
-				cantidad += item.Cantidad
-				precio += item.Producto.Precio * item.Cantidad
-		diccionario['cantidad']=cantidad
-		diccionario['subtotal']=intcomma(precio)
-		diccionario['carrito']=carrito
+			if Carrito.objects.filter(Usuario=usuario, Estado=estado).count() > 0:
+				carrito = Carrito.objects.get(Usuario=usuario, Estado=estado)
+				detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
+				for item in detalle:
+					cantidad += item.Cantidad
+					precio += item.Producto.Precio * item.Cantidad
+				diccionario['cantidad']=cantidad
+				diccionario['subtotal']=intcomma(precio)
+				diccionario['carrito']=carrito
+			else:
+				precio = 0
+				diccionario['cantidad']=0
+				diccionario['subtotal']=intcomma(precio)
+		else:
+			precio = 0
+			diccionario['cantidad']=0
+			diccionario['subtotal']=intcomma(precio)
 		return render_to_response('ajax/datos-carrito.html',diccionario, context_instance=RequestContext(request))
 	else:
 		raise Http404
@@ -2272,26 +2281,30 @@ def items_en_carrito(request):
 	if request.is_ajax():
 		if not request.user.is_anonymous():
 			usuario = request.user
+
+		if Carrito.objects.filter(Usuario=usuario, Estado=1).count() > 0:
 			carrito = Carrito.objects.get(Usuario=usuario, Estado=1)
-		if Detalle_Carrito.objects.filter(Carrito=carrito).count() > 0:
-			for item in Detalle_Carrito.objects.filter(Carrito=carrito):
-				producto = Producto.objects.get(Codigo=item.Producto.Codigo)
-				if Imagen.objects.filter(Producto=producto).count() > 0:
-					objImg = Imagen.objects.get(Producto=producto)
-					archImg = objImg.Imagen
-				else:
-					archImg = "img_detalle/sin_imagen.jpg"
-				detalle = {
-					'id': item.pk,
-					'Carrito': carrito,
-					'Imagen': archImg,
-					'Producto': Producto.objects.get(Codigo=item.Producto.Codigo),
-					'Cantidad': item.Cantidad,
-					'Precio': intcomma(item.Producto.Precio)
-					}
-				detalleCarrito.append(detalle)
-			diccionario['detalle']=detalleCarrito
-			template = 'ajax/items-en-carrito.html'
+			if Detalle_Carrito.objects.filter(Carrito=carrito).count() > 0:
+				for item in Detalle_Carrito.objects.filter(Carrito=carrito):
+					producto = Producto.objects.get(Codigo=item.Producto.Codigo)
+					if Imagen.objects.filter(Producto=producto).count() > 0:
+						objImg = Imagen.objects.get(Producto=producto)
+						archImg = objImg.Imagen
+					else:
+						archImg = "img_detalle/sin_imagen.jpg"
+					detalle = {
+						'id': item.pk,
+						'Carrito': carrito,
+						'Imagen': archImg,
+						'Producto': Producto.objects.get(Codigo=item.Producto.Codigo),
+						'Cantidad': item.Cantidad,
+						'Precio': intcomma(item.Producto.Precio)
+						}
+					detalleCarrito.append(detalle)
+				diccionario['detalle']=detalleCarrito
+				template = 'ajax/items-en-carrito.html'
+			else:
+				template = 'ajax/no-hay-items-carrito.html'
 		else:
 			template = 'ajax/no-hay-items-carrito.html'
 		return render_to_response(template,diccionario, context_instance=RequestContext(request))
