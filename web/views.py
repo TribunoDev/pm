@@ -428,7 +428,13 @@ def ofertas(request):
 def novedades(request):
 	diccionario={}
 	novedades=[]
-	fecha = date.today() - timedelta(days=60)
+	if FactorDiasNovedades.objects.count() > 0:
+		qDias = FactorDiasNovedades.objects.all()[:1]
+		dias = qDias[0].Dias
+	else:
+		dias = 90
+
+	fecha = date.today() - timedelta(days=dias)
 	productos = Producto.objects.filter(Fecha__gte=fecha, Activo__exact=True).order_by('?')[:12]
 	for producto in productos:
 		if Imagen.objects.filter(Producto=producto).count() > 0:
@@ -2262,13 +2268,13 @@ def item_carrito(request):
 	if request.is_ajax():
 		if not request.user.is_anonymous():
 			usuario = request.user
-	
-		#if Carrito.objects.filter(Usuario=usuario, Estado=estado).count() != 0:
 			estado = Estado.objects.get(id=1)
-			carrito = Carrito.objects.get(Usuario=usuario, Estado=estado)
-			detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
-			for item in detalle:
-				cantidad += item.Cantidad		
+
+			if Carrito.objects.filter(Usuario=usuario, Estado=estado).count() > 0:
+				carrito = Carrito.objects.get(Usuario=usuario, Estado=estado)
+				detalle = Detalle_Carrito.objects.filter(Carrito = carrito)
+				for item in detalle:
+					cantidad += item.Cantidad		
 		return HttpResponse(json.dumps({'cantidad':cantidad}), content_type='application/json')
 	else:
 		raise Http404
